@@ -37,7 +37,7 @@ const CreateNotification = ({ showModal, onclick }) => {
               id="notification_title"
               value={data.notification_title}
               onChange={handleChange}
-              className="w-full border rounded-lg text-sm py-2.5 px-3.5 focus:border-yellow-500 focus:ring focus:ring-yellow-200 outline-none"
+              className="w-full border rounded-lg text-sm py-2.5 px-3.5 focus:border-[#0085FF] focus:ring focus:ring-[#rgb(177 226 253)] outline-none"
               placeholder="Title"
             />
           </div>
@@ -51,7 +51,7 @@ const CreateNotification = ({ showModal, onclick }) => {
               rows={"6"}
               value={data.notification_message}
               onChange={handleChange}
-              className="w-full border rounded-lg text-sm py-2.5 px-3.5 focus:border-yellow-500 focus:ring focus:ring-yellow-200 outline-none"
+              className="w-full border rounded-lg text-sm py-2.5 px-3.5 focus:border-[#0085FF] focus:ring focus:ring-[#rgb(177 226 253)] outline-none"
               placeholder="Message..."
             ></textarea>
           </div>
