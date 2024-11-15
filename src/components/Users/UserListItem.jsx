@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const UserListItem = () => {
   return (
     <tr className="">
-      <th className="px-6 lg:px-4 xl:px-0 flex gap-3  py-4 font-normal text-gray-900">
+      <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
         <div className="relative h-10 w-10">
           <img
             className="h-full w-full rounded-full object-cover object-center"
@@ -18,12 +18,12 @@ const UserListItem = () => {
           <div mailto:classname="text-gray-400">jobs@sailboatui.com</div>
         </div>
       </th>
-      <td className="px-6 lg:px-4 xl:px-0 py-4">
+      <td className="px-6 lg:px-4 xl:px-3 py-4">
       jobs@sailboatui.com
       </td>
-      <td className="px-6 lg:px-4 xl:px-0 py-4">##########</td>
+      <td className="px-6 lg:px-4 xl:px-3 py-4">##########</td>
 
-      <td className="px-6 lg:px-4 xl:px-0 py-4 flex justify-center gap-2">
+      <td className="px-6 lg:px-4 xl:px-3 py-4 flex justify-center gap-2">
         <button className="w-auto px-3 py-1 bg-red-600 hover:opacity-80 text-white rounded-md text-xs">
           Block
         </button>

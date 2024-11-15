@@ -32,7 +32,7 @@ const ProductList = () => {
           <tr className="">
             <th
               scope="col"
-              className="px-6 lg:px-4 xl:px-2 rounded-s-lg py-4 text-sm font-semibold"
+              className="px-6 lg:px-4 xl:px-3 rounded-s-lg py-4 text-sm font-semibold"
             >
               Name
             </th>

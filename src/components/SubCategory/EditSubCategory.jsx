@@ -28,10 +28,10 @@ export default function SubCategoryEdit() {
             placeholder="Enter Category Name"
           />
           </div>
-          <div className="mb-3 col-span-2 lg:w-[13%] ">
+          <div className="mb-3 col-span-2">
             <label htmlFor="file" className="w-full" >
               <span className="" >Attachment</span>
-              <div className="mt-2 text-[#0098EA] border lg:h-[130px]  rounded-md justify-center border-dashed border-[#0098EA]  flex items-center cursor-pointer">
+              <div className="mt-2 text-[#0098EA] border lg:h-[200px]  rounded-md justify-center border-dashed border-[#0098EA]  flex items-center cursor-pointer">
                 <FaPlus className="mr-2" size={25} />
               </div>
               <input

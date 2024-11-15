@@ -146,7 +146,7 @@ const Sidebar = () => {
                 : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
             }`}
           >
-            <TbFileInvoice className="text-lg" /> Revenue
+            <TbFileInvoice className="text-lg" /> Subscription
           </button>
         </li>
         <li className=" w-full">

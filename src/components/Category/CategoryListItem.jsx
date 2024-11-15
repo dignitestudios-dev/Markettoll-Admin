@@ -4,7 +4,7 @@ import {NavLink} from "react-router-dom";
 const CategoryListItem = () => {
   return (
     <tr className="">
-      <th className="px-6 lg:px-4 xl:px-2 flex gap-3  py-4 font-normal text-gray-900">
+      <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
         <div className="relative h-10 w-10">
           <img
             className="h-full w-full rounded-md object-cover object-center"
@@ -14,8 +14,8 @@ const CategoryListItem = () => {
           {/* <span className="absolute right-0 bottom-0 h-2 w-2 rounded-full bg-green-400 ring ring-white"></span> */}
         </div>
       </th>
-      <td className="px-6 lg:px-4 xl:px-2 py-4">Cloths</td>
-      <td className="px-6 lg:px-4 xl:px-0 py-4 flex justify-center gap-2">
+      <td className="px-6 lg:px-4 xl:px-3 py-4">Cloths</td>
+      <td className="px-6 lg:px-4 xl:px-3 py-4 flex justify-center gap-2">
         <NavLink to={'/editcategory'} className="w-auto px-3 py-1 bg-[#34C759] hover:opacity-80 text-white rounded-md text-xs">
           Edit
         </NavLink>

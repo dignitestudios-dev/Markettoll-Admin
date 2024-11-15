@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const DeletedUserListItem = () => {
   return (
     <tr className="">
-      <th className="px-6 lg:px-4 xl:px-0 flex gap-3  py-4 font-normal text-gray-900">
+      <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
         <div className="relative h-10 w-10">
           <img
             className="h-full w-full rounded-full object-cover object-center"
@@ -18,9 +18,9 @@ const DeletedUserListItem = () => {
           <div mailto:classname="text-gray-400">jobs@sailboatui.com</div>
         </div>
       </th>
-      <td className="px-6 lg:px-4 xl:px-0 py-4">jobs@sailboatui.com</td>
+      <td className="px-6 lg:px-4 xl:px-3 py-4">jobs@sailboatui.com</td>
 
-      <td className="px-6 lg:px-4 xl:px-0 py-4">############</td>
+      <td className="px-6 lg:px-4 xl:px-3 py-4">############</td>
     </tr>
   );
 };

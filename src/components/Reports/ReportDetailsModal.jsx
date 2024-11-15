@@ -37,14 +37,9 @@ const ReportDetailsModal = ({ showModal, onclick }) => {
           </div>
 
           <div className="w-full flex items-center justify-end gap-3 mt-2">
-            <button className="text-xs font-medium border border-yellow-500 text-yellow-500 hover:bg-[#0098EA] hover:text-white transition-all duration-300 px-3 py-1 rounded-lg">
-              Warn User
-            </button>
+           
             <button className="text-xs font-medium border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 px-3 py-1 rounded-lg">
               Block User
-            </button>
-            <button className="text-xs font-medium border border-green-500 text-green-500 hover:bg-green-500 hover:text-white transition-all duration-300 px-3 py-1 rounded-lg">
-              Mark Resolved
             </button>
             <button className="text-xs font-medium border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 px-3 py-1 rounded-lg" onClick={onclick}>
               Cancel
