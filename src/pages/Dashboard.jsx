@@ -8,7 +8,7 @@ const Dashboard = () => {
   useEffect(() => {
     const scrollToTop = () => {
       window.scrollTo(0,0);
-      document.title = "BCT - Dashboard";
+      document.title = "Market-Toll - Dashboard";
     };
     scrollToTop()
   }, []);

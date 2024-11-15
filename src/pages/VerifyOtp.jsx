@@ -9,7 +9,7 @@ const VerifyOtp = () => {
   }
 
   useEffect(() => {
-    document.title = "BCT - Verify OTP";
+    document.title = "Market-Toll - Verify OTP";
   }, []);
 
   return (

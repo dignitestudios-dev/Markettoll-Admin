@@ -17,7 +17,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    document.title = "BCT - Login";
+    document.title = "Market-Toll - Login";
   }, []);
 
   return (

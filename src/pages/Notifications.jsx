@@ -5,7 +5,7 @@ const Notifications = () => {
   useEffect(() => {
     const scrollToTop = () => {
       window.scrollTo(0,0);
-      document.title = "BCT - Push Notifications";
+      document.title = "Market-Toll - Push Notifications";
     };
     scrollToTop()
   }, []);

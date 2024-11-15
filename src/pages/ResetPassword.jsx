@@ -14,7 +14,7 @@ const ResetPassword = () => {
   };
 
   useEffect(() => {
-    document.title = "BCT - Reset Password";
+    document.title = "Market-Toll - Reset Password";
   }, []);
   
   return (

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 const Plans = () => {
   
   useEffect(() => {
-    document.title = "BCT - Plans";
+    document.title = "Market-Toll - Plans";
   }, []);
 
   return (

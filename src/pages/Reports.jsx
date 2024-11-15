@@ -4,7 +4,7 @@ import ReportList from "../components/Reports/ReportList";
 const Reports = () => {
   
   useEffect(() => {
-    document.title = "BCT - Reports";
+    document.title = "Market-Toll - Reports";
   }, []);
 
   return (

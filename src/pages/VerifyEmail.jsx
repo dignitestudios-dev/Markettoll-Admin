@@ -10,7 +10,7 @@ const VerifyEmail = () => {
   };
 
   useEffect(() => {
-    document.title = "BCT - Verify Email";
+    document.title = "Market-Toll - Verify Email";
   }, []);
 
   return (
