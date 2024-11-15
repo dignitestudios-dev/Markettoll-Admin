@@ -39,7 +39,7 @@ const Layout = ({ pages }) => {
           <div className="flex gap-3 items-center  py-4 font-normal text-gray-900">
             <div className="relative bg-[#c00000]/[0.05] rounded-full h-10 w-10">
               <img
-                class="h-full w-full rounded-full object-cover object-center"
+                className="h-full w-full rounded-full object-cover object-center"
                 src={"https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
                 alt=""
               />
@@ -48,7 +48,7 @@ const Layout = ({ pages }) => {
               <div className="font-semibold text-gray-700 leading-tight">
                 Admin
               </div>
-              <div className="text-gray-400">admin@bct.com</div>
+              <div className="text-gray-400">admin@market.com</div>
             </div>
 
             {/* <button>
