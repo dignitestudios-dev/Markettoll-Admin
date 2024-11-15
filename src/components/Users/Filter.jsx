@@ -25,7 +25,7 @@ const Filter = () => {
         Reset
       </button>
       <button
-        class={`active:scale-95 rounded-md px-6 py-2 text-sm font-medium text-white outline-none focus:ring focus:ring-yellow-200 hover:opacity-90 bg-[#0098EA]`}
+        class={`active:scale-95 rounded-md px-6 py-2 text-sm font-medium text-white outline-none focus:ring focus:ring-[#0098EA] hover:opacity-90 bg-[#0098EA]`}
       >
         Search
       </button>
