@@ -27,7 +27,7 @@ const ProductList = () => {
   }, [isUserData]);
 
   useEffect(()=>{
-    const filterProduct=Product.filter((item)=>item.status==active);
+    const filterProduct=Product?.filter((item)=>item.status==active);
     SetFilter(filterProduct)
   },[Product,active])
 
