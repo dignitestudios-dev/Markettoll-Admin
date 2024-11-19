@@ -5,17 +5,17 @@ const Auth = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(false);
 
-  const checkUser = () => {
-    if (user) {
-      navigate("/dashboard");
-    } else {
-      navigate("/login");
-    }
-  };
+  // const checkUser = () => {
+  //   if (user) {
+  //     navigate("/dashboard");
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // };
 
-  useEffect(() => {
-    checkUser();
-  }, []);
+  // useEffect(() => {
+  //   checkUser();
+  // }, []);
   
   return <div></div>;
 };

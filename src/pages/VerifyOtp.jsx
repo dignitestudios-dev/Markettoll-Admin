@@ -1,11 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { OTPMockup } from "../assets/export";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import BASE_URL from "../constants/BaseUrl";
 
 const VerifyOtp = () => {
   const navigate = useNavigate();
-  const handleNavigate = () => {
-    navigate("/reset-password")
+  const state=useLocation();
+  const [Otp,setOtp]=useState("")
+
+  const handleNavigate = (e) => {
+    e.preventDefault();
+  
+    fetch(`${BASE_URL}/users/forgot-password-verify-email-otp`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: state.state?.email,
+        otp:Otp
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Wrong Otp');
+        }
+        return res.json();
+      })
+      .then((data) => {              
+        navigate("/reset-password", { state: { email: state.state?.email } });
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
+  
   }
 
   useEffect(() => {
@@ -30,6 +58,8 @@ const VerifyOtp = () => {
                   <input
                     name="otp"
                     type="password"
+                    value={Otp}
+                    onChange={(e)=>setOtp(e.target.value)}
                     required
                     className="w-full text-sm border border-gray-300 px-4 py-3 rounded-md outline-none"
                     placeholder="OTP Code"

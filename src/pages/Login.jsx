@@ -2,19 +2,43 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginImage } from "../assets/export";
 import { LuEye, LuEyeOff } from "react-icons/lu";
+import BASE_URL from "../constants/BaseUrl";
+import Cookie from "js-cookie"
 import { AuthContext } from "../context/AuthContext";
-
 const Login = () => {
   const navigate = useNavigate();
+  const {setIsLoggedIn}=useContext(AuthContext);
   const [showPass, setShowPass] = useState(false);
-
-  // const { isLoggedIn, setIsLoggedIn, ToggleUser } = useContext(AuthContext);
-
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");   
   const handleSubmit = (e) => {
     e.preventDefault();
-    // ToggleUser()
-    navigate("/dashboard");
+    fetch(`${BASE_URL}/users/email-password-login`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to log in');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        Cookie.set("data", JSON.stringify(data?.data));  
+        setIsLoggedIn(true); 
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
   };
+  
 
   useEffect(() => {
     document.title = "Market-Toll - Login";
@@ -37,6 +61,8 @@ const Login = () => {
                     name="email"
                     type="email"
                     autoComplete="off"
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}
                     className="w-full text-sm border border-gray-300 px-4 py-3 rounded-md outline-none"
                     placeholder="Enter email"
                   />
@@ -66,16 +92,18 @@ const Login = () => {
                   <input
                     name="password"
                     type={showPass ? "text" : "password"}
+                    value={password}
+                    onChange={(e)=>setPassword(e.target.value)}
                     className="w-full text-sm py-3 outline-none"
                     placeholder="Enter password"
                   />
-                  <button onClick={() => setShowPass(!showPass)}>
+                  <div className="cursor-pointer" onClick={() => setShowPass(!showPass)}>
                     {showPass ? (
                       <LuEyeOff className="text-lg text-gray-400" />
                     ) : (
                       <LuEye className="text-lg text-gray-400" />
                     )}
-                  </button>
+                  </div>
                 </div>
               </div>
               <div className="flex items-center justify-start gap-2">

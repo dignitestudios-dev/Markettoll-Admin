@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const DeletedUserListItem = () => {
+const DeletedUserListItem = ({item}) => {
   return (
     <tr className="">
       <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
@@ -14,13 +14,12 @@ const DeletedUserListItem = () => {
          
         </div>
         <div className="text-sm">
-          <div className="font-medium text-gray-700">Steven Jobs</div>
-          <div mailto:classname="text-gray-400">jobs@sailboatui.com</div>
+          <div className="font-medium text-gray-700">{item?.name}</div>
         </div>
       </th>
-      <td className="px-6 lg:px-4 xl:px-3 py-4">jobs@sailboatui.com</td>
+      <td className="px-6 lg:px-4 xl:px-3 py-4">{item?.email.value}</td>
 
-      <td className="px-6 lg:px-4 xl:px-3 py-4">############</td>
+      <td className="px-6 lg:px-4 xl:px-3 py-4">{item?.phoneNumber?.code+item?.phoneNumber?.value}</td>
     </tr>
   );
 };

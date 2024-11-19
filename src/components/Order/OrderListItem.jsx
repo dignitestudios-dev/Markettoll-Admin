@@ -1,26 +1,29 @@
 import React from "react";
 
-const OrderListItem = () => {
+const OrderListItem = ({ item }) => {
+  const deliveryAddress = item?.deliveryAddress;
+  const formattedAddress = `${deliveryAddress?.streetAddress}, ${deliveryAddress?.apartment_suite}, ${deliveryAddress?.city}, ${deliveryAddress?.state}, ${deliveryAddress?.country}, ${deliveryAddress?.zipCode}`;
+
   return (
     <tr className="">
-      <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
+      <th className="px-6 lg:px-4 xl:px-3 flex gap-3 py-4 font-normal text-gray-900">
         <div className="text-sm">
-          <div className="font-medium text-gray-700">Steven Jobs</div>
+          <div className="font-medium text-gray-700">
+            {item?.placerDetails?.name}
+          </div>
         </div>
       </th>
-      <td className="px-6 lg:px-4 xl:px-3 py-4">Sports & Outdoors</td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4">Outdoor Gear</td>
       <td className="px-6 lg:px-4 xl:px-3 py-4">
-        <p className="w-[250px] overflow-auto text-nowrap description-scroll " >
-          lock jdjd siddjdhs dukes dish’s sjdjshs Chris d use nfjdncbsnicbduc s
-          djddjiejddue shdueusus d djcidejshs. dnduduahsi dnsuwishwd dbxhdhsbd
-          snxjdhsbd d xjisishsugsjcjej
-        </p>
+        {item?.placerDetails?.email?.value}
       </td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4">$2000</td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4"> 3</td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4">Steve</td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4">steven@yopmail.com</td>    
+      <td className="px-6 lg:px-4 xl:px-3 py-4">{formattedAddress}</td>
+      <td className="px-6 lg:px-4 xl:px-3 py-4">{item?.total}</td>
+      <td className="px-6 lg:px-4 xl:px-3 py-4">
+        {" "}
+        <button className="w-auto px-3 py-1 bg-[#0098EA] text-nowrap hover:opacity-80 text-white rounded-md text-xs">
+          Order Detail
+        </button>
+      </td>
     </tr>
   );
 };

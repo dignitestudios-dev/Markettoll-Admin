@@ -1,12 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { EmailVerificationMockup } from "../assets/export";
 import { Link, useNavigate } from "react-router-dom";
+import BASE_URL from "../constants/BaseUrl";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
-
-  const handleNavigate = () => {
-    navigate("/verify-otp");
+  const [email,setEmail]=useState("");
+  const handleNavigate = (e) => {
+    e.preventDefault();
+    fetch(`${BASE_URL}/users/forgot-password-send-email-otp`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to Send Otp');
+        }
+        return res.json();
+      })
+      .then((data) => {              
+        navigate("/verify-otp", { state: { email: email } });
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
+  
   };
 
   useEffect(() => {
@@ -32,6 +55,7 @@ const VerifyEmail = () => {
                     name="email"
                     type="email"
                     required
+                    onChange={(e)=>setEmail(e.target.value)}
                     className="w-full text-sm border border-gray-300 px-4 py-3 rounded-md outline-none"
                     placeholder="Enter email"
                   />

@@ -1,7 +1,60 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserListItem from "./UserListItem";
+import BASE_URL from "../../constants/BaseUrl";
+import { AuthContext } from "../../context/AuthContext";
+
+
 
 const UserList = () => {
+  const { isUserData } = useContext(AuthContext);
+  const [users,SetUsers]=useState([]);
+  
+  useEffect(() => {
+    const token = isUserData?.token; 
+    fetch(`${BASE_URL}/admin/users?page=1`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json", 
+      }
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        SetUsers(res?.data)
+        console.log(res.data,"userssFetch");
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  }, [isUserData]);
+
+  const handleBlockUser = (id) => {
+    const token = isUserData?.token; 
+    fetch(`${BASE_URL}/admin/block-user/${id}`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json", 
+      }
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to Block User');
+        }
+        return res.json();
+      })
+      .then((data) => {        
+        console.log(data);
+        
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
+  };
+  
+
+
+  
   return (
     <div className="w-full overflow-x-auto h-[600px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
       <table className="w-full border-collapse  text-left text-sm text-gray-500">
@@ -25,6 +78,12 @@ const UserList = () => {
             >
               Phone
             </th>
+            <th
+              scope="col"
+              className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
+            >
+              Status
+            </th>
 
             <th
               scope="col"
@@ -33,16 +92,14 @@ const UserList = () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-          <UserListItem/>
-          <UserListItem/>
-          <UserListItem/>
-          <UserListItem/>
-          <UserListItem/>
-          <UserListItem/>
-          <UserListItem/>
-          <UserListItem/>
-          <UserListItem/>
-      
+          {
+            users?.map((item)=>
+            (
+              <UserListItem item={item} handleBlockUser={handleBlockUser} />
+            )
+            )
+          }
+          
         </tbody>
       </table>
     </div>

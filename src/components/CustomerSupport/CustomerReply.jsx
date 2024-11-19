@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
-import BASE_URL from "../../constants/BaseUrl";
 
-const CreateNotification = ({ showModal, onclick,token }) => {
+const CustomerReply = ({ showModal, onclick }) => {
   const [data, setData] = useState({
     notification_title: "",
     notification_message: "",
@@ -14,30 +13,7 @@ const CreateNotification = ({ showModal, onclick,token }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`${BASE_URL}/admin/notification`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json", 
-      },
-      body: JSON.stringify({
-        title:data?.notification_title,
-        body:data?.notification_message,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Failed to log in');
-        }
-        return res.json();
-      })
-      .then((data) => { 
-         console.log("Notification Created",data);
-         onclick();
-      })
-      .catch((err) => {
-        console.error('Error:', err);
-      });
+    console.log("Notification data >> ", data);
   };
 
   return (
@@ -50,10 +26,10 @@ const CreateNotification = ({ showModal, onclick,token }) => {
           >
             <IoClose className="w-full h-full" />
           </button>
-          <h1 className="text-xl font-semibold">Send Notification</h1>
+          <h1 className="text-xl font-semibold">Email Reply</h1>
           <div className="w-full flex flex-col gap-1">
             <label htmlFor="notification_title" className="text-sm font-medium">
-              Notification Title
+              Title
             </label>
             <input
               type="text"
@@ -67,7 +43,7 @@ const CreateNotification = ({ showModal, onclick,token }) => {
           </div>
           <div className="w-full flex flex-col gap-1">
             <label htmlFor="notification_message" className="text-sm font-medium">
-              Notification Message
+              Message
             </label>
             <textarea
               name="notification_message"
@@ -81,7 +57,7 @@ const CreateNotification = ({ showModal, onclick,token }) => {
           </div>
           <div className="w-full mt-2">
             <button type="submit" className="w-full bg-[#0098EA] text-white font-medium text-sm rounded-lg py-3">
-              Send Now
+              Submit
             </button>
           </div>
         </form>
@@ -90,4 +66,4 @@ const CreateNotification = ({ showModal, onclick,token }) => {
   );
 };
 
-export default CreateNotification;
+export default CustomerReply;

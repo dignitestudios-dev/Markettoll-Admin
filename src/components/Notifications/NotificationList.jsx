@@ -1,13 +1,34 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import NotificationItem from "./NotificationItem";
 import CreateNotification from "./CreateNotification";
+import { AuthContext } from "../../context/AuthContext";
+import BASE_URL from "../../constants/BaseUrl";
 
 const NotificationList = () => {
   const [showModal, setShowModal] = useState(false);
-
+  const { isUserData } = useContext(AuthContext);
+  const [Notifications,SetNotifications]=useState([]);
+  const token = isUserData?.token; 
   const handleShowModal = () => {
     setShowModal(!showModal);
   };
+  useEffect(() => {
+    fetch(`${BASE_URL}/admin/notification?page=1`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json", 
+      }
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        SetNotifications(res?.data)
+        console.log(res?.data ,"SetNotifications");
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  }, [isUserData,showModal]);   
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -16,15 +37,14 @@ const NotificationList = () => {
         <button className="text-sm font-medium text-white bg-[#0098EA] hover:opacity-90 px-4 py-2.5 rounded-lg" onClick={handleShowModal}>
           Create Notification
         </button>
-        <CreateNotification showModal={showModal} onclick={handleShowModal} />
+        <CreateNotification showModal={showModal} token={token} onclick={handleShowModal} />
       </div>
       <div className="w-full rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4">
-        <NotificationItem />
-        <NotificationItem />
-        <NotificationItem />
-        <NotificationItem />
-        <NotificationItem />
-        <NotificationItem />
+        {
+          Notifications?.map((item)=>(
+            <NotificationItem item={item} />
+          ))
+        }
       </div>
     </div>
   );

@@ -1,16 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ResetPasswordMockup } from "../assets/export";
+import BASE_URL from "../constants/BaseUrl";
 
 const ResetPassword = () => {
   const [showPass, setShowPass] = useState(false);
   const [showPass2, setShowPass2] = useState(false);
+  const [password,setPassword]=useState("")
+  const state=useLocation();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate("/login");
+    e.preventDefault(); 
+    fetch(`${BASE_URL}/users/forgot-password-update-password`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: state.state?.email,
+        password:password
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Wrong Otp');
+        }
+        return res.json();
+      })
+      .then((data) => {              
+          navigate("/login");
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
   };
 
   useEffect(() => {
@@ -35,14 +59,16 @@ const ResetPassword = () => {
                     type={showPass ? "text" : "password"}
                     className="w-full text-sm py-3 outline-none"
                     placeholder="Enter password"
+                    value={password}
+                    onChange={(e)=>setPassword(e.target.value)}
                   />
-                  <button onClick={() => setShowPass(!showPass)}>
+                  <div className="cursor-pointer" onClick={() => setShowPass(!showPass)}>
                     {showPass ? (
                       <LuEyeOff className="text-lg text-gray-400" />
                     ) : (
                       <LuEye className="text-lg text-gray-400" />
                     )}
-                  </button>
+                  </div>
                 </div>
               </div>
               <div>
@@ -54,13 +80,13 @@ const ResetPassword = () => {
                     className="w-full text-sm py-3 outline-none"
                     placeholder="Enter password"
                   />
-                  <button onClick={() => setShowPass2(!showPass2)}>
+                  <div className="cursor-pointer" onClick={() => setShowPass2(!showPass2)}>
                     {showPass2 ? (
                       <LuEyeOff className="text-lg text-gray-400" />
                     ) : (
                       <LuEye className="text-lg text-gray-400" />
                     )}
-                  </button>
+                  </div>
                 </div>
               </div>
 

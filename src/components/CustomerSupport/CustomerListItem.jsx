@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const CustomerListItem = () => {
+const CustomerListItem = ({handleShowModal}) => {
+
   return (
     <tr className="">
       <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
@@ -24,6 +25,9 @@ const CustomerListItem = () => {
       <td className="px-6 lg:px-4 xl:px-3 py-4">##########</td>
 
       <td className="px-6 lg:px-4 xl:px-3 py-4 flex justify-center gap-2">
+        <button onClick={handleShowModal} className="w-auto px-3 py-1 bg-[#0098EA] hover:opacity-80 text-white rounded-md text-xs">
+          Reply
+        </button>
         <button className="w-auto px-3 py-1 bg-red-600 hover:opacity-80 text-white rounded-md text-xs">
           Block
         </button>

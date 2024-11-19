@@ -15,7 +15,7 @@ const Customer = () => {
     <div className="w-full flex flex-col gap-y-4">
          <h1 className="text-xl font-bold">Customer Report</h1>
       <Filter />
-      <CustomerList />
+      <CustomerList  />
     </div>
   );
 };

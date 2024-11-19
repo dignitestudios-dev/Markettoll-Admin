@@ -1,15 +1,21 @@
-import { useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Sidebar from "./Sidebar";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
-
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 const Layout = ({ pages }) => {
   const sidebarRef = useRef(null);
   const [isOpen, setisOpen] = useState(false);
+  const {isUserData}=useContext(AuthContext); 
   
+  const navigate=useNavigate("")
   const toggleModal = () => {
     setisOpen(!isOpen);
   };
 
+
+   
+   
   return (
     <div className="w-screen h-screen flex overflow-x-hidden justify-start items-start">
       <div
@@ -46,9 +52,9 @@ const Layout = ({ pages }) => {
             </div>
             <div className="text-sm flex flex-col justify-start items-start">
               <div className="font-semibold text-gray-700 leading-tight">
-                Admin
+              {isUserData?.name}
               </div>
-              <div className="text-gray-400">admin@market.com</div>
+              <div className="text-gray-400">{isUserData?.email?.value}</div>
             </div>
 
             {/* <button>

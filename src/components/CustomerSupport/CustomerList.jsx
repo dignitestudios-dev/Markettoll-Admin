@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import CustomerListItem from "./CustomerListItem";
+import CustomerReply from "./CustomerReply";
 
 const CustomerList = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleShowModal = () => {
+    setShowModal(!showModal);
+  };
   return (
     <div className="w-full overflow-x-auto h-[600px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
       <table className="w-full border-collapse  text-left text-sm text-gray-500">
@@ -33,18 +39,18 @@ const CustomerList = () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-          <CustomerListItem/>
-          <CustomerListItem/>
-          <CustomerListItem/>
-          <CustomerListItem/>
-          <CustomerListItem/>
-          <CustomerListItem/>
-          <CustomerListItem/>
-          <CustomerListItem/>
-          <CustomerListItem/>
-      
+          <CustomerListItem handleShowModal={handleShowModal}/>
+          <CustomerListItem handleShowModal={handleShowModal} />
+          <CustomerListItem handleShowModal={handleShowModal}/>
+          <CustomerListItem handleShowModal={handleShowModal}/>
+          <CustomerListItem handleShowModal={handleShowModal}/>
+          <CustomerListItem handleShowModal={handleShowModal}/>
+          <CustomerListItem handleShowModal={handleShowModal}/>
+          <CustomerListItem handleShowModal={handleShowModal}/>
+          <CustomerListItem handleShowModal={handleShowModal}/>      
         </tbody>
       </table>
+      <CustomerReply showModal={showModal} onclick={handleShowModal} />
     </div>
   );
 };

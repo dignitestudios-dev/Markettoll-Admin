@@ -15,14 +15,14 @@ const SubCategoryListItem = () => {
         </div>
       </th>
       <td className="px-6 lg:px-4 xl:px-3 py-4">Cloths</td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4 flex justify-center gap-2">
+      {/* <td className="px-6 lg:px-4 xl:px-3 py-4 flex justify-center gap-2">
         <NavLink to={'/subeditcategory'} className="w-auto px-3 py-1 bg-[#34C759] hover:opacity-80 text-white rounded-md text-xs">
           Edit
         </NavLink>
         <button className="w-auto px-3 py-1 bg-red-600 hover:opacity-80 text-white rounded-md text-xs">
           Delete
         </button>
-      </td>
+      </td> */}
     </tr>
   );
 };

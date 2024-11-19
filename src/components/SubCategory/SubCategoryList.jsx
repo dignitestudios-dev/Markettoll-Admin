@@ -19,10 +19,10 @@ const SubCategoryList = () => {
             >
               Sub Category
             </th>          
-            <th
+            {/* <th
               scope="col"
               className="px-6 lg:px-4 xl:px-2  rounded-r-lg py-4 text-sm font-semibold text-center"
-            >Actions</th>
+            >Actions</th> */}
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">

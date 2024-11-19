@@ -1,12 +1,58 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ReportDetailsModal from "./ReportDetailsModal";
+import { AuthContext } from "../../context/AuthContext";
+import BASE_URL from "../../constants/BaseUrl";
 
 const ReportList = () => {
   const [showModal, setShowModal] = useState(false);
-
+  const { isUserData } = useContext(AuthContext);
+  const [Reported, SetReported] = useState([]);
   const handleShowModal = () => {
     setShowModal(!showModal);
+  };
+
+  useEffect(() => {
+    const token = isUserData?.token;
+    fetch(`${BASE_URL}/admin/reported-users?page=1`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        SetReported(res?.data);
+        console.log(res, "reportedAccounts");
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  }, [isUserData]);
+
+  const handleBlockUser = (id) => {
+    const token = isUserData?.token; 
+    fetch(`${BASE_URL}/admin/block-user/${id}`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json", 
+      }
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to Block User');
+        }
+        return res.json();
+      })
+      .then((data) => {        
+        console.log(data);
+        
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
   };
 
   return (
@@ -22,206 +68,30 @@ const ReportList = () => {
             </th>
             <th className="text-sm font-semibold text-start py-4">Category</th>
             <th className="text-sm font-semibold text-start py-4">Date</th>
-            <th className="text-sm font-semibold text-start py-4">Status</th>
             <th className="text-sm font-semibold text-start py-4">Actions</th>
           </tr>
 
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-              <ReportDetailsModal
-                showModal={showModal}
-                onclick={handleShowModal}
-              />
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
-          <tr className="border-b hover:bg-gray-100 transition-all duration-300">
-            <td className="text-[13px] font-medium py-4 px-2">Jane Smith</td>
-            <td className="text-[13px] font-medium py-4">John Doe</td>
-            <td className="text-[13px] font-medium py-4">Harassment</td>
-            <td className="text-[13px] font-medium py-4">24-04-2024</td>
-            <td className="text-[13px] font-medium py-4">
-              <span className="px-3 py-1.5 rounded-full text-[10px] text-red-500 bg-red-100">
-                Unresolved
-              </span>
-            </td>
-            <td>
-              <button className="text-xs font-medium bg-[#0098EA] text-white px-4 py-2 rounded-lg" onClick={handleShowModal}>
-                View
-              </button>
-            </td>
-          </tr>
+          {Reported?.map((item) => (
+            <tr className="border-b hover:bg-gray-100 transition-all duration-300">
+              <td className="text-[13px] font-medium py-4 px-2">{item?.reporter?.name}</td>
+              <td className="text-[13px] font-medium py-4">{item?.reportedUser?.name}</td>
+              <td className="text-[13px] font-medium py-4">{item?.selectedReason}</td>
+              <td className="text-[13px] font-medium py-4">{new Date(item?.createdAt).toLocaleDateString()}</td>          
+                  
+              <td>
+                <button
+                  className="text-xs font-medium bg-red-500 text-white px-4 py-2 rounded-lg"
+                  onClick={()=>handleBlockUser(item?.reportedUser?._id)}
+                >
+                  Block
+                </button>
+                {/* <ReportDetailsModal
+                  showModal={showModal}
+                  onclick={handleShowModal}
+                /> */}
+              </td>
+            </tr>
+          ))}
         </table>
       </div>
     </div>

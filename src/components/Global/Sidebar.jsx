@@ -9,7 +9,8 @@ import { TbFileInvoice } from "react-icons/tb";
 import { MdOutlineNoAccounts, MdSupportAgent } from "react-icons/md";
 import { FaCartFlatbedSuitcase, FaTruckRampBox } from "react-icons/fa6";
 import { PiDresser } from "react-icons/pi";
-import { RiListCheck2 } from "react-icons/ri";
+import cookie from "js-cookie";
+import { BiMessageRounded } from "react-icons/bi";
 const Sidebar = () => {
   const navigate = useNavigate();
   const [activeLink, setActiveLink] = useState("Dashboard");
@@ -19,7 +20,7 @@ const Sidebar = () => {
     setActiveLink(name);
   };
   return (
-    <div className="w-full py-6 px-2  lg:px-10 flex flex-col items-center gap-y-6">
+    <div className="w-full py-6 px-2  lg:px-10 flex overflow-y-auto description-scroll flex-col items-center gap-y-6">
       <div>
         {/* <h1 className="text-2xl font-semibold">BCT</h1> */}
         <img src={Logo} alt="" />
@@ -85,18 +86,7 @@ const Sidebar = () => {
             <PiDresser className="text-lg" /> Category
           </button>
         </li>
-        <li className="w-full">
-          <button
-            onClick={() => navigateToLink("/subcategory", "SubCategory")}
-            className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
-              activeLink === "SubCategory"
-                ? "bg-[#0098EA] text-white"
-                : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
-            }`}
-          >
-            <RiListCheck2 className="text-lg" />Sub Category
-          </button>
-        </li>
+      
         <li className="w-full">
           <button
             onClick={() => navigateToLink("/deleted", "Deleted")}
@@ -119,6 +109,18 @@ const Sidebar = () => {
             }`}
           >
             <MdSupportAgent className="text-lg" />Customer
+          </button>
+        </li>
+          <li className="w-full">
+          <button
+            onClick={() => navigateToLink("/chat", "Chat")}
+            className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
+              activeLink === "Chat"
+                ? "bg-[#0098EA] text-white"
+                : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
+            }`}
+          >
+            <BiMessageRounded  className="text-lg" />Chat
           </button>
         </li>
         {/* <li className="w-full ">
@@ -177,7 +179,10 @@ const Sidebar = () => {
         </li>
         <li className={`w-full  text-white`}>
           <button
-            onClick={() => navigate("/login")}
+            onClick={() =>{
+              cookie.remove("data");    
+              navigate("/login")          
+            }}
             className="text-sm font-medium w-full py-3 px-6 flex items-center gap-3 text-black rounded-lg hover:bg-[#0098EA] hover:text-white transition-all duration-300"
           >
             <HiOutlineLogout className="text-lg" /> Logout

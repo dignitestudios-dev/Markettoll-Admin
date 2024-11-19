@@ -4,6 +4,7 @@ import UserInfo from "../components/UserDetails/UserInfo";
 import Category from "../pages/Category/Category";
 import CreateCategory from "../pages/Category/CreateCategory";
 import EditCategory from "../pages/Category/EditCategory";
+import Chat from "../pages/Chat";
 import Customer from "../pages/CustomerSupport";
 import Dashboard from "../pages/Dashboard";
 import DeletedAccounts from "../pages/DeletedAccounts";
@@ -24,51 +25,66 @@ import VerifyEmail from "../pages/VerifyEmail";
 import VerifyOtp from "../pages/VerifyOtp";
 
 export const AppRoutes = [
-  {
-    Title: "Dashboard Page",
-    url: "/",
-    page: <Layout pages={<Auth />} />,
-  },
+  // {
+  //   Title: "Dashboard Page",
+  //   url: "/",
+  //   page: <Layout pages={<Auth />} />,
+  //   isPrivate: true,
+  // },
   {
     Title: "Dashboard Page",
     url: "/dashboard",
     page: <Layout pages={<Dashboard />} />,
+    isPrivate: true,
   },
   {
     Title: "Subscription Plans Page",
     url: "/plans",
     page: <Layout pages={<Plans />} />,
+    isPrivate: true,
   },
   {
     Title: "Users Page",
     url: "/users",
     page: <Layout pages={<Users />} />,
+    isPrivate: true,
   },
   {
     Title: "Products",
     url: "/products",
     page: <Layout pages={<Products />} />,
+    isPrivate: true,
   },
   {
     Title: "Order Page",
     url: "/order",
     page: <Layout pages={<Order />} />,
+    isPrivate: true,
   },
   
   {
     Title: "Category",
     url: "/category",
     page: <Layout pages={<Category />} />,
+    isPrivate: true,
+  },
+  {
+    Title: "chat",
+    url: "/chat",
+    page: <Layout pages={<Chat />} />,
+    isPrivate: true,
   },
   {
     Title: "CreateCategory",
     url: "/createcategory",
     page: <Layout pages={<CreateCategory />} />,
+    isPrivate: true,
   },
   {
     Title: "EditCategory",
     url: "/editcategory",
     page: <Layout pages={<EditCategory />} />,
+    isPrivate: true,
   },
 
 
@@ -76,71 +92,85 @@ export const AppRoutes = [
     Title: "SubCategory",
     url: "/subcategory",
     page: <Layout pages={<SubCategory />} />,
+    isPrivate: true,
   },
   {
     Title: "SubCreateCategory",
     url: "/subcreatecategory",
     page: <Layout pages={<CreateSubCategory />} />,
+    isPrivate: true,
   },
   {
     Title: "SubEditCategory",
     url: "/subeditcategory",
     page: <Layout pages={<EditSubCategory />} />,
+    isPrivate: true,
   },
   {
     Title: "Customer",
     url: "/customer",
     page: <Layout pages={<Customer />} />,
+    isPrivate: true,
   },
 
   {
     Title: "Deleted",
     url: "/deleted",
     page: <Layout pages={<DeletedAccounts />} />,
+    isPrivate: true,
   },
   {
     Title: "User Information Page",
     url: "/user/12323",
     page: <Layout pages={<UserInfo />} />,
+    isPrivate: true,
   },
   {
     Title: "Subscriptions Page",
     url: "/revenue",
     page: <Layout pages={<Revenue />} />,
+    isPrivate: true,
   },
   {
     Title: "Notifications Page",
     url: "/notifications",
     page: <Layout pages={<Notifications />} />,
+    isPrivate: true,
   },
   {
     Title: "Reports Page",
     url: "/reports",
     page: <Layout pages={<Reports />} />,
+    isPrivate: true,
   },
   {
     Title: "Report Details Page",
     url: "/reports/1234",
     page: <Layout pages={<ReportDetails />} />,
+    isPrivate: true,
   },
   {
     Title: "Dashboard Page",
     url: "/login",
     page: <Login />,
+    isPrivate: false,
   },
   {
     Title: "Dashboard Page",
     url: "/verify-email",
     page: <VerifyEmail />,
+    isPrivate: false,
   },
   {
     Title: "Dashboard Page",
     url: "/verify-otp",
     page: <VerifyOtp />,
+    isPrivate: false,
   },
   {
     Title: "Dashboard Page",
     url: "/reset-password",
     page: <ResetPassword />,
+    isPrivate: false,
   },
 ];
