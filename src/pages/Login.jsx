@@ -13,30 +13,31 @@ const Login = () => {
   const [password,setPassword]=useState("");   
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`${BASE_URL}/users/email-password-login`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Failed to log in');
-        }
-        return res.json();
-      })
-      .then((data) => {
-        Cookie.set("data", JSON.stringify(data?.data));  
-        setIsLoggedIn(true); 
-        navigate("/dashboard");
-      })
-      .catch((err) => {
-        console.error('Error:', err);
-      });
+    navigate("/dashboard");
+    // fetch(`${BASE_URL}/users/email-password-login`, {
+    //   method: "POST",
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     email: email,
+    //     password: password,
+    //   }),
+    // })
+    //   .then((res) => {
+    //     if (!res.ok) {
+    //       throw new Error('Failed to log in');
+    //     }
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     Cookie.set("data", JSON.stringify(data?.data));  
+    //     setIsLoggedIn(true); 
+    //     navigate("/dashboard");
+    //   })
+    //   .catch((err) => {
+    //     console.error('Error:', err);
+    //   });
   };
   
 
