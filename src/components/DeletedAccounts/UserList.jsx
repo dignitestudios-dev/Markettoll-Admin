@@ -27,7 +27,7 @@ const DeletedUserList = () => {
   }, [isUserData]);
   return (
     <div className="w-full overflow-x-auto h-[600px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
-       {DeleteAcc.length > 0 ? (
+       {DeleteAcc?.length > 0 ? (
           <table className="w-full border-collapse text-left text-sm text-gray-500">
             <thead>
               <tr>
