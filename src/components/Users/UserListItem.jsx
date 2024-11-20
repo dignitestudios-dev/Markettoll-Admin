@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const UserListItem = ({ item, handleBlockUser }) => {
+const UserListItem = ({ item, handleBlockUser,handleUnBlockUser }) => {
   return (
     <tr className="">
       <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
@@ -33,11 +33,10 @@ const UserListItem = ({ item, handleBlockUser }) => {
       </td>
       <td className="px-6 lg:px-4 xl:px-3 py-4 flex justify-center gap-2">
         <button
-        disabled={item.adminStatus=="active"?false:true}
-        onClick={() => handleBlockUser(item?._id)}
+        onClick={() => item.adminStatus=="active"?handleBlockUser(item?._id):handleUnBlockUser(item?._id)}
           className={`w-auto px-3 py-1 ${item.adminStatus=="active"?"bg-red-600 text-white":"bg-red-50 text-red-600"}  hover:opacity-80  rounded-md text-xs`}
         >
-          {item.adminStatus=="active"?"Block":"Blocked"}          
+          {item.adminStatus=="active"?"Block":"Unblock"}          
         </button>
       </td>
     </tr>

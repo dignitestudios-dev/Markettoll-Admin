@@ -12,6 +12,7 @@ import Login from "../pages/Login";
 import Notifications from "../pages/Notifications";
 import Order from "../pages/Order";
 import Plans from "../pages/Plans";
+import ProductDetail from "../pages/ProductDetail";
 import Products from "../pages/Products";
 import ReportDetails from "../pages/ReportDetails";
 import Reports from "../pages/Reports";
@@ -25,15 +26,9 @@ import VerifyEmail from "../pages/VerifyEmail";
 import VerifyOtp from "../pages/VerifyOtp";
 
 export const AppRoutes = [
-  // {
-  //   Title: "Dashboard Page",
-  //   url: "/",
-  //   page: <Layout pages={<Auth />} />,
-  //   isPrivate: true,
-  // },
   {
     Title: "Dashboard Page",
-    url: "/dashboard",
+    url: "/",
     page: <Layout pages={<Dashboard />} />,
     isPrivate: true,
   },
@@ -53,6 +48,12 @@ export const AppRoutes = [
     Title: "Products",
     url: "/products",
     page: <Layout pages={<Products />} />,
+    isPrivate: true,
+  },
+  {
+    Title: "Products",
+    url: "/productDetail/:id",
+    page: <Layout pages={<ProductDetail />} />,
     isPrivate: true,
   },
   {

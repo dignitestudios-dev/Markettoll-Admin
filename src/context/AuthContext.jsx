@@ -7,16 +7,24 @@ export const AuthContext = createContext();
 const AuthContextProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isUserData, setUserData] = useState(false);
-
+  
+  const token =Cookie.get("data");
+  const navigate=useNavigate("")
   useEffect(() => {
-    const token = Cookie.get("data");
     if (token) {
-      setUserData(JSON.parse(token))
-      setIsLoggedIn(true); 
+      try {
+        const parsedToken = JSON.parse(token);
+        console.log("data",parsedToken);
+        setUserData(parsedToken);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error("Failed to parse token:", error);
+        navigate("/login"); 
+      }
     } else {
-      setIsLoggedIn(false);
+      navigate("/login");
     }
-  }, []);
+  }, [token]);
   const ToggleUser = () => {
     setIsLoggedIn(!isLoggedIn);
   };

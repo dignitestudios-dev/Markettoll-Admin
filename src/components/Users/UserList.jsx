@@ -52,6 +52,30 @@ const UserList = () => {
       });
   };
   
+  const handleUnBlockUser = (id) => {
+    const token = isUserData?.token; 
+    fetch(`${BASE_URL}/admin/unblock-user/${id}`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json", 
+      }
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to Block User');
+        }
+        return res.json();
+      })
+      .then((data) => {        
+        console.log(data);
+        
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
+  };
+  
 
 
   
@@ -95,7 +119,7 @@ const UserList = () => {
           {
             users?.map((item)=>
             (
-              <UserListItem item={item} handleBlockUser={handleBlockUser} />
+              <UserListItem item={item} handleBlockUser={handleBlockUser} handleUnBlockUser={handleUnBlockUser} />
             )
             )
           }

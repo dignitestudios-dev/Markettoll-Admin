@@ -106,10 +106,17 @@ const ProductList = () => {
             </th>
             <th
               scope="col"
-              className="px-6 lg:px-4 xl:px-2 rounded-r-lg  py-4 text-sm font-semibold"
+              className="px-6 lg:px-4 xl:px-2 py-4 text-sm font-semibold"
             >
               Seller Email
             </th>
+            
+            <th
+              scope="col"
+              className="px-6 lg:px-4 xl:px-2 rounded-r-lg  py-4 text-sm font-semibold"
+            >Action
+            </th>
+
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">

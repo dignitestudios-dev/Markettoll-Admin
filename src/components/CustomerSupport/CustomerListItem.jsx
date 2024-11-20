@@ -29,7 +29,7 @@ const CustomerListItem = ({handleShowModal}) => {
           Reply
         </button>
         <button className="w-auto px-3 py-1 bg-red-600 hover:opacity-80 text-white rounded-md text-xs">
-          Block
+          Ticket Resolved
         </button>
        
       </td>
