@@ -6,13 +6,14 @@ import BASE_URL from "../../constants/BaseUrl";
 
 const ReportList = () => {
   const [showModal, setShowModal] = useState(false);
-  const { isUserData } = useContext(AuthContext);
+  const { isUserData, setLoader } = useContext(AuthContext);
   const [Reported, SetReported] = useState([]);
   const handleShowModal = () => {
     setShowModal(!showModal);
   };
 
   useEffect(() => {
+    setLoader(true)
     const token = isUserData?.token;
     fetch(`${BASE_URL}/admin/reported-users?page=1`, {
       method: "GET",
@@ -25,19 +26,21 @@ const ReportList = () => {
       .then((res) => {
         SetReported(res?.data);
         console.log(res, "reportedAccounts");
+        setLoader(false)
       })
       .catch((error) => {
         console.error("Error fetching users:", error);
+        setLoader(false)
       });
   }, [isUserData]);
 
   const handleBlockUser = (id) => {
-    const token = isUserData?.token; 
+    const token = isUserData?.token;
     fetch(`${BASE_URL}/admin/block-user/${id}`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       }
     })
       .then((res) => {
@@ -46,9 +49,9 @@ const ReportList = () => {
         }
         return res.json();
       })
-      .then((data) => {        
+      .then((data) => {
         console.log(data);
-        
+
       })
       .catch((err) => {
         console.error('Error:', err);
@@ -76,12 +79,12 @@ const ReportList = () => {
               <td className="text-[13px] font-medium py-4 px-2">{item?.reporter?.name}</td>
               <td className="text-[13px] font-medium py-4">{item?.reportedUser?.name}</td>
               <td className="text-[13px] font-medium py-4">{item?.selectedReason}</td>
-              <td className="text-[13px] font-medium py-4">{new Date(item?.createdAt).toLocaleDateString()}</td>          
-                  
+              <td className="text-[13px] font-medium py-4">{new Date(item?.createdAt).toLocaleDateString()}</td>
+
               <td>
                 <button
                   className="text-xs font-medium bg-red-500 text-white px-4 py-2 rounded-lg"
-                  onClick={()=>handleBlockUser(item?.reportedUser?._id)}
+                  onClick={() => handleBlockUser(item?.reportedUser?._id)}
                 >
                   Block
                 </button>

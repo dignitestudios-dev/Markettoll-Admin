@@ -6,9 +6,9 @@ import { AuthContext } from "../../context/AuthContext";
 const Layout = ({ pages }) => {
   const sidebarRef = useRef(null);
   const [isOpen, setisOpen] = useState(false);
-  const {isUserData}=useContext(AuthContext); 
-  
-  const navigate=useNavigate("")
+  const { isUserData, loader } = useContext(AuthContext);
+
+  const navigate = useNavigate("")
   const toggleModal = () => {
     setisOpen(!isOpen);
   };
@@ -19,21 +19,19 @@ const Layout = ({ pages }) => {
   //   }
   // },[])
 
-   
-   
+
+
   return (
     <div className="w-screen h-screen flex overflow-x-hidden justify-start items-start">
       <div
         onClick={toggleModal}
-        className={`w-screen h-screen fixed top-0 left-0 transition-all duration-500  ${
-          isOpen ? " lg:translate-x-0" : "-translate-x-full lg:translate-x-0"
-        } lg:static  z-[2000] lg:z-auto px-3 lg:w-60 xl:w-72 flex flex-col gap-3 items-center justify-start py-0 lg:h-full `}
+        className={`w-screen h-screen fixed top-0 left-0 transition-all duration-500  ${isOpen ? " lg:translate-x-0" : "-translate-x-full lg:translate-x-0"
+          } lg:static  z-[2000] lg:z-auto px-3 lg:w-60 xl:w-72 flex flex-col gap-3 items-center justify-start py-0 lg:h-full `}
       >
         <div
           ref={sidebarRef}
-          className={`fixed top-0 left-0 transition-all duration-200  ${
-            isOpen ? " lg:translate-x-0" : "-translate-x-full lg:translate-x-0"
-          } lg:static w-[60%] z-[2000] lg:z-auto px-3 lg:w-60 xl:w-72 flex flex-col gap-3 items-center justify-start py-0 h-full bg-white border-r border-gray-100`}
+          className={`fixed top-0 left-0 transition-all duration-200  ${isOpen ? " lg:translate-x-0" : "-translate-x-full lg:translate-x-0"
+            } lg:static w-[60%] z-[2000] lg:z-auto px-3 lg:w-60 xl:w-72 flex flex-col gap-3 items-center justify-start py-0 h-full bg-white border-r border-gray-100`}
         >
           <Sidebar />
         </div>
@@ -57,7 +55,7 @@ const Layout = ({ pages }) => {
             </div>
             <div className="text-sm flex flex-col justify-start items-start">
               <div className="font-semibold text-gray-700 leading-tight">
-              {isUserData?.name}
+                {isUserData?.name}
               </div>
               <div className="text-gray-400">{isUserData?.email?.value}</div>
             </div>
@@ -67,6 +65,9 @@ const Layout = ({ pages }) => {
             </button> */}
           </div>
         </div>
+
+        {loader ? <span className="loader"></span> : ""}
+
         <div className="w-full p-6 bg-white">{pages}</div>
       </div>
     </div>
