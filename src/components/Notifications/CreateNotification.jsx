@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import BASE_URL from "../../constants/BaseUrl";
 
-const CreateNotification = ({ showModal, onclick,token }) => {
+const CreateNotification = ({ showModal, onclick, token }) => {
   const [data, setData] = useState({
     notification_title: "",
     notification_message: "",
@@ -13,16 +13,17 @@ const CreateNotification = ({ showModal, onclick,token }) => {
   };
 
   const handleSubmit = (e) => {
+
     e.preventDefault();
     fetch(`${BASE_URL}/admin/notification`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title:data?.notification_title,
-        body:data?.notification_message,
+        title: data?.notification_title,
+        body: data?.notification_message,
       }),
     })
       .then((res) => {
@@ -31,9 +32,9 @@ const CreateNotification = ({ showModal, onclick,token }) => {
         }
         return res.json();
       })
-      .then((data) => { 
-         console.log("Notification Created",data);
-         onclick();
+      .then((data) => {
+        console.log("Notification Created", data);
+        onclick();
       })
       .catch((err) => {
         console.error('Error:', err);

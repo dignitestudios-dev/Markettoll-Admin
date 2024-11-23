@@ -5,36 +5,39 @@ import { AuthContext } from "../../context/AuthContext";
 
 
 
-const UserList = () => {
-  const { isUserData } = useContext(AuthContext);
-  const [users,SetUsers]=useState([]);
-  
+const UserList = ({ filterData }) => {
+  const { isUserData, setLoader } = useContext(AuthContext);
+  const [users, SetUsers] = useState([]);
+
   useEffect(() => {
-    const token = isUserData?.token; 
-    fetch(`${BASE_URL}/admin/users?page=1`, {
+    setLoader(true)
+    const token = isUserData?.token;
+    fetch(`${BASE_URL}/admin/users?name=${filterData || ''}&page=1`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       }
     })
       .then((res) => res.json())
       .then((res) => {
         SetUsers(res?.data)
-        console.log(res.data,"userssFetch");
+        console.log(res.data, "userssFetch");
+        setLoader(false)
       })
       .catch((error) => {
         console.error("Error fetching users:", error);
+        setLoader(false)
       });
-  }, [isUserData]);
+  }, [isUserData, filterData]);
 
   const handleBlockUser = (id) => {
-    const token = isUserData?.token; 
+    const token = isUserData?.token;
     fetch(`${BASE_URL}/admin/block-user/${id}`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       }
     })
       .then((res) => {
@@ -43,22 +46,22 @@ const UserList = () => {
         }
         return res.json();
       })
-      .then((data) => {        
+      .then((data) => {
         console.log(data);
-        
+
       })
       .catch((err) => {
         console.error('Error:', err);
       });
   };
-  
+
   const handleUnBlockUser = (id) => {
-    const token = isUserData?.token; 
+    const token = isUserData?.token;
     fetch(`${BASE_URL}/admin/unblock-user/${id}`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       }
     })
       .then((res) => {
@@ -67,23 +70,23 @@ const UserList = () => {
         }
         return res.json();
       })
-      .then((data) => {        
+      .then((data) => {
         console.log(data);
-        
+
       })
       .catch((err) => {
         console.error('Error:', err);
       });
   };
-  
 
 
-  
+
+
   return (
     <div className="w-full overflow-x-auto h-[600px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
       <table className="w-full border-collapse  text-left text-sm text-gray-500">
         <thead className="">
-        <tr className="">
+          <tr className="">
             <th
               scope="col"
               className="px-6 lg:px-4 xl:px-3 rounded-s-lg py-4 text-sm font-semibold"
@@ -117,13 +120,13 @@ const UserList = () => {
         </thead>
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
           {
-            users?.map((item)=>
+            users?.map((item) =>
             (
               <UserListItem item={item} handleBlockUser={handleBlockUser} handleUnBlockUser={handleUnBlockUser} />
             )
             )
           }
-          
+
         </tbody>
       </table>
     </div>

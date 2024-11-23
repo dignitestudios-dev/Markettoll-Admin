@@ -6,29 +6,33 @@ import BASE_URL from "../../constants/BaseUrl";
 
 const NotificationList = () => {
   const [showModal, setShowModal] = useState(false);
-  const { isUserData } = useContext(AuthContext);
-  const [Notifications,SetNotifications]=useState([]);
-  const token = isUserData?.token; 
+  const { isUserData, setLoader } = useContext(AuthContext);
+  const [Notifications, SetNotifications] = useState([]);
+  const token = isUserData?.token;
   const handleShowModal = () => {
     setShowModal(!showModal);
   };
   useEffect(() => {
+    setLoader(true)
+
     fetch(`${BASE_URL}/admin/notification?page=1`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       }
     })
       .then((res) => res.json())
       .then((res) => {
         SetNotifications(res?.data)
-        console.log(res?.data ,"SetNotifications");
+        console.log(res?.data, "SetNotifications");
+        setLoader(false)
       })
       .catch((error) => {
         console.error("Error fetching users:", error);
+        setLoader(false)
       });
-  }, [isUserData,showModal]);   
+  }, [isUserData, showModal,]);
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -41,7 +45,7 @@ const NotificationList = () => {
       </div>
       <div className="w-full rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4">
         {
-          Notifications?.map((item)=>(
+          Notifications?.map((item) => (
             <NotificationItem item={item} />
           ))
         }
