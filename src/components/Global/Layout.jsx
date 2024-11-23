@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { ToastContainer } from "react-toastify";
 const Layout = ({ pages }) => {
   const sidebarRef = useRef(null);
   const [isOpen, setisOpen] = useState(false);
@@ -67,6 +68,7 @@ const Layout = ({ pages }) => {
             </button> */}
           </div>
         </div>
+        <ToastContainer />
         <div className="w-full p-6 bg-white">{pages}</div>
       </div>
     </div>

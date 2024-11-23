@@ -28,7 +28,7 @@ const Sidebar = () => {
       <ul className="w-full flex flex-col gap-y-2">
         <li className={`w-full text-black`}>
           <button
-            onClick={() => navigateToLink("/dashboard", "Dashboard")}
+            onClick={() => navigateToLink("/", "Dashboard")}
             className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
               activeLink === "Dashboard"
                 ? "bg-[#0098EA] text-white"

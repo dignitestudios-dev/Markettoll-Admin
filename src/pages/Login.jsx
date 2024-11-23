@@ -32,7 +32,7 @@ const Login = () => {
       .then((data) => {
         Cookie.set("data", JSON.stringify(data?.data));  
         setIsLoggedIn(true); 
-        navigate("/dashboard");
+        navigate("/");
       })
       .catch((err) => {
         console.error('Error:', err);
