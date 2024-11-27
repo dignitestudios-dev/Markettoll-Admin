@@ -4,6 +4,7 @@ import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer } from "react-toastify";
+import LogOutModal from "../LogOut/LogOutModal";
 const Layout = ({ pages }) => {
   const sidebarRef = useRef(null);
   const [isOpen, setisOpen] = useState(false);
@@ -63,7 +64,12 @@ const Layout = ({ pages }) => {
 
         {loader ? <span className="loader"></span> : ""}
         <ToastContainer />
-        <div className="w-full p-6 bg-white">{pages}</div>
+        <div className="w-full p-6 bg-white">{pages}
+
+
+        <LogOutModal  />
+
+        </div>
       </div>
     </div>
   );

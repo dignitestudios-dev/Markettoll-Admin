@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
+import BASE_URL from "../../constants/BaseUrl";
+import { toast } from "react-toastify";
 
-const CustomerReply = ({ showModal, onclick }) => {
+const CustomerReply = ({ showModal, onclick,id,token }) => {
   const [data, setData] = useState({
-    notification_title: "",
     notification_message: "",
   });
 
@@ -13,8 +14,52 @@ const CustomerReply = ({ showModal, onclick }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Notification data >> ", data);
-  };
+    const loadingToast = toast.loading("Processing... Please wait.", {
+        position: "top-right",
+        autoClose: false, 
+    });
+
+    fetch(`${BASE_URL}admin/email-support-request-reply/${id}`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            body: data?.notification_message,
+        }),
+    })
+    .then((res) => {
+        if (!res.ok) {
+            toast.update(loadingToast, {
+                render: 'Failed to send the message. Please try again.',
+                type: 'error',
+                isLoading: false,
+                autoClose: 5000,
+            });
+            throw new Error('Failed to send the message');
+        }
+        return res.json();
+    })
+    .then((data) => {
+        toast.update(loadingToast, {
+            render: 'Message sent successfully!',
+            type: 'success',
+            isLoading: false,
+            autoClose: 5000,
+        });
+        console.log("Success:", data);
+    })
+    .catch((err) => {
+        toast.update(loadingToast, {
+            render: 'An error occurred while processing your request.',
+            type: 'error',
+            isLoading: false,
+            autoClose: 5000,
+        });
+        console.error('Error:', err);
+    });
+};
 
   return (
     showModal && (
@@ -26,21 +71,7 @@ const CustomerReply = ({ showModal, onclick }) => {
           >
             <IoClose className="w-full h-full" />
           </button>
-          <h1 className="text-xl font-semibold">Email Reply</h1>
-          <div className="w-full flex flex-col gap-1">
-            <label htmlFor="notification_title" className="text-sm font-medium">
-              Title
-            </label>
-            <input
-              type="text"
-              name="notification_title"
-              id="notification_title"
-              value={data.notification_title}
-              onChange={handleChange}
-              className="w-full border rounded-lg text-sm py-2.5 px-3.5 focus:border-[#0085FF] focus:ring focus:ring-[#rgb(177 226 253)] outline-none"
-              placeholder="Title"
-            />
-          </div>
+          <h1 className="text-xl font-semibold">Email Reply</h1>        
           <div className="w-full flex flex-col gap-1">
             <label htmlFor="notification_message" className="text-sm font-medium">
               Message
@@ -49,6 +80,7 @@ const CustomerReply = ({ showModal, onclick }) => {
               name="notification_message"
               id="notification_message"
               rows={"6"}
+              required
               value={data.notification_message}
               onChange={handleChange}
               className="w-full border rounded-lg text-sm py-2.5 px-3.5 focus:border-[#0085FF] focus:ring focus:ring-[#rgb(177 226 253)] outline-none"

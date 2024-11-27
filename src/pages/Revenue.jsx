@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import UserList from '../components/Revenue/UserList'
 import RevenueChart from '../components/Revenue/RevenueChart'
+import SubscriptionList from '../components/Revenue/SubscriptionList';
 
 const Revenue = () => {
   useEffect(() => {
@@ -14,7 +14,7 @@ const Revenue = () => {
   return (
     <div>
       <RevenueChart/>
-      <UserList/>
+      <SubscriptionList/>
     </div>
   )
 }

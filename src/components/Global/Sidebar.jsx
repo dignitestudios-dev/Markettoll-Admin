@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { HiOutlineLogout } from "react-icons/hi";
@@ -11,9 +11,12 @@ import { FaCartFlatbedSuitcase, FaTruckRampBox } from "react-icons/fa6";
 import { PiDresser } from "react-icons/pi";
 import cookie from "js-cookie";
 import { BiMessageRounded } from "react-icons/bi";
+import LogOutModal from "../LogOut/LogOutModal";
+import { AuthContext } from "../../context/AuthContext";
 const Sidebar = () => {
   const navigate = useNavigate();
   const [activeLink, setActiveLink] = useState("Dashboard");
+  const {setShowModal}=useContext(AuthContext);
 
   const navigateToLink = (link, name) => {
     navigate(link);
@@ -180,8 +183,7 @@ const Sidebar = () => {
         <li className={`w-full  text-white`}>
           <button
             onClick={() =>{
-              cookie.remove("data");    
-              navigate("/login")          
+              setShowModal(true)         
             }}
             className="text-sm font-medium w-full py-3 px-6 flex items-center gap-3 text-black rounded-lg hover:bg-[#0098EA] hover:text-white transition-all duration-300"
           >

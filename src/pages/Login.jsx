@@ -3,16 +3,25 @@ import { Link, useNavigate } from "react-router-dom";
 import { LoginImage } from "../assets/export";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import BASE_URL from "../constants/BaseUrl";
-import Cookie from "js-cookie"
+import Cookie from "js-cookie";
 import { AuthContext } from "../context/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const navigate = useNavigate();
-  const {setIsLoggedIn}=useContext(AuthContext);
+  const { setIsLoggedIn } = useContext(AuthContext);
   const [showPass, setShowPass] = useState(false);
-  const [email,setEmail]=useState("");
-  const [password,setPassword]=useState("");   
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
+  
+    // Display the loader toast
+    const loaderToast = toast.loading("Processing... Please wait.", {
+      position: "top-right",
+      autoClose: false, 
+    });
+  
     fetch(`${BASE_URL}/users/email-password-login`, {
       method: "POST",
       headers: {
@@ -25,16 +34,35 @@ const Login = () => {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error('Failed to log in');
+          // If the response is not OK, throw an error with the message
+          return res.json().then((errorData) => {
+            throw new Error(errorData?.message || 'Failed to log in');
+          });
         }
         return res.json();
       })
       .then((data) => {
-        Cookie.set("data", JSON.stringify(data?.data));  
-        setIsLoggedIn(true); 
+        // On successful login
+        Cookie.set("data", JSON.stringify(data?.data));
+        setIsLoggedIn(true);
+        toast.update(loaderToast, {
+          render: 'Logged in successfully!',
+          type: 'success',
+          isLoading:false,
+          autoClose: 3000, // Close after 3 seconds
+        });
         navigate("/");
       })
       .catch((err) => {
+        // Update loader toast to error and auto-close after 3 seconds
+        toast.update(loaderToast, {
+          render: err.message || 'An error occurred!',
+          type: 'error',
+          isLoading:false,
+          autoClose: 3000, // Close after 3 seconds
+        });
+  
+        // Optionally log the error in console for debugging
         console.error('Error:', err);
       });
   };
@@ -46,6 +74,7 @@ const Login = () => {
 
   return (
     <div className="font-[sans-serif] text-[#333]">
+      
       <div className="min-h-screen flex fle-col items-center justify-center py-6 px-4">
         <div className="grid md:grid-cols-2 items-center gap-4 max-w-7xl w-full">
           <div className="rounded-md p-6 lg:p-10 max-w-md shadow-[0_2px_22px_-4px_rgba(93,96,127,0.2)] max-md:mx-auto">
@@ -61,8 +90,9 @@ const Login = () => {
                     name="email"
                     type="email"
                     autoComplete="off"
+                    required
                     value={email}
-                    onChange={(e)=>setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full text-sm border border-gray-300 px-4 py-3 rounded-md outline-none"
                     placeholder="Enter email"
                   />
@@ -93,11 +123,15 @@ const Login = () => {
                     name="password"
                     type={showPass ? "text" : "password"}
                     value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
                     className="w-full text-sm py-3 outline-none"
                     placeholder="Enter password"
                   />
-                  <div className="cursor-pointer" onClick={() => setShowPass(!showPass)}>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => setShowPass(!showPass)}
+                  >
                     {showPass ? (
                       <LuEyeOff className="text-lg text-gray-400" />
                     ) : (
@@ -135,6 +169,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

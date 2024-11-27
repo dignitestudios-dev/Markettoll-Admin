@@ -45,7 +45,7 @@ function ChatUIComponent() {
       console.error("Error fetching messages: ", error);
     }
   };
-   
+  const [originalUserList, setOriginalUserList] = useState([]);
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -56,6 +56,7 @@ function ChatUIComponent() {
           return { ...doc.data(), id: doc.id }; 
         });
         setUsers(usersList); 
+        setOriginalUserList(usersList); 
       } catch (error) {
         console.error("Error fetching users: ", error);
       }
@@ -69,6 +70,20 @@ function ChatUIComponent() {
   },[chatId])
   
 
+  const filterUser = (e) => {
+    const filterValue = e.target.value;
+    if (filterValue === "") {
+      setUsers(originalUserList);
+    } else {
+      console.log(originalUserList,"userListt");      
+      const dataFilter = originalUserList.filter(
+        (item) => item.user.name.toLowerCase().includes(filterValue.toLowerCase())
+      );
+      console.log(dataFilter, filterValue, originalUserList, "filteration");
+      setUsers(dataFilter);
+    }
+  };
+
   return (
     <div className="grid grid-cols-[400px_1fr] h-[85vh]">
     <div className="flex flex-col w-[400px] max-h-[600px] border rounded-lg overflow-y-auto">
@@ -76,6 +91,7 @@ function ChatUIComponent() {
       <div className="border border-b-0 py-4 px-2">
         <input
           type="text"
+          onChange={filterUser}
           placeholder="search chatting"
          className="flex-1 p-2 border w-full rounded-md shadow-sm outline-none focus:border-[#0085FF] focus:ring focus:ring-[#0098EA] focus:ring-opacity-50"
         />
@@ -86,7 +102,7 @@ function ChatUIComponent() {
         users?.map((item)=>(
           <div onClick={()=>{
             setChatId(item);            
-            }} className="flex gap-2 flex-row py-4 px-2 justify-center items-center border">
+            }} className="flex gap-2 cursor-pointer flex-row py-4 px-2 justify-center items-center border">
         <div className="">
           <img
             src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODB8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww"
@@ -121,19 +137,9 @@ function ChatUIComponent() {
       
           {/* Messages Body */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4 description-scroll max-h-[450px]">
-            {messages.map((item,i) => (
-              // <div
-              //   key={i}
-              //   className={`flex ${item?.senderId == isUserData?._id ? "justify-end" : "justify-start"}`}
-              // >
-              //   <div
-              //     className={`p-2 rounded-lg ${
-              //       item?.senderId != isUserData?._id ? "bg-[#F7F7F7]" : "bg-[#0098EA] text-white"
-              //     } max-w-[80%]`}
-              //   >
-              //     <p>{item?.text}</p>
-              //   </div>
-              // </div>
+            {messages
+          .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)) 
+          .map((item) => (
                <div
                className={`w-full px-2 flex flex-col ${
                  item.senderId == isUserData?._id ? "items-end" : "items-start" 

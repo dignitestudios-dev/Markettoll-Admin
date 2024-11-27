@@ -4,7 +4,8 @@ import { AuthContext } from "../../context/AuthContext";
 
 const Filter = ({ setFilterData }) => {
   const [filter, setFilter] = useState("")
-  const { isUserData } = useContext(AuthContext);
+  const [InputVal, setInputVal] = useState("")
+
   const FilterUsers = (val) => {
     setFilterData(val)
   }
@@ -19,24 +20,29 @@ const Filter = ({ setFilterData }) => {
           <div className="relative flex items-center">
             <input
               name="email"
-              type="email"
+              type="text"
               autoComplete="off"
-              onChange={(e) => FilterUsers(e.target.value)}
+              value={InputVal}
+              onChange={(e) => {
+                setInputVal(e.target.value)
+                FilterUsers(e.target.value)
+              }}
               className="w-full text-sm border border-gray-200 px-8 py-2 rounded-md shadow-sm outline-none focus:border-[#0085FF] focus:ring focus:ring-[#0098EA] focus:ring-opacity-50 text-sm"
-              placeholder="Enter email"
+              placeholder="Search Here..."
             />
             <CiSearch className="w-[18px] h-[18px] absolute left-2" color="#0098EA" />
           </div>
         </div>
         <div className="mt-6 grid w-full grid-cols-2  space-x-4 md:flex">
-          <button className="active:scale-95 rounded-md bg-gray-200 px-6 py-2 font-medium text-black outline-none focus:ring-gray-500 hover:opacity-90 text-sm">
+          <button 
+             onClick={()=>{
+              setFilterData("");
+              setInputVal("")     
+            }}
+          className="active:scale-95 rounded-md bg-gray-200 px-6 py-2 font-medium text-black outline-none focus:ring-gray-500 hover:opacity-90 text-sm">
             Reset
           </button>
-          <button
-            class={`active:scale-95 rounded-md px-6 py-2 text-sm font-medium text-white outline-none focus:ring focus:ring-[#0098EA] hover:opacity-90 bg-[#0098EA]`}
-          >
-            Search
-          </button>
+
         </div>
       </div>
     </div>

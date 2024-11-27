@@ -4,15 +4,14 @@ import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 
 const ProductList = ({ filterData }) => {
-  const [active, SetActive] = useState("active");
+  const [active, SetActive] = useState("products");
   const { isUserData, setLoader } = useContext(AuthContext);
   const [Product, SetProduct] = useState([]);
-  const [Filter, SetFilter] = useState([]);
 
   useEffect(() => {
     setLoader(true)
     const token = isUserData?.token;
-    fetch(`${BASE_URL}/admin/products?name=${filterData || ''}&page=1`, {
+    fetch(`${BASE_URL}admin/${active}?name=${filterData || ''}&page=1`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -28,19 +27,15 @@ const ProductList = ({ filterData }) => {
         console.error("Error fetching users:", error);
         setLoader(false)
       });
-  }, [isUserData, filterData]);
+  }, [isUserData, filterData,active]);
 
-  useEffect(() => {
-    const filterProduct = Product?.filter((item) => item.status == active);
-    SetFilter(filterProduct)
-  }, [Product, active])
 
   return (
     <>
       <div className="mt-2  w-full grid-cols-2  flex items-center justify-end space-x-4 md:flex">
         <button
-          onClick={() => SetActive("active")}
-          className={`active:scale-95 rounded-md ${active == "active"
+          onClick={() => SetActive("products")}
+          className={`active:scale-95 rounded-md ${active == "products"
             ? "bg-[#0098EA] text-white"
             : "bg-gray-200 text-black"
             }  px-6 py-2 font-medium  outline-none focus:ring-gray-500 hover:opacity-90 text-sm`}
@@ -48,8 +43,8 @@ const ProductList = ({ filterData }) => {
           Active
         </button>
         <button
-          onClick={() => SetActive("deactive")}
-          className={`active:scale-95 rounded-md px-6 ${active == "deactive"
+          onClick={() => SetActive("deactivated-products")}
+          className={`active:scale-95 rounded-md px-6 ${active == "deactivated-products"
             ? "bg-[#0098EA] text-white"
             : "bg-gray-200 text-black"
             }  py-2 text-sm font-medium  outline-none focus:ring focus:ring-[#0098EA] hover:opacity-90 `}
@@ -123,7 +118,7 @@ const ProductList = ({ filterData }) => {
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
             {
-              Filter?.map((item) => (
+              Product?.map((item) => (
                 <ProductListItem item={item} />
               ))
             }
