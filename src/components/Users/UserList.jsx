@@ -8,7 +8,9 @@ import { AuthContext } from "../../context/AuthContext";
 const UserList = ({ filterData }) => {
   const { isUserData, setLoader } = useContext(AuthContext);
   const [users, SetUsers] = useState([]);
-
+  const [currentPageNumber, setCurrentPageNumber] = useState(1);
+  const [dataToDisplay, setDataToDisplay] = useState([]);
+  const TOTAL_VALUES_PER_PAGE = 10;
   useEffect(() => {
     setLoader(true)
     const token = isUserData?.token;
@@ -22,7 +24,7 @@ const UserList = ({ filterData }) => {
       .then((res) => res.json())
       .then((res) => {
         SetUsers(res?.data)
-        console.log(res.data, "userssFetch");
+        setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
         setLoader(false)
       })
       .catch((error) => {
@@ -30,6 +32,26 @@ const UserList = ({ filterData }) => {
         setLoader(false)
       });
   }, [isUserData, filterData]);
+
+
+  const goOnPrevPage = () => {
+    if (currentPageNumber === 1) return;
+    setCurrentPageNumber((prev) => prev - 1);
+  };
+
+  const goOnNextPage = () => {
+    if (currentPageNumber === users.length / TOTAL_VALUES_PER_PAGE) return;
+    setCurrentPageNumber((prev) => prev + 1);
+  };
+  const handleSelectChange = (e) => {
+    setCurrentPageNumber(e.target.value);
+  };
+
+  useEffect(() => {
+    const start = (currentPageNumber - 1) * TOTAL_VALUES_PER_PAGE;
+    const end = currentPageNumber * TOTAL_VALUES_PER_PAGE;
+    setDataToDisplay(users.slice(start, end));
+  }, [currentPageNumber]);
 
   const handleBlockUser = (id) => {
     const token = isUserData?.token;
@@ -83,7 +105,13 @@ const UserList = ({ filterData }) => {
 
 
   return (
-    <div className="w-full overflow-x-auto h-[600px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
+    <>
+     <div className="flex justify-end gap-3 w-full">
+        <button className={`${currentPageNumber === 1?" bg-[#9fdeff]":" bg-[#0098EA]"} px-2 rounded-md w-[80px] text-white py-2 `}  onClick={goOnPrevPage}>Prev</button>
+        <button className="bg-[#0098EA] px-2 rounded-md w-[80px] text-white py-2" onClick={goOnNextPage}>Next</button>
+      </div>
+    
+    <div className="w-full overflow-x-auto h-[600px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">     
       <table className="w-full border-collapse  text-left text-sm text-gray-500">
         <thead className="">
           <tr className="">
@@ -120,7 +148,7 @@ const UserList = ({ filterData }) => {
         </thead>
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
           {
-            users?.map((item) =>
+            dataToDisplay?.map((item) =>
             (
               <UserListItem item={item} handleBlockUser={handleBlockUser} handleUnBlockUser={handleUnBlockUser} />
             )
@@ -130,6 +158,7 @@ const UserList = ({ filterData }) => {
         </tbody>
       </table>
     </div>
+    </>
   );
 };
 
