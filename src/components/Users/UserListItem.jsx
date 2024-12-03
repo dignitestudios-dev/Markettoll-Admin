@@ -1,10 +1,15 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const UserListItem = ({ item, handleBlockUser,handleUnBlockUser }) => {
+const UserListItem = ({ item, blockedUserId }) => {
+  const {setBlockedModal } = useContext(AuthContext);
+ 
+  const navigate=useNavigate("")
+   
   return (
-    <tr className="">
-      <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
+    <tr className="cursor-pointer"  >
+      <th onClick={()=>navigate("/user/123")} className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
         <div className="relative h-10 w-10">
           <img
             className="h-full w-full rounded-full object-cover object-center"
@@ -32,13 +37,22 @@ const UserListItem = ({ item, handleBlockUser,handleUnBlockUser }) => {
         </span>
       </td>
       <td className="px-6 lg:px-4 xl:px-3 py-4 flex justify-center gap-2">
-        <button
-        onClick={() => item.adminStatus=="active"?handleBlockUser(item?._id):handleUnBlockUser(item?._id)}
-          className={`w-auto px-3 py-1 ${item.adminStatus=="active"?"bg-red-600 text-white":"bg-red-50 text-red-600"}  hover:opacity-80  rounded-md text-xs`}
-        >
-          {item.adminStatus=="active"?"Block":"Unblock"}          
-        </button>
-      </td>
+  <button
+    onClick={() => {
+      if (item.adminStatus === "active") {
+        setBlockedModal(true);
+        blockedUserId(item?._id);
+      } else {
+        setBlockedModal(true);
+        blockedUserId(item?._id);
+      }
+    }}
+    className={`w-auto px-3 py-1 ${item.adminStatus === "active" ? "bg-red-600 text-white" : "bg-red-50 text-red-600"} hover:opacity-80 rounded-md text-xs`}
+  >
+    {item.adminStatus === "active" ? "Block" : "Unblock"}
+  </button>
+</td>
+
     </tr>
   );
 };

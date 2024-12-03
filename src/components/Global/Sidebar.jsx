@@ -16,12 +16,15 @@ import { AuthContext } from "../../context/AuthContext";
 const Sidebar = () => {
   const navigate = useNavigate();
   const [activeLink, setActiveLink] = useState("Dashboard");
-  const {setShowModal}=useContext(AuthContext);
+  const { setShowModal } = useContext(AuthContext);
 
   const navigateToLink = (link, name) => {
     navigate(link);
     setActiveLink(name);
   };
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   return (
     <div className="w-full py-6 px-2  lg:px-10 flex overflow-y-auto description-scroll flex-col items-center gap-y-6">
       <div>
@@ -74,7 +77,8 @@ const Sidebar = () => {
                 : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
             }`}
           >
-            <FaTruckRampBox   className="text-lg" />Order 
+            <FaTruckRampBox className="text-lg" />
+            Order
           </button>
         </li>
         <li className="w-full">
@@ -89,7 +93,7 @@ const Sidebar = () => {
             <PiDresser className="text-lg" /> Category
           </button>
         </li>
-      
+
         <li className="w-full">
           <button
             onClick={() => navigateToLink("/deleted", "Deleted")}
@@ -102,30 +106,53 @@ const Sidebar = () => {
             <MdOutlineNoAccounts className="text-lg" /> Deleted
           </button>
         </li>
-        <li className="w-full">
+        <li
+          className={`w-full `} // Add background when dropdown is open
+        >
           <button
-            onClick={() => navigateToLink("/customer", "Customer")}
+            onClick={() => setIsDropdownOpen((prevState) => !prevState)} // Toggle dropdown
             className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
-              activeLink === "Customer"
+              isDropdownOpen 
                 ? "bg-[#0098EA] text-white"
                 : "bg-transparent text-black hover:bg-[#0098EA] text-nowrap hover:text-white transition-all duration-300"
             }`}
           >
-            <MdSupportAgent className="text-lg" />Customer
+            <MdSupportAgent className="text-lg" />
+            Customer
           </button>
+
+          {/* Dropdown Menu for Customer */}
+          {isDropdownOpen && (
+            <ul className="ml-6 mt-2 bg-white border rounded-lg">
+              <li className="w-full">
+                <button
+                  onClick={() => navigateToLink("/customer", "Customer")}
+                  className={`text-sm flex items-center  gap-3 font-medium w-full py-3 px-6 rounded-lg ${
+                    activeLink === "customer"
+                      ? "bg-[#0098EA] text-white"
+                      : "bg-transparent text-black  hover:bg-[#0098EA] hover:text-white transition-all duration-300"
+                  }`}
+                >
+                  Email Support
+                </button>
+              </li>
+              <li className="w-full">
+                <button
+                  onClick={() => navigateToLink("/chat", "Chat")}
+                  className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
+                    activeLink === "Chat"
+                      ? "bg-[#0098EA] text-white"
+                      : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
+                  }`}
+                >
+                  <BiMessageRounded className="text-lg" />
+                 Live Chat
+                </button>
+              </li>
+            </ul>
+          )}
         </li>
-          <li className="w-full">
-          <button
-            onClick={() => navigateToLink("/chat", "Chat")}
-            className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
-              activeLink === "Chat"
-                ? "bg-[#0098EA] text-white"
-                : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
-            }`}
-          >
-            <BiMessageRounded  className="text-lg" />Chat
-          </button>
-        </li>
+
         {/* <li className="w-full ">
           <button
             onClick={() =>
@@ -142,9 +169,7 @@ const Sidebar = () => {
         </li> */}
         <li className="w-full ">
           <button
-            onClick={() =>
-              navigateToLink("/revenue", "revenue")
-            }
+            onClick={() => navigateToLink("/revenue", "revenue")}
             className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
               activeLink === "revenue"
                 ? "bg-[#0098EA] text-white"
@@ -156,9 +181,7 @@ const Sidebar = () => {
         </li>
         <li className=" w-full">
           <button
-            onClick={() =>
-              navigateToLink("/notifications", "Notifications")
-            }
+            onClick={() => navigateToLink("/notifications", "Notifications")}
             className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
               activeLink === "Notifications"
                 ? "bg-[#0098EA] text-white"
@@ -182,8 +205,8 @@ const Sidebar = () => {
         </li>
         <li className={`w-full  text-white`}>
           <button
-            onClick={() =>{
-              setShowModal(true)         
+            onClick={() => {
+              setShowModal(true);
             }}
             className="text-sm font-medium w-full py-3 px-6 flex items-center gap-3 text-black rounded-lg hover:bg-[#0098EA] hover:text-white transition-all duration-300"
           >

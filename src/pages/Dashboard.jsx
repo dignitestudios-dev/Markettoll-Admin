@@ -18,9 +18,8 @@ const Dashboard = () => {
       <h1 className="text-xl font-bold">Dashboard</h1>
       {/* <Analytics/> */}
       <RevenueAndUsersBarChart />
-      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6">      
+      <div className="w-full grid grid-cols-1 lg:grid-cols-1 gap-6">      
         <NewUsersList />
-        <LatestTransactions />
       </div>
     </div>
   );

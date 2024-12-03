@@ -64,12 +64,13 @@ const ReportList = () => {
         <table className="w-full text-start overflow-x-scroll border">
           <tr className="border-b border-t bg-gray-100">
             <th className="text-sm font-semibold text-start py-4 md:pl-2">
-              Reporter's username
+            Reported User
             </th>
             <th className="text-sm font-semibold text-start py-4">
-              Reported user
+            Reported By
             </th>
             <th className="text-sm font-semibold text-start py-4">Category</th>
+            <th className="text-sm font-semibold text-start py-4">Reason</th>
             <th className="text-sm font-semibold text-start py-4">Date</th>
             <th className="text-sm font-semibold text-start py-4">Actions</th>
           </tr>
@@ -78,6 +79,7 @@ const ReportList = () => {
             <tr className="border-b hover:bg-gray-100 transition-all duration-300">
               <td className="text-[13px] font-medium py-4 px-2">{item?.reporter?.name}</td>
               <td className="text-[13px] font-medium py-4">{item?.reportedUser?.name}</td>
+              <td className="text-[13px] font-medium py-4">Category</td>
               <td className="text-[13px] font-medium py-4">{item?.selectedReason}</td>
               <td className="text-[13px] font-medium py-4">{new Date(item?.createdAt).toLocaleDateString()}</td>
 

@@ -7,7 +7,9 @@ const CategoryList = () => {
 
   const { isUserData, setLoader } = useContext(AuthContext);
   const [Categories, SetCategories] = useState([]);
-
+  const [currentPageNumber, setCurrentPageNumber] = useState(1);
+  const [dataToDisplay, setDataToDisplay] = useState([]);
+  const TOTAL_VALUES_PER_PAGE = 10;
   useEffect(() => {
     setLoader(true)
     const token = isUserData?.token;
@@ -29,8 +31,23 @@ const CategoryList = () => {
         setLoader(false)
       });
   }, [isUserData]);
+  const goOnPrevPage = () => {
+    if (currentPageNumber === 1) return;
+    setCurrentPageNumber((prev) => prev - 1);
+  };
 
+  const goOnNextPage = () => {
+    if (currentPageNumber === Categories.length / TOTAL_VALUES_PER_PAGE) return;
+    setCurrentPageNumber((prev) => prev + 1);
+  };
+
+  useEffect(() => {
+    const start = (currentPageNumber - 1) * TOTAL_VALUES_PER_PAGE;
+    const end = currentPageNumber * TOTAL_VALUES_PER_PAGE;
+    setDataToDisplay(Categories.slice(start, end));
+  }, [currentPageNumber,Categories]);
   return (
+    <>     
     <div className="w-full overflow-x-auto h-[600px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
       <table className="w-full border-collapse  text-left text-sm text-gray-500">
         <thead className="">
@@ -61,7 +78,7 @@ const CategoryList = () => {
         </thead>
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
           {
-            Categories?.map((item) => (
+            dataToDisplay?.map((item) => (
               <CategoryListItem item={item} />
             ))
           }
@@ -69,6 +86,11 @@ const CategoryList = () => {
         </tbody>
       </table>
     </div>
+    <div className="flex justify-end gap-3 w-full">
+        <button className={`${currentPageNumber === 1?" bg-[#9fdeff]":" bg-[#0098EA]"} px-2 rounded-md w-[80px] text-white py-2 `}  onClick={goOnPrevPage}>Prev</button>
+        <button className="bg-[#0098EA] px-2 rounded-md w-[80px] text-white py-2" onClick={goOnNextPage}>Next</button>
+      </div> 
+      </>
   );
 };
 

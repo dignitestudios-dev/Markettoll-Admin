@@ -14,15 +14,10 @@ const ProductListItem = ({item}) => {
       </th>
       <td className="px-6 lg:px-4 xl:px-3 py-4 text-nowrap">{item.category}</td>
       <td className="px-6 lg:px-4 xl:px-3 py-4 text-nowrap">{item.subCategory}</td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4 text-nowrap">
-        <p className="w-[250px] overflow-auto text-nowrap description-scroll " >
-        {item.description}
-        </p>
-      </td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4">{item.price}</td>
+
+      <td className="px-6 lg:px-4 xl:px-3 py-4">${item.price}</td>
       <td className="px-6 lg:px-4 xl:px-3 py-4"> {item.status}</td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4 text-nowrap">{item.seller?.name}</td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4">{item.seller?.email?.value}</td>      
+ 
       <td className="px-6 lg:px-4 xl:px-3 py-4"> 
         <button
           onClick={()=>{

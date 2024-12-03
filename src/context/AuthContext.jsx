@@ -9,6 +9,8 @@ const AuthContextProvider = ({ children }) => {
   const [isUserData, setUserData] = useState(false);
   const [loader, setLoader] = useState(false)
   const [showModal,setShowModal]=useState(false);
+  const [blockedModal,setBlockedModal]=useState(false);
+
   const token = Cookie.get("data");
   const navigate = useNavigate("")
   useEffect(() => {
@@ -30,7 +32,7 @@ const AuthContextProvider = ({ children }) => {
     setIsLoggedIn(!isLoggedIn);
   };
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, ToggleUser, setUserData, isUserData, loader, setLoader,setShowModal,showModal }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, ToggleUser, setUserData, isUserData, loader, setLoader,setShowModal,showModal,setBlockedModal,blockedModal }}>
       {children}
     </AuthContext.Provider>
   );

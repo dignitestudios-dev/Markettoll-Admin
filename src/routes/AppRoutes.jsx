@@ -122,7 +122,7 @@ export const AppRoutes = [
   },
   {
     Title: "User Information Page",
-    url: "/user/12323",
+    url: "/user/:id",
     page: <Layout pages={<UserInfo />} />,
     isPrivate: true,
   },

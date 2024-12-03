@@ -1,11 +1,13 @@
 import React from "react";
+import UserListing from "./UserListing";
+import UserOrder from "./UserOrder";
+import UserSubscription from "./UserSubscription";
 
 const UserInfo = () => {
   return (
     <div className="w-full flex flex-col gap-6">
-      <h1 className="font-semibold text-xl">User Info</h1>
-
-      <div className="w-full lg:w-1/2 flex flex-col gap-4 border rounded-xl p-4 md:p-6">
+      <h1 className="font-semibold text-xl">User Profile</h1>
+      <div className="w-full lg:w-1/1 flex flex-col gap-4 border rounded-xl p-4 md:p-6">
         <div className="w-full flex items-center justify-between">
           <p className="text-sm font-normal text-gray-500">Profile Photo:</p>
           <img
@@ -31,33 +33,19 @@ const UserInfo = () => {
             Subscription Plan:
           </p>
           <p className="text-sm font-medium">Premium</p>
-        </div>
-        <div className="w-full flex items-center justify-between">
-          <p className="text-sm font-normal text-gray-500">
-            Translation Language:
-          </p>
-          <p className="text-sm font-medium">English</p>
-        </div>
-        <div className="w-full flex items-center justify-between">
-          <p className="text-sm font-normal text-gray-500">
-            Account Registration:
-          </p>
-          <p className="text-sm font-medium">24-04-2024</p>
-        </div>
-        <div className="w-full flex items-center justify-between">
-          <p className="text-sm font-normal text-gray-500">Location:</p>
-          <p className="text-sm font-medium">London, UK</p>
-        </div>
-        <div className="w-full flex items-center justify-between">
-          <p className="text-sm font-normal text-gray-500">About:</p>
-          <p className="text-sm font-medium">I'm a creating web developer</p>
-        </div>
+        </div>           
         <div className="pt-4">
           <button className="text-sm bg-red-600 text-white font-medium px-4 py-1.5 rounded-lg">
             Block User
           </button>
         </div>
       </div>
+      <h1 className="font-semibold text-xl">User Listings</h1>
+      <UserListing/>
+      <h1 className="font-semibold text-xl">User Orders</h1>
+      <UserOrder/>
+      <h1 className="font-semibold text-xl">User Subscription</h1>
+      <UserSubscription/>
     </div>
   );
 };

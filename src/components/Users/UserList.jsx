@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import UserListItem from "./UserListItem";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
+import ConfirmBlockModal from "./ConfirmModal";
 
 
 
@@ -9,7 +10,10 @@ const UserList = ({ filterData }) => {
   const { isUserData, setLoader } = useContext(AuthContext);
   const [users, SetUsers] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
+  const [BlockedUserId, setBlockedUserId] = useState("");
   const [dataToDisplay, setDataToDisplay] = useState([]);
+  const [unblockState, setUnblockState] = useState(false);
+  const [isBlocked,setIsBlocked]=useState(false);
   const TOTAL_VALUES_PER_PAGE = 10;
   useEffect(() => {
     setLoader(true)
@@ -31,7 +35,7 @@ const UserList = ({ filterData }) => {
         console.error("Error fetching users:", error);
         setLoader(false)
       });
-  }, [isUserData, filterData]);
+  }, [isUserData, filterData,unblockState]);
 
 
   const goOnPrevPage = () => {
@@ -43,9 +47,6 @@ const UserList = ({ filterData }) => {
     if (currentPageNumber === users.length / TOTAL_VALUES_PER_PAGE) return;
     setCurrentPageNumber((prev) => prev + 1);
   };
-  const handleSelectChange = (e) => {
-    setCurrentPageNumber(e.target.value);
-  };
 
   useEffect(() => {
     const start = (currentPageNumber - 1) * TOTAL_VALUES_PER_PAGE;
@@ -53,9 +54,10 @@ const UserList = ({ filterData }) => {
     setDataToDisplay(users.slice(start, end));
   }, [currentPageNumber]);
 
-  const handleBlockUser = (id) => {
-    const token = isUserData?.token;
-    fetch(`${BASE_URL}/admin/block-user/${id}`, {
+  const handleBlockUser = (UserId) => {  
+    setIsBlocked(true);
+    const token=isUserData?.token;
+    fetch(`${BASE_URL}/admin/block-user/${UserId}`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -69,6 +71,7 @@ const UserList = ({ filterData }) => {
         return res.json();
       })
       .then((data) => {
+        setUnblockState(!unblockState)
         console.log(data);
 
       })
@@ -76,8 +79,10 @@ const UserList = ({ filterData }) => {
         console.error('Error:', err);
       });
   };
+ 
 
   const handleUnBlockUser = (id) => {
+    setIsBlocked(false);
     const token = isUserData?.token;
     fetch(`${BASE_URL}/admin/unblock-user/${id}`, {
       method: "POST",
@@ -93,6 +98,7 @@ const UserList = ({ filterData }) => {
         return res.json();
       })
       .then((data) => {
+        setUnblockState(!unblockState)
         console.log(data);
 
       })
@@ -102,16 +108,10 @@ const UserList = ({ filterData }) => {
   };
 
 
-
-
   return (
     <>
-     <div className="flex justify-end gap-3 w-full">
-        <button className={`${currentPageNumber === 1?" bg-[#9fdeff]":" bg-[#0098EA]"} px-2 rounded-md w-[80px] text-white py-2 `}  onClick={goOnPrevPage}>Prev</button>
-        <button className="bg-[#0098EA] px-2 rounded-md w-[80px] text-white py-2" onClick={goOnNextPage}>Next</button>
-      </div>
-    
-    <div className="w-full overflow-x-auto h-[600px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">     
+        
+    <div className="w-full overflow-x-auto h-[400px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">     
       <table className="w-full border-collapse  text-left text-sm text-gray-500">
         <thead className="">
           <tr className="">
@@ -150,14 +150,18 @@ const UserList = ({ filterData }) => {
           {
             dataToDisplay?.map((item) =>
             (
-              <UserListItem item={item} handleBlockUser={handleBlockUser} handleUnBlockUser={handleUnBlockUser} />
+              <UserListItem item={item} blockedUserId={setBlockedUserId}  />
             )
             )
           }
-
         </tbody>
       </table>
     </div>
+    <div className="flex justify-end gap-3 w-full">
+        <button className={`${currentPageNumber === 1?" bg-[#9fdeff]":" bg-[#0098EA]"} px-2 rounded-md w-[80px] text-white py-2 `}  onClick={goOnPrevPage}>Prev</button>
+        <button className="bg-[#0098EA] px-2 rounded-md w-[80px] text-white py-2" onClick={goOnNextPage}>Next</button>
+      </div> 
+    <ConfirmBlockModal isBlocked={isBlocked}  handleBlockUser={handleBlockUser}  handleUnBlockUser={handleUnBlockUser} UserId={BlockedUserId} />
     </>
   );
 };

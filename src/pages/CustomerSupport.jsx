@@ -13,7 +13,7 @@ const Customer = () => {
   const [filterData, setFilterData] = useState("")
   return (
     <div className="w-full flex flex-col gap-y-4">
-      <h1 className="text-xl font-bold">Customer Support</h1>
+      <h1 className="text-xl font-bold">Email Support</h1>
       <Filter setFilterData={setFilterData} />
       <CustomerList filterData={filterData} />
     </div>

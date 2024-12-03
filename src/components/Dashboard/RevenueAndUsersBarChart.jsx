@@ -14,7 +14,6 @@ import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 
 const RevenueAndUsersBarChart = () => {
-
   const [data,setData]=useState([]);
   const { isUserData, setLoader } = useContext(AuthContext);
 
@@ -57,12 +56,29 @@ const RevenueAndUsersBarChart = () => {
       setLoader(false);
     });
   }, [isUserData]);
-  
+
+  const [lineVisibility, setLineVisibility] = useState({
+    Order: true,
+    Revenue: true,
+  });
+
+  const toggleLineVisibility = (lineKey) => {
+    setLineVisibility(prevState => ({
+      ...prevState,
+      [lineKey]: !prevState[lineKey],
+    }));
+  };
+
    return (
     <div className="w-full h-[50vh] pt-6 pb-4 px-0 border pr-6 rounded-xl relative">
       <div className="w-full flex gap-2 absolute top-2 right-2 text-end justify-end">
-        <span className="text-xs bg-[#eab40b] text-white px-3 py-1 rounded-md">Orders</span>
-        <span className="bg-green-700 text-white px-3 py-1 rounded-md text-xs">Revenue</span>
+        <span
+          className="text-xs bg-[#eab40b] text-white px-3 py-3 rounded-full cursor-pointer"
+          onClick={() => toggleLineVisibility('Order')}></span>
+        <span
+          className="bg-green-700 text-white px-3 py-1 rounded-full text-xs cursor-pointer"
+          onClick={() => toggleLineVisibility('Revenue')}
+        ></span>
       </div>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
@@ -77,14 +93,27 @@ const RevenueAndUsersBarChart = () => {
           }}
         >
           <XAxis dataKey="name" className="text-xs text-gray-500" />
-          <Tooltip />
-          <Line
-            type="monotone"
-            dataKey="Order"
-            stroke="rgb(234 179 8)"
-            activeDot={{ r: 8 }}
-          />       
-          <Line type="monotone" dataKey="Revenue" stroke="#82ca9d" />
+          <YAxis className="text-xs text-gray-500" />
+          <Tooltip />           
+          {
+          lineVisibility.Order && (
+            <Line
+              type="monotone"
+              dataKey="Order"
+              stroke="rgb(234 179 8)"
+              activeDot={{ r: 8 }}
+              onClick={() => toggleLineVisibility('Order')}
+            />
+          )}
+          {
+          lineVisibility.Revenue && (
+            <Line
+              type="monotone"
+              dataKey="Revenue"
+              stroke="#82ca9d"
+              onClick={() => toggleLineVisibility('Revenue')}
+            />
+          )}
         </LineChart>
       </ResponsiveContainer>
     </div>
