@@ -2,6 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import ProductListItem from "./ProductListItem";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
+import {
+  FilterProductCategory,
+  FilterProductStatus,
+  FilterProductSubCategory,
+  MultiRangeSlider,
+} from "./Filter";
 
 const ProductList = ({ filterData }) => {
   const [active, SetActive] = useState("products");
@@ -10,28 +16,36 @@ const ProductList = ({ filterData }) => {
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [dataToDisplay, setDataToDisplay] = useState([]);
   const TOTAL_VALUES_PER_PAGE = 10;
+  const [displayValue, setDisplayValue] = useState("Category");
+  const [SubCategFill, setSubCategFill] = useState("Sub Category");
   useEffect(() => {
-    setLoader(true)
+    setLoader(true);
     const token = isUserData?.token;
-    fetch(`${BASE_URL}admin/${active}?name=${filterData || ''}&category=&subCategory=&page=1`, {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
+    fetch(
+      `${BASE_URL}admin/${active}?name=${filterData || ""}&category=${
+        displayValue == "Category" ? "" : displayValue
+      }&subCategory=${
+        SubCategFill != "Sub Category" ? SubCategFill : ""
+      }&page=1`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
-    })
+    )
       .then((res) => res.json())
       .then((res) => {
         SetProduct(res.data);
         setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-        setLoader(false)
+        setLoader(false);
       })
       .catch((error) => {
         console.error("Error fetching users:", error);
-        setLoader(false)
+        setLoader(false);
       });
-  }, [isUserData, filterData,active]);
-
+  }, [isUserData, filterData, active, displayValue, SubCategFill]);
 
   const goOnPrevPage = () => {
     if (currentPageNumber === 1) return;
@@ -51,7 +65,7 @@ const ProductList = ({ filterData }) => {
 
   return (
     <>
-      <div className="mt-2  w-full grid-cols-2  flex items-center justify-end space-x-4 md:flex">
+      {/* <div className="mt-2  w-full grid-cols-2  flex items-center justify-end space-x-4 md:flex">
         <button
           onClick={() => SetActive("products")}
           className={`active:scale-95 rounded-md ${active == "products"
@@ -70,10 +84,9 @@ const ProductList = ({ filterData }) => {
         >
           Deactivated
         </button>
-      </div>
+      </div> */}
 
       <div className="w-full overflow-x-auto h-[400px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
-
         <table className="w-full mt-4  border-collapse  text-left text-sm text-gray-500">
           <thead className="">
             <tr className="">
@@ -87,49 +100,73 @@ const ProductList = ({ filterData }) => {
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
               >
-                Category
-              </th>
-              <th
-                scope="col"
-                className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
-              >
-                Sub Category
-              </th>
-            
+                <FilterProductCategory
+                  displayValue={displayValue}
+                  setDisplayValue={setDisplayValue}
+                  setSubCategFill={setSubCategFill}
+                />
 
-              <th
-                scope="col"
-                className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
-              >
-                Price
+                {/* Category */}
               </th>
               <th
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
               >
-                Status
+                <FilterProductSubCategory
+                  displayValue={displayValue}
+                  SubCategFill={SubCategFill}
+                  setSubCategFill={setSubCategFill}
+                />
+              </th>
+              <th
+                scope="col"
+                className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
+              >
+                <MultiRangeSlider
+                  min={0}
+                  max={100000}
+               
+                  dataToDisplay={dataToDisplay}
+                  setDataToDisplay={setDataToDisplay}
+                />
+              </th>
+              <th
+                scope="col"
+                className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
+              >
+                <FilterProductStatus SetActive={SetActive} />
               </th>
               <th
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2 rounded-r-lg  py-4 text-sm font-semibold"
-              >Action
+              >
+                Action
               </th>
-
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-            {
-              dataToDisplay?.map((item) => (
-                <ProductListItem item={item} />
-              ))
-            }
+            {dataToDisplay?.map((item) => (
+              <ProductListItem item={item} />
+            ))}
           </tbody>
         </table>
       </div>
       <div className="flex justify-end gap-3 w-full">
-        <button className={`${currentPageNumber === 1?" bg-[#9fdeff]":" bg-[#0098EA]"} px-2 rounded-md w-[80px] text-white py-2 `}  onClick={goOnPrevPage}>Prev</button>
-        <button className="bg-[#0098EA] px-2 rounded-md w-[80px] text-white py-2" onClick={goOnNextPage}>Next</button>
-      </div> 
+        <button
+          className={`${
+            currentPageNumber === 1 ? " bg-[#9fdeff]" : " bg-[#0098EA]"
+          } px-2 rounded-md w-[80px] text-white py-2 `}
+          onClick={goOnPrevPage}
+        >
+          Prev
+        </button>
+        <button
+          className="bg-[#0098EA] px-2 rounded-md w-[80px] text-white py-2"
+          onClick={goOnNextPage}
+        >
+          Next
+        </button>
+      </div>
     </>
   );
 };

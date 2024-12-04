@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ProductList from '../components/Product/ProductList';
-import ProductFilter from '../components/Product/Filter';
+import {ProductFilter} from '../components/Product/Filter';
 export default function Products() {
   useEffect(() => {
     const scrollToTop = () => {

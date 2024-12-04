@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
+import BASE_URL from "../constants/BaseUrl";
 
 export const AuthContext = createContext();
 
@@ -28,11 +29,37 @@ const AuthContextProvider = ({ children }) => {
       navigate("/login");
     }
   }, [token]);
+
+
+  const [Categories, SetCategories] = useState([]);
+
+  useEffect(() => {
+    setLoader(true);
+    const token = isUserData?.token;
+    fetch(`${BASE_URL}/users/product-categories`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        SetCategories(res?.data);
+        setLoader(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        setLoader(false);
+      });
+  }, [isUserData]);
+
+
   const ToggleUser = () => {
     setIsLoggedIn(!isLoggedIn);
   };
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, ToggleUser, setUserData, isUserData, loader, setLoader,setShowModal,showModal,setBlockedModal,blockedModal }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, ToggleUser, setUserData,SetCategories,Categories,isUserData, loader, setLoader,setShowModal,showModal,setBlockedModal,blockedModal }}>
       {children}
     </AuthContext.Provider>
   );

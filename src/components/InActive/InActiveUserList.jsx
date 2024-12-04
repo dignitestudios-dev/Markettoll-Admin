@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import UserListItem from "./UserListItem";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
-import ConfirmBlockModal from "./ConfirmModal";
+import InActiveUserListItem from "./InActiveUserListItem";
+import ConfirmBlockModal from "../Users/ConfirmModal";
 
-
-
-const UserList = ({ filterData }) => {
+const InActiveUserList = ({ filterData }) => {
   const { isUserData, setLoader } = useContext(AuthContext);
   const [users, SetUsers] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
@@ -37,7 +35,6 @@ const UserList = ({ filterData }) => {
       });
   }, [isUserData, filterData,unblockState]);
 
-
   const goOnPrevPage = () => {
     if (currentPageNumber === 1) return;
     setCurrentPageNumber((prev) => prev - 1);
@@ -55,7 +52,7 @@ const UserList = ({ filterData }) => {
   }, [currentPageNumber]);
 
   const handleBlockUser = (UserId) => {  
-   
+    setIsBlocked(true);
     const token=isUserData?.token;
     fetch(`${BASE_URL}/admin/block-user/${UserId}`, {
       method: "POST",
@@ -82,6 +79,7 @@ const UserList = ({ filterData }) => {
  
 
   const handleUnBlockUser = (id) => {
+    setIsBlocked(false);
     const token = isUserData?.token;
     fetch(`${BASE_URL}/admin/unblock-user/${id}`, {
       method: "POST",
@@ -147,9 +145,9 @@ const UserList = ({ filterData }) => {
         </thead>
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
           {
-            dataToDisplay?.filter(item=>item.adminStatus=="active")?.map((item) =>
+            dataToDisplay?.filter(item=>item.adminStatus!="active")?.map((item) =>
             (
-              <UserListItem  setIsBlocked={setIsBlocked} item={item} blockedUserId={setBlockedUserId}  />
+              <InActiveUserListItem item={item} blockedUserId={setBlockedUserId}  />
             )
             )
           }
@@ -165,4 +163,4 @@ const UserList = ({ filterData }) => {
   );
 };
 
-export default UserList;
+export default InActiveUserList;

@@ -5,7 +5,7 @@ import { HiOutlineLogout } from "react-icons/hi";
 import { LuLayoutDashboard, LuUser } from "react-icons/lu";
 import { Logo } from "../../assets/export";
 import { LuFolderOpenDot } from "react-icons/lu";
-import { TbFileInvoice } from "react-icons/tb";
+import { TbAlertCircleOff, TbFileInvoice } from "react-icons/tb";
 import { MdOutlineNoAccounts, MdSupportAgent } from "react-icons/md";
 import { FaCartFlatbedSuitcase, FaTruckRampBox } from "react-icons/fa6";
 import { PiDresser } from "react-icons/pi";
@@ -54,6 +54,18 @@ const Sidebar = () => {
             }`}
           >
             <LuUser className="text-lg" /> Users
+          </button>
+        </li>
+        <li className="w-full">
+          <button
+            onClick={() => navigateToLink("/inactive", "InActive")}
+            className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
+              activeLink === "InActive"
+                ? "bg-[#0098EA] text-white"
+                : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
+            }`}
+          >
+           <TbAlertCircleOff className="text-lg"/> InActive Users
           </button>
         </li>
         <li className="w-full">

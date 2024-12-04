@@ -8,6 +8,7 @@ import Chat from "../pages/Chat";
 import Customer from "../pages/CustomerSupport";
 import Dashboard from "../pages/Dashboard";
 import DeletedAccounts from "../pages/DeletedAccounts";
+import InActiveUser from "../pages/InActiveUser";
 import Login from "../pages/Login";
 import Notifications from "../pages/Notifications";
 import Order from "../pages/Order";
@@ -42,6 +43,12 @@ export const AppRoutes = [
     Title: "Users Page",
     url: "/users",
     page: <Layout pages={<Users />} />,
+    isPrivate: true,
+  },
+  {
+    Title: "InActive Users Page",
+    url: "/inactive",
+    page: <Layout pages={<InActiveUser />} />,
     isPrivate: true,
   },
   {

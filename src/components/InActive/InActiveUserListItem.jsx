@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const UserListItem = ({ item, blockedUserId,setIsBlocked }) => {
+const InActiveUserListItem = ({ item, blockedUserId }) => {
   const {setBlockedModal } = useContext(AuthContext);
  
   const navigate=useNavigate("")
@@ -41,10 +41,8 @@ const UserListItem = ({ item, blockedUserId,setIsBlocked }) => {
     onClick={() => {
       if (item.adminStatus === "active") {
         setBlockedModal(true);
-        setIsBlocked(true);
         blockedUserId(item?._id);
       } else {
-        setIsBlocked(false);
         setBlockedModal(true);
         blockedUserId(item?._id);
       }
@@ -59,4 +57,4 @@ const UserListItem = ({ item, blockedUserId,setIsBlocked }) => {
   );
 };
 
-export default UserListItem;
+export default InActiveUserListItem;
