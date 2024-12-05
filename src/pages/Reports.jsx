@@ -9,7 +9,7 @@ const Reports = () => {
 
   return (
     <div>
-      <h1 className="text-xl font-bold">Reports</h1>
+      <h1 className="text-xl font-bold">Reported Users</h1>
       <ReportList />
     </div>
   );

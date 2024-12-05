@@ -32,15 +32,15 @@ const OrderList = ({ filterData }) => {
       });
   }, [isUserData, filterData]);
   const goOnPrevPage = () => {
-    if (currentPageNumber === 1) return;
+    if (currentPageNumber === 1) return; 
     setCurrentPageNumber((prev) => prev - 1);
   };
 
   const goOnNextPage = () => {
-    if (currentPageNumber === Order.length / TOTAL_VALUES_PER_PAGE) return;
+    const totalPages = Math.ceil(Order.length / TOTAL_VALUES_PER_PAGE);
+    if (currentPageNumber === totalPages) return;
     setCurrentPageNumber((prev) => prev + 1);
   };
-
   useEffect(() => {
     const start = (currentPageNumber - 1) * TOTAL_VALUES_PER_PAGE;
     const end = currentPageNumber * TOTAL_VALUES_PER_PAGE;

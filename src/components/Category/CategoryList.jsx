@@ -32,12 +32,13 @@ const CategoryList = () => {
       });
   }, [isUserData]);
   const goOnPrevPage = () => {
-    if (currentPageNumber === 1) return;
+    if (currentPageNumber === 1) return; 
     setCurrentPageNumber((prev) => prev - 1);
   };
 
   const goOnNextPage = () => {
-    if (currentPageNumber === Categories.length / TOTAL_VALUES_PER_PAGE) return;
+    const totalPages = Math.ceil(Categories.length / TOTAL_VALUES_PER_PAGE);
+    if (currentPageNumber === totalPages) return;
     setCurrentPageNumber((prev) => prev + 1);
   };
 

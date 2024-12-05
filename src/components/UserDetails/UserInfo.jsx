@@ -2,6 +2,8 @@ import React from "react";
 import UserListing from "./UserListing";
 import UserOrder from "./UserOrder";
 import UserSubscription from "./UserSubscription";
+import UserFeaturePosting from "./UserFeaturePost";
+import UserReviewsList from "./UserReviewsList";
 
 const UserInfo = () => {
   return (
@@ -46,6 +48,10 @@ const UserInfo = () => {
       <UserOrder/>
       <h1 className="font-semibold text-xl">User Subscription</h1>
       <UserSubscription/>
+      <h1 className="font-semibold text-xl">User Feature Posting</h1>
+      <UserFeaturePosting/>
+      <h1 className="font-semibold text-xl">Reviews</h1>
+      <UserReviewsList/>
     </div>
   );
 };

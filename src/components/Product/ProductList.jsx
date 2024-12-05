@@ -48,12 +48,13 @@ const ProductList = ({ filterData }) => {
   }, [isUserData, filterData, active, displayValue, SubCategFill]);
 
   const goOnPrevPage = () => {
-    if (currentPageNumber === 1) return;
+    if (currentPageNumber === 1) return; 
     setCurrentPageNumber((prev) => prev - 1);
   };
 
   const goOnNextPage = () => {
-    if (currentPageNumber === Product.length / TOTAL_VALUES_PER_PAGE) return;
+    const totalPages = Math.ceil(Product.length / TOTAL_VALUES_PER_PAGE);
+    if (currentPageNumber === totalPages) return;
     setCurrentPageNumber((prev) => prev + 1);
   };
 
