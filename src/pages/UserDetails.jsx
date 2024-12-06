@@ -1,11 +1,12 @@
 import React from 'react'
 import UserInfo from '../components/UserDetails/UserInfo'
-import UserListing from '../components/UserDetails/UserListing'
-
+import { useLocation } from 'react-router-dom'
 const UserDetails = () => {
+
+
   return (
     <div className=''>
-      <UserInfo/>
+      <UserInfo  />
     </div>
   )
 }

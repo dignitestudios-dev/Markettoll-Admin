@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import ConfirmBlockModal from "./ConfirmModal";
 
 const UserList = ({ filterData }) => {
-  const { isUserData, setLoader } = useContext(AuthContext);
+  const { isUserData, setLoader,FilterMonthUser } = useContext(AuthContext);
   const [users, SetUsers] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [BlockedUserId, setBlockedUserId] = useState("");
@@ -34,6 +34,36 @@ const UserList = ({ filterData }) => {
         setLoader(false);
       });
   }, [isUserData, filterData, unblockState]);
+
+
+  useEffect(()=>{
+    setLoader(true);
+    const token = isUserData?.token;
+    const formateDate=FilterMonthUser&&FilterMonthUser?.split("-");  
+    if (formateDate) {
+      
+      fetch(`${BASE_URL}/admin/users-registered-in-month?month=${formateDate[1]||""}&year=${formateDate[0]||""}&page=1`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => res.json())
+      .then((res) => {  
+        console.log(res.data,"filter by months");
+        if (res.data) {        
+          SetUsers(res?.data);
+          setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        setLoader(false);
+      });
+    }  
+    },[FilterMonthUser])
 
   const goOnPrevPage = () => {
     if (currentPageNumber === 1) return; // Don't go back if already on the first page
@@ -78,6 +108,8 @@ const UserList = ({ filterData }) => {
         console.error("Error:", err);
       });
   };
+
+  
 
   const handleUnBlockUser = (id) => {
     const token = isUserData?.token;

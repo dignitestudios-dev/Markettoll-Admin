@@ -11,6 +11,8 @@ const AuthContextProvider = ({ children }) => {
   const [loader, setLoader] = useState(false)
   const [showModal,setShowModal]=useState(false);
   const [blockedModal,setBlockedModal]=useState(false);
+  const [DesclimarModal,setDesclimarModal ]=useState(false);
+  const [FilterMonthUser,setFilterMonthUser]=useState("");
 
   const token = Cookie.get("data");
   const navigate = useNavigate("")
@@ -59,7 +61,7 @@ const AuthContextProvider = ({ children }) => {
     setIsLoggedIn(!isLoggedIn);
   };
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, ToggleUser, setUserData,SetCategories,Categories,isUserData, loader, setLoader,setShowModal,showModal,setBlockedModal,blockedModal }}>
+    <AuthContext.Provider value={{FilterMonthUser,setFilterMonthUser,DesclimarModal,setDesclimarModal ,isLoggedIn, setIsLoggedIn, ToggleUser, setUserData,SetCategories,Categories,isUserData, loader, setLoader,setShowModal,showModal,setBlockedModal,blockedModal }}>
       {children}
     </AuthContext.Provider>
   );

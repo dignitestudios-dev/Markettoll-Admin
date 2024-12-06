@@ -15,7 +15,6 @@ const CategoryListItem = ({item}) => {
         </div>
       </th>
       <td className="px-6 lg:px-4 xl:px-3 py-4">{item?.name}</td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4">{item?.subCategories.map((subCateg)=>subCateg.name + " , ")}</td>
       {/* <td className="px-6 lg:px-4 xl:px-3 py-4 flex justify-center gap-2">
         <NavLink to={'/editcategory'} className="w-auto px-3 py-1 bg-[#34C759] hover:opacity-80 text-white rounded-md text-xs">
           Edit

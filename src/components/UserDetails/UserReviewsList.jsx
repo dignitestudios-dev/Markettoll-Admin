@@ -1,8 +1,32 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoIosStar } from "react-icons/io";
 import UserReviewCard from "./UserReviewCard";
-const UserReviewsList = () => {
-
+import { AuthContext } from "../../context/AuthContext";
+import BASE_URL from "../../constants/BaseUrl";
+const UserReviewsList = ({userId}) => {
+  const { isUserData, setLoader } = useContext(AuthContext);
+  const [Subscription, SetSubscription] = useState([]);
+  useEffect(() => {
+    setLoader(true);
+    const token = isUserData?.token;
+    fetch(`${BASE_URL}admin/user-subscriptions/${userId}?page=1`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        SetSubscription(res.data);
+        setLoader(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        setLoader(false);
+      });
+  }, [isUserData]);
+  console.log(Subscription, "subscription");
   return (
     <div className="border rounded-xl  px-3 py-3 h-[300px] overflow-auto description-scroll ">     
         <>
