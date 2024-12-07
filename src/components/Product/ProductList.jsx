@@ -86,7 +86,6 @@ const ProductList = ({ filterData }) => {
           Deactivated
         </button>
       </div> */}
-
       <div className="w-full overflow-x-auto h-[400px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
         <table className="w-full mt-4  border-collapse  text-left text-sm text-gray-500">
           <thead className="">
@@ -136,13 +135,7 @@ const ProductList = ({ filterData }) => {
                 className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
               >
                 <FilterProductStatus SetActive={SetActive} />
-              </th>
-              <th
-                scope="col"
-                className="px-6 lg:px-4 xl:px-2 rounded-r-lg  py-4 text-sm font-semibold"
-              >
-                Action
-              </th>
+              </th>             
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">

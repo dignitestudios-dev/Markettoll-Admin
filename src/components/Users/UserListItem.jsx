@@ -56,11 +56,11 @@ const UserListItem = ({ item, blockedUserId, setIsBlocked }) => {
           onClick={() => {
             if (item.adminStatus === "active") {
               setBlockedModal(true);
-              setIsBlocked(true);
+              setIsBlocked(item.adminStatus);
               blockedUserId(item?._id);
             } else {
-              setIsBlocked(false);
-              setBlockedModal(true);
+              setIsBlocked(item.adminStatus);
+              setBlockedModal(false);
               blockedUserId(item?._id);
             }
           }}

@@ -3,10 +3,11 @@ import CategoryListItem from "./CategoryListItem";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import SubCategoryModal from "./CreateSubCategModal";
 
 const CategoryList = () => {
  const navigate=useNavigate("");
-  const { isUserData, setLoader } = useContext(AuthContext);
+  const { isUserData, setLoader,setSubCatModal,SubCatModal } = useContext(AuthContext);
   const [Categories, SetCategories] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [dataToDisplay, setDataToDisplay] = useState([]);
@@ -95,8 +96,8 @@ const CategoryList = () => {
     <div className="flex justify-between mb-3 items-center" >
          <h1 className="text-xl font-bold">Sub Category</h1>
          <button 
-        
-        class={`active:scale-95 rounded-md px-6 py-2 text-sm font-medium text-white outline-none focus:ring  hover:opacity-90 bg-[#0098EA]`}
+        onClick={()=>setSubCatModal(!SubCatModal)}
+        className={`active:scale-95 rounded-md px-6 py-2 text-sm font-medium text-white outline-none focus:ring  hover:opacity-90 bg-[#0098EA]`}
       >
         Create Sub Category
       </button>
@@ -152,6 +153,8 @@ const CategoryList = () => {
         <button className={`${currentPageNumber === 1?" bg-[#9fdeff]":" bg-[#0098EA]"} px-2 rounded-md w-[80px] text-white py-2 `}  onClick={goOnPrevPage}>Prev</button>
         <button className="bg-[#0098EA] px-2 rounded-md w-[80px] text-white py-2" onClick={goOnNextPage}>Next</button>
       </div> 
+
+      <SubCategoryModal Categories={Categories} />
       </>
   );
 };

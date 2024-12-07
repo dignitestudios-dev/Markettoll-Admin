@@ -12,7 +12,7 @@ const InActiveUserList = ({ filterData }) => {
   const [dataToDisplay, setDataToDisplay] = useState([]);
   const [unblockState, setUnblockState] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
-  const TOTAL_VALUES_PER_PAGE = 3;
+  const TOTAL_VALUES_PER_PAGE = 10;
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
@@ -36,7 +36,7 @@ const InActiveUserList = ({ filterData }) => {
   }, [isUserData, filterData, unblockState]);
 
   const goOnPrevPage = () => {
-    if (currentPageNumber === 1) return; 
+    if (currentPageNumber === 1) return;
     setCurrentPageNumber((prev) => prev - 1);
   };
 
@@ -53,7 +53,6 @@ const InActiveUserList = ({ filterData }) => {
   }, [currentPageNumber]);
 
   const handleBlockUser = (UserId) => {
-    setIsBlocked(true);
     const token = isUserData?.token;
     fetch(`${BASE_URL}/admin/block-user/${UserId}`, {
       method: "POST",
@@ -78,7 +77,6 @@ const InActiveUserList = ({ filterData }) => {
   };
 
   const handleUnBlockUser = (id) => {
-    setIsBlocked(false);
     const token = isUserData?.token;
     fetch(`${BASE_URL}/admin/unblock-user/${id}`, {
       method: "POST",
@@ -146,6 +144,7 @@ const InActiveUserList = ({ filterData }) => {
               ?.filter((item) => item.adminStatus != "active")
               ?.map((item) => (
                 <InActiveUserListItem
+                  setIsBlocked={setIsBlocked}
                   item={item}
                   blockedUserId={setBlockedUserId}
                 />

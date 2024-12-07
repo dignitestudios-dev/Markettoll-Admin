@@ -2,14 +2,17 @@ import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const InActiveUserListItem = ({ item, blockedUserId }) => {
-  const {setBlockedModal } = useContext(AuthContext);
- 
-  const navigate=useNavigate("")
-   
+const InActiveUserListItem = ({ item, blockedUserId, setIsBlocked }) => {
+  const { setBlockedModal } = useContext(AuthContext);
+
+  const navigate = useNavigate("");
+
   return (
-    <tr className="cursor-pointer"  >
-      <th onClick={()=>navigate("/user/123")} className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
+    <tr className="cursor-pointer">
+      <th
+        onClick={() => navigate("/user/123")}
+        className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900"
+      >
         <div className="relative h-10 w-10">
           <img
             className="h-full w-full rounded-full object-cover object-center"
@@ -31,28 +34,43 @@ const InActiveUserListItem = ({ item, blockedUserId }) => {
         {item?.phoneNumber?.code + item?.phoneNumber?.value}
       </td>
       <td className="px-6 lg:px-4 xl:px-3 py-4">
-        <span className={`inline-flex items-center gap-1 rounded-full  ${item.adminStatus=="active"?"bg-green-50 text-green-600":"bg-red-50 text-red-600"}  px-2 py-1 text-xs font-semibold `}>
-          <span className={`h-1.5 w-1.5 rounded-full ${item.adminStatus=="active"?" bg-green-600":"bg-red-600"}`}></span>
+        <span
+          className={`inline-flex items-center gap-1 rounded-full  ${
+            item.adminStatus == "active"
+              ? "bg-green-50 text-green-600"
+              : "bg-red-50 text-red-600"
+          }  px-2 py-1 text-xs font-semibold `}
+        >
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${
+              item.adminStatus == "active" ? " bg-green-600" : "bg-red-600"
+            }`}
+          ></span>
           {item?.adminStatus}
         </span>
       </td>
       <td className="px-6 lg:px-4 xl:px-3 py-4 flex justify-center gap-2">
-  <button
-    onClick={() => {
-      if (item.adminStatus === "active") {
-        setBlockedModal(true);
-        blockedUserId(item?._id);
-      } else {
-        setBlockedModal(true);
-        blockedUserId(item?._id);
-      }
-    }}
-    className={`w-auto px-3 py-1 ${item.adminStatus === "active" ? "bg-red-600 text-white" : "bg-red-50 text-red-600"} hover:opacity-80 rounded-md text-xs`}
-  >
-    {item.adminStatus === "active" ? "Block" : "Unblock"}
-  </button>
-</td>
-
+        <button
+          onClick={() => {
+            if (item.adminStatus === "active") {
+              setBlockedModal(true);
+              setIsBlocked(item.adminStatus);
+              blockedUserId(item?._id);
+            } else {
+              setIsBlocked(false);
+              setBlockedModal(item.adminStatus);
+              blockedUserId(item?._id);
+            }
+          }}
+          className={`w-auto px-3 py-1 ${
+            item.adminStatus === "active"
+              ? "bg-red-600 text-white"
+              : "bg-red-50 text-red-600"
+          } hover:opacity-80 rounded-md text-xs`}
+        >
+          {item.adminStatus === "active" ? "Block" : "Unblock"}
+        </button>
+      </td>
     </tr>
   );
 };

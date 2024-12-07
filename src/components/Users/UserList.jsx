@@ -12,7 +12,7 @@ const UserList = ({ filterData }) => {
   const [dataToDisplay, setDataToDisplay] = useState([]);
   const [unblockState, setUnblockState] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
-  const TOTAL_VALUES_PER_PAGE = 10;
+  const TOTAL_VALUES_PER_PAGE = 15;
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;

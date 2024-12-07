@@ -39,32 +39,20 @@ export default function UserFeaturePosting({userId}) {
                 scope="col"
                 className="px-6 lg:px-4 xl:px-3 rounded-s-lg py-4 text-sm font-semibold"
               >
-                Name
+                Package
               </th>
               <th
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
               >
-                Category
+                Amount
               </th>
               <th
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
               >
-                Sub Category
-              </th>
-              <th
-                scope="col"
-                className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
-              >
-                Price
-              </th>
-              <th
-                scope="col"
-                className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
-              >
-                Status
-              </th>
+                Renewed At
+              </th>             
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
@@ -75,16 +63,11 @@ export default function UserFeaturePosting({userId}) {
                     Product Name
                   </div>
                 </div>
-              </th>
-              <td className="px-6 lg:px-4 xl:px-3 py-4 text-nowrap">
-                Product Category
-              </td>
-              <td className="px-6 lg:px-4 xl:px-3 py-4 text-nowrap">
-                Product Sub Category
-              </td>
-
+              </th>             
               <td className="px-6 lg:px-4 xl:px-3 py-4">$200</td>
-              <td className="px-6 lg:px-4 xl:px-3 py-4"> status</td>
+              <td className="px-6 lg:px-4 xl:px-3 py-4 text-nowrap">
+                20/21/1 
+              </td>
             </tr>
           </tbody>
         </table>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Filter from "../components/Users/Filter";
+import Filter from "../components/InActive/Filter";
 import InActiveUserList from "../components/InActive/InActiveUserList";
 
 const InActiveUser = () => {

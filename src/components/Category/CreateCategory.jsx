@@ -40,7 +40,7 @@ export default function CategoryCreate() {
       formData.append("images", image);
     }
 
-    fetch(`${BASE_URL}/admin/category-subcategory`, {
+    fetch(`${BASE_URL}/admin/category`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
