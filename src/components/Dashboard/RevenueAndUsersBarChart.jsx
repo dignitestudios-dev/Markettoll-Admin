@@ -12,22 +12,26 @@ import {
 import { RevenueAndUsersData } from "../../constants/RevenueAndUsersData";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const RevenueAndUsersBarChart = () => {
   const [data,setData]=useState([]);
   const { isUserData, setLoader } = useContext(AuthContext);
+  const [startDate, setStartDate] = useState(new Date());
+  const [monthPick, setMonthPick] = useState(new Date());
 
+  
   useEffect(() => {
     const token = isUserData?.token;
     Promise.all([
-      fetch(`${BASE_URL}admin/yearly-orders`, {
+      fetch(`${BASE_URL}admin/yearly-orders?year=${startDate.getFullYear()}`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }).then(res => res.json()),
-      fetch(`${BASE_URL}admin/yearly-subscription-revenue`, {
+      fetch(`${BASE_URL}admin/yearly-subscription-revenue?year=${startDate.getFullYear()}`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -55,7 +59,7 @@ const RevenueAndUsersBarChart = () => {
       console.error("Error fetching data:", error);
       setLoader(false);
     });
-  }, [isUserData]);
+  }, [isUserData,startDate]);
 
   const [lineVisibility, setLineVisibility] = useState({
     Order: true,
@@ -69,9 +73,38 @@ const RevenueAndUsersBarChart = () => {
     }));
   };
 
+  const customHeader = ({ date, changeYear, changeMonth }) => (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <span>{date.getFullYear()} - {date.toLocaleString('default', { month: 'long' })}</span>
+    </div>
+  );
+
    return (
     <div className="w-full h-[50vh] pt-6 pb-4 px-0 border pr-6 rounded-xl relative">
+       
       <div className="w-full flex gap-2 absolute top-2 right-2 text-end justify-end">
+        <div>
+        <DatePicker
+      className="w-[80px] px-1 focus:border-[#0098EA] focus:outline-[#0098EA] border rounded-lg"
+      selected={monthPick}
+      onChange={(date) => setMonthPick(date)}
+      dateFormat="MM"
+      showMonthYearPicker
+      showFullMonthYearPicker
+      showTwoColumnMonthYearPicker
+      renderCustomHeader={customHeader}
+    />
+        </div>
+        <div>
+        <DatePicker
+        className="w-[80px] px-1  focus:border-[#0098EA]  focus:outline-[#0098EA]  border rounded-lg"
+      selected={startDate}
+      onChange={(date) => setStartDate(date)}
+      minDate={new Date()}
+      showYearPicker
+      dateFormat="yyyy"
+    />
+        </div>
         <span
           className="text-xs bg-[#eab40b] text-white px-3 py-3 rounded-full cursor-pointer"
           onClick={() => toggleLineVisibility('Order')}></span>

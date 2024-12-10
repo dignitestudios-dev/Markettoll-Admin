@@ -36,7 +36,7 @@ const ReportList = () => {
         console.error("Error fetching users:", error);
         setLoader(false);
       });
-  }, [isUserData,unblockState]);
+  }, [isUserData, unblockState]);
 
   const handleBlockUser = (id) => {
     const token = isUserData?.token;
@@ -121,7 +121,7 @@ const ReportList = () => {
                 {new Date(item?.createdAt).toLocaleDateString()}
               </td>
 
-              <td>           
+              <td>
                 <button
                   onClick={() => {
                     if (item?.reportedUser.adminStatus === "active") {
@@ -129,7 +129,7 @@ const ReportList = () => {
                       setIsBlocked(item?.reportedUser.adminStatus);
                       setBlockedUserId(item?.reportedUser._id);
                     } else {
-                      alert("hi")
+                      alert("hi");
                       setIsBlocked(item?.reportedUser.adminStatus);
                       setBlockedModal(true);
                       setBlockedUserId(item?.reportedUser._id);

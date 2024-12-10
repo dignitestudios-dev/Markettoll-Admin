@@ -28,7 +28,7 @@ const ConfirmBlockModal = ({UserId,handleBlockUser,isBlocked,handleUnBlockUser})
                     handleUnBlockUser(UserId);   
                     setBlockedModal(!blockedModal);
                 }
-            }}  className="bg-red-500 text-white text-sm px-4 py-2 rounded-md">{isBlocked=="active"?"Blocked":"UnBlocked"}</button>
+            }}  className="bg-red-500 text-white text-sm px-4 py-2 rounded-md">{isBlocked=="active"?"Block":"UnBlocked"}</button>
           </div>
           </div>
         </div>

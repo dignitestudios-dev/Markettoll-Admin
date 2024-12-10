@@ -11,12 +11,12 @@ import BASE_URL from "../../constants/BaseUrl";
 
 const UserInfo = () => {
   const loc = useLocation("");
-  const { setBlockedModal,isUserData  } = useContext(AuthContext);
+  const { setBlockedModal, isUserData } = useContext(AuthContext);
   let data = loc.state.data;
   const [BlockedUserId, setBlockedUserId] = useState("");
   const [isBlocked, setIsBlocked] = useState(false);
-    const [unblockState, setUnblockState] = useState(false);
-  const navigate=useNavigate("")
+  const [unblockState, setUnblockState] = useState(false);
+  const navigate = useNavigate("");
 
   const handleBlockUser = (UserId) => {
     const token = isUserData?.token;
@@ -35,15 +35,13 @@ const UserInfo = () => {
       })
       .then((data) => {
         setUnblockState(!unblockState);
-        navigate("/users")
+        navigate("/users");
         console.log(data);
       })
       .catch((err) => {
         console.error("Error:", err);
       });
   };
-
-  
 
   const handleUnBlockUser = (id) => {
     const token = isUserData?.token;
@@ -61,18 +59,15 @@ const UserInfo = () => {
         return res.json();
       })
       .then((data) => {
-        navigate("/users")
+        navigate("/users");
         setUnblockState(!unblockState);
         console.log(data);
-
       })
       .catch((err) => {
         console.error("Error:", err);
       });
   };
 
-
-  
   return (
     <div className="w-full flex flex-col gap-6">
       <h1 className="font-semibold text-xl">User Profile</h1>
@@ -111,15 +106,18 @@ const UserInfo = () => {
                 setIsBlocked(true);
                 setBlockedUserId(data?._id);
               } else {
-                alert(data.adminStatus)
                 setIsBlocked(false);
                 setBlockedModal(true);
                 setBlockedUserId(data?._id);
               }
             }}
-            className="text-sm bg-red-600 text-white font-medium px-4 py-1.5 rounded-lg"
+            className={`text-sm font-medium px-4 py-1.5 rounded-lg ${
+            data.adminStatus === "active"
+              ? "bg-red-600 text-white"
+              : "bg-red-50 text-red-600"
+          } hover:opacity-80 rounded-md text-xs`}
           >
-            Block User
+            {data.adminStatus == "active" ? "Block User" : "UnBlock User"}
           </button>
         </div>
       </div>
@@ -134,16 +132,14 @@ const UserInfo = () => {
       <h1 className="font-semibold text-xl">Reviews</h1>
       <UserReviewsList />
 
-
       <ConfirmBlockModal
-        isBlocked={data.adminStatus}        
+        isBlocked={data.adminStatus}
         handleBlockUser={handleBlockUser}
         handleUnBlockUser={handleUnBlockUser}
         UserId={BlockedUserId}
       />
-
     </div>
   );
-};
+}; 
 
 export default UserInfo;
