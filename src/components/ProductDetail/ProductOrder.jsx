@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductOrder({ Producid }) {
   const { isUserData, setLoader } = useContext(AuthContext);
   const [Order, SetOrder] = useState([]);
+  const navigate=useNavigate("");
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
@@ -60,7 +62,9 @@ export default function ProductOrder({ Producid }) {
         </thead>
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
           {Order?.map((item) => (
-            <tr className="">
+            <tr onClick={()=>{
+              navigate(`/OrderDetail/${item?._id}`)
+            }} className="cursor-pointer">
               <th className="px-6 lg:px-4 xl:px-3 flex gap-3 py-4 font-normal text-gray-900">
                 <div className="text-sm">
                   <div className="font-medium text-gray-700">

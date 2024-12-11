@@ -18,6 +18,8 @@ const ProductList = ({ filterData }) => {
   const TOTAL_VALUES_PER_PAGE = 10;
   const [displayValue, setDisplayValue] = useState("Category");
   const [SubCategFill, setSubCategFill] = useState("Sub Category");
+  console.log(dataToDisplay,"productData");
+  
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;

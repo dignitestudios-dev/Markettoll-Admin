@@ -13,6 +13,8 @@ const UserInfo = () => {
   const loc = useLocation("");
   const { setBlockedModal, isUserData } = useContext(AuthContext);
   let data = loc.state.data;
+  console.log(data,"userInfoData");
+  
   const [BlockedUserId, setBlockedUserId] = useState("");
   const [isBlocked, setIsBlocked] = useState(false);
   const [unblockState, setUnblockState] = useState(false);
@@ -122,7 +124,7 @@ const UserInfo = () => {
         </div>
       </div>
       <h1 className="font-semibold text-xl">User Listings</h1>
-      <UserListing userId={data._id} />
+      <UserListing userId={data._id} userData={data} />
       <h1 className="font-semibold text-xl">User Orders</h1>
       <UserOrder userId={data._id} />
       <h1 className="font-semibold text-xl">User Subscription</h1>

@@ -3,15 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import BASE_URL from "../../constants/BaseUrl";
 
-export default function UserListing({userId}) {
+export default function UserListing({ userId, userData }) {
   const navigate = useNavigate("");
   const { isUserData, setLoader } = useContext(AuthContext);
   const [Product, SetProduct] = useState([]);
   useEffect(() => {
     setLoader(true);
-    const token = isUserData?.token;  
-    console.log(userId,"userIdd");
-    
+    const token = isUserData?.token;
+    console.log(userId, "userIdd");
+
     fetch(`${BASE_URL}admin/user-listings/${userId}?page=1`, {
       method: "GET",
       headers: {
@@ -29,7 +29,6 @@ export default function UserListing({userId}) {
         setLoader(false);
       });
   }, [isUserData]);
-
 
   return (
     <div>
@@ -67,44 +66,34 @@ export default function UserListing({userId}) {
               >
                 Status
               </th>
-              <th
-                scope="col"
-                className="px-6 lg:px-4 xl:px-2 rounded-r-lg  py-4 text-sm font-semibold"
-              >
-                Action
-              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
             {Product?.map((item) => (
-              <tr className="">
+              <tr
+                onClick={() => {
+                  navigate(`/productDetail/${item?._id}`, {
+                    state: { data: { ...item, seller: userData } },
+                  });
+                }}
+                className="cursor-pointer"
+              >
                 <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
                   <div className="text-sm">
                     <div className="font-medium text-gray-700 text-nowrap">
-                     {item?.name}
+                      {item?.name}
                     </div>
                   </div>
                 </th>
                 <td className="px-6 lg:px-4 xl:px-3 py-4 text-nowrap">
-                {item?.category}
+                  {item?.category}
                 </td>
                 <td className="px-6 lg:px-4 xl:px-3 py-4 text-nowrap">
-                {item?.subCategory}
+                  {item?.subCategory}
                 </td>
 
                 <td className="px-6 lg:px-4 xl:px-3 py-4">{item?.price}</td>
                 <td className="px-6 lg:px-4 xl:px-3 py-4"> {item?.status}</td>
-
-                <td className="px-6 lg:px-4 xl:px-3 py-4">
-                  <button
-                    onClick={() => {
-                      navigate(`/productDetail/123`);
-                    }}
-                    className={`w-auto px-3 py-1 text-nowrap bg-[#0098EA] text-white  hover:opacity-80  rounded-md text-xs`}
-                  >
-                    Product Detail
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>

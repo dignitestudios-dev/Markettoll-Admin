@@ -12,6 +12,7 @@ import InActiveUser from "../pages/InActiveUser";
 import Login from "../pages/Login";
 import Notifications from "../pages/Notifications";
 import Order from "../pages/Order";
+import OrderDetail from "../pages/OrderDetail";
 import Plans from "../pages/Plans";
 import ProductDetail from "../pages/ProductDetail";
 import Products from "../pages/Products";
@@ -67,6 +68,12 @@ export const AppRoutes = [
     Title: "Order Page",
     url: "/order",
     page: <Layout pages={<Order />} />,
+    isPrivate: true,
+  },
+  {
+    Title: "Order Page",
+    url: "/OrderDetail/:id",
+    page: <Layout pages={<OrderDetail />} />,
     isPrivate: true,
   },
   

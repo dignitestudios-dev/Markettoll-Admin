@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FiHeart } from "react-icons/fi";
 import { GoArrowLeft } from "react-icons/go";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ProductReviewsList from "../components/ProductDetail/ProductReviewsList";
 import ProductSeller from "../components/ProductDetail/ProductSeller";
 import ProductOrder from "../components/ProductDetail/ProductOrder";
 
 export default function ProductDetail() {
   const loc = useLocation("");
+  const navigate=useNavigate("");
+  console.log(loc?.state?.data,"data");
+  useEffect(()=>{
+    if (!loc?.state?.data) {
+      navigate("/products")
+    }
+  })
   return (
     <div className="w-full relative">
       <div className="w-full p-4 rounded-[30px] bg-[#F7F7F7]">
@@ -26,7 +33,7 @@ export default function ProductDetail() {
           <div className="w-full mt-2 flex flex-col lg:flex-row justify-start gap-x-8 gap-y-6">
             <div className="w-full relative">
               <img
-                src={"/product1.png"}
+                src={loc?.state?.data?.images[0].url}
                 alt="product image"
                 className="w-full h-auto lg:h-[376px] object-cover rounded-xl"
               />
