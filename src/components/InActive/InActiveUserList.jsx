@@ -35,23 +35,6 @@ const InActiveUserList = ({ filterData }) => {
       });
   }, [isUserData, filterData, unblockState]);
 
-  const goOnPrevPage = () => {
-    if (currentPageNumber === 1) return;
-    setCurrentPageNumber((prev) => prev - 1);
-  };
-
-  const goOnNextPage = () => {
-    const totalPages = Math.ceil(users.length / TOTAL_VALUES_PER_PAGE);
-    if (currentPageNumber === totalPages) return;
-    setCurrentPageNumber((prev) => prev + 1);
-  };
-
-  useEffect(() => {
-    const start = (currentPageNumber - 1) * TOTAL_VALUES_PER_PAGE;
-    const end = currentPageNumber * TOTAL_VALUES_PER_PAGE;
-    setDataToDisplay(users.slice(start, end));
-  }, [currentPageNumber]);
-
   const handleBlockUser = (UserId) => {
     const token = isUserData?.token;
     fetch(`${BASE_URL}/admin/block-user/${UserId}`, {
@@ -140,7 +123,7 @@ const InActiveUserList = ({ filterData }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-            {dataToDisplay
+            {users
               ?.filter((item) => item.adminStatus != "active")
               ?.map((item) => (
                 <InActiveUserListItem
@@ -152,7 +135,7 @@ const InActiveUserList = ({ filterData }) => {
           </tbody>
         </table>
       </div>
-      <div className="flex justify-end gap-3 w-full">
+      {/* <div className="flex justify-end gap-3 w-full">
         <button
           className={`${
             currentPageNumber === 1 ? " bg-[#9fdeff]" : " bg-[#0098EA]"
@@ -162,12 +145,12 @@ const InActiveUserList = ({ filterData }) => {
           Prev
         </button>
         <button
-          className="bg-[#0098EA] px-2 rounded-md w-[80px] text-white py-2"
           onClick={goOnNextPage}
+          disabled={currentPageNumber >= Math.ceil(users.length / TOTAL_VALUES_PER_PAGE)}
         >
           Next
         </button>
-      </div>
+      </div> */}
       <ConfirmBlockModal
         isBlocked={isBlocked}
         handleBlockUser={handleBlockUser}

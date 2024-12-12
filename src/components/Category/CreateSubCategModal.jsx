@@ -29,15 +29,20 @@ const SubCategoryModal = ({Categories}) => {
       });
       return;
     }
-
+  
     const loadingToastId = toast.loading("Submitting...");
     const formData = new FormData();
     formData.append("categoryName", subCategory);
-    formData.append("subcategoryNames", category);
+    
+    // Ensure subcategoryNames is an array.
+    const subcategoryArray = Array.isArray(category) ? category : [category];
+    formData.append("subcategoryNames", JSON.stringify(subcategoryArray));
+  
+    // Add all images to the form data.
     for (const image of categoryImages) {
       formData.append("images", image);
     }
-
+  
     fetch(`${BASE_URL}/admin/subcategory`, {
       method: "POST",
       headers: {
@@ -61,6 +66,7 @@ const SubCategoryModal = ({Categories}) => {
           autoClose: 3000,
           position: "top-right",
         });
+        setSubCatModal(false)
         navigate("/category");
       })
       .catch((err) => {
@@ -73,6 +79,7 @@ const SubCategoryModal = ({Categories}) => {
         });
       });
   };
+  
 
   return (
     SubCatModal && (
