@@ -99,7 +99,7 @@ const InActiveUserList = ({ filterData }) => {
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
               >
-                Email
+                Email 
               </th>
               <th
                 scope="col"
@@ -113,7 +113,6 @@ const InActiveUserList = ({ filterData }) => {
               >
                 Status
               </th>
-
               <th
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2  rounded-r-lg py-4 text-sm font-semibold text-center"

@@ -60,7 +60,7 @@ const NewUsersList = () => {
           View All
         </NavLink>
       </div>
-
+      <br />
       <div className="w-full overflow-x-auto h-[400px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
         <table className="w-full border-collapse  text-left text-sm text-gray-500">
           <thead className="">
@@ -89,7 +89,6 @@ const NewUsersList = () => {
               >
                 Status
               </th>
-
               <th
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2  rounded-r-lg py-4 text-sm font-semibold text-center"
@@ -99,15 +98,12 @@ const NewUsersList = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-          {
-        users.map((item)=>(
-          <NewUserListItem item={item} />
-        ))
-      }
+            {users.map((item) => (
+              <NewUserListItem item={item} />
+            ))}
           </tbody>
         </table>
       </div>
-      
     </div>
   );
 };

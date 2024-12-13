@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const InActiveUserListItem = ({ item, blockedUserId, setIsBlocked }) => {
   const { setBlockedModal } = useContext(AuthContext);
-
   const navigate = useNavigate("");
 
   return (
@@ -35,7 +34,7 @@ const InActiveUserListItem = ({ item, blockedUserId, setIsBlocked }) => {
       </td>
       <td className="px-6 lg:px-4 xl:px-3 py-4">
         <span
-          className={`inline-flex items-center gap-1 rounded-full  ${
+          className={`inline-flex items-center gap-1 rounded-full ${
             item.adminStatus == "active"
               ? "bg-green-50 text-green-600"
               : "bg-red-50 text-red-600"

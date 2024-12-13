@@ -56,13 +56,13 @@ export default function DetailOrder() {
                       <div className="pb-4 md:pb-8 w-full md:w-40">
                         <img
                           className="w-full hidden !h-[120px] md:block"
-                          src={item?.product?.images[0]?.url}
+                          src={item?.product?.images[0]?.url?item?.product?.images[0]?.url:"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
                           alt="product Img"
                         />
                         <img
                           className="w-full !h-[120px] md:hidden"
-                          src={item?.product?.images[0]?.url}
-                          alt="product"
+                          src={item?.product?.images[0]?.url?item?.product?.images[0]?.url:"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
+                          alt="product Img"
                         />
                       </div>
                       <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full pb-8 space-y-4 md:space-y-0">
@@ -131,7 +131,7 @@ export default function DetailOrder() {
                   alt="avatar"
                 />
                 <div className="flex justify-start items-start flex-col space-y-2">
-                  <p
+                  <p                  
                     onClick={() => {
                       navigate(`/user/${OrderDetail[0]?.placerDetails._id}`, {
                         state: { data: OrderDetail[0]?.placerDetails},
