@@ -3,6 +3,7 @@ import { IoClose } from "react-icons/io5";
 import BASE_URL from "../../constants/BaseUrl";
 
 const CreateNotification = ({ showModal, onclick, token }) => {
+   const [ScheduleCheck,setScheduleCheck]=useState(false)
   const [data, setData] = useState({
     notification_title: "",
     notification_message: "",
@@ -13,12 +14,11 @@ const CreateNotification = ({ showModal, onclick, token }) => {
   };
 
   const handleSubmit = (e) => {
-
     e.preventDefault();
     fetch(`${BASE_URL}/admin/notification`, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -28,7 +28,7 @@ const CreateNotification = ({ showModal, onclick, token }) => {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error('Failed to log in');
+          throw new Error("Failed to log in");
         }
         return res.json();
       })
@@ -37,14 +37,19 @@ const CreateNotification = ({ showModal, onclick, token }) => {
         onclick();
       })
       .catch((err) => {
-        console.error('Error:', err);
+        console.error("Error:", err);
       });
   };
+  console.log(ScheduleCheck,"schedule Check");
+  
 
   return (
     showModal && (
       <div className="w-screen h-screen flex items-center justify-center bg-[rgba(0,0,0,0.4)] fixed top-0 left-0 right-0 bottom-0 z-30 px-4">
-        <form onSubmit={handleSubmit} className="w-[500px] h-auto bg-white p-6 rounded-lg flex flex-col gap-5 relative">
+        <form
+          onSubmit={handleSubmit}
+          className="w-[500px] h-auto bg-white p-6 rounded-lg flex flex-col gap-5 relative"
+        >
           <button
             className="w-6 h-6 rounded-full bg-gray-200 p-1 absolute top-6 right-6"
             onClick={onclick}
@@ -67,7 +72,10 @@ const CreateNotification = ({ showModal, onclick, token }) => {
             />
           </div>
           <div className="w-full flex flex-col gap-1">
-            <label htmlFor="notification_message" className="text-sm font-medium">
+            <label
+              htmlFor="notification_message"
+              className="text-sm font-medium"
+            >
               Notification Message
             </label>
             <textarea
@@ -80,8 +88,46 @@ const CreateNotification = ({ showModal, onclick, token }) => {
               placeholder="Message..."
             ></textarea>
           </div>
+          <div className="w-full flex flex-col gap-1">
+            <label
+              htmlFor="scheduled_notification"
+              className="flex cursor-pointer items-center  text-sm font-medium"
+            >
+              <input
+                type="checkbox"
+                name="scheduled_notification"
+                id="scheduled_notification"
+                className="mr-1"
+                value={ScheduleCheck}
+                onChange={(e)=>setScheduleCheck(e.target.checked)}
+              />
+              Scheduled Notification
+            </label>
+          </div>
+          {
+            ScheduleCheck&&(
+              <div className="w-full flex flex-col gap-1">
+              <label htmlFor="notification_title" className="text-sm font-medium">
+                Select Date Time
+              </label>
+              <input
+                type="datetime-local"
+                name="notification_title"
+                id="notification_title"
+                value={data.notification_title}
+                onChange={handleChange}
+                className="w-full border rounded-lg text-sm py-2.5 px-3.5 focus:border-[#0085FF] focus:ring focus:ring-[#rgb(177 226 253)] outline-none"
+                placeholder="Title"
+              />
+            </div>
+            )
+          }
+         
           <div className="w-full mt-2">
-            <button type="submit" className="w-full bg-[#0098EA] text-white font-medium text-sm rounded-lg py-3">
+            <button
+              type="submit"
+              className="w-full bg-[#0098EA] text-white font-medium text-sm rounded-lg py-3"
+            >
               Send Now
             </button>
           </div>

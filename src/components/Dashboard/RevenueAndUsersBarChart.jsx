@@ -9,7 +9,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { RevenueAndUsersData } from "../../constants/RevenueAndUsersData";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 import DatePicker from "react-datepicker";
@@ -19,8 +18,8 @@ const RevenueAndUsersBarChart = () => {
   const { isUserData, setLoader } = useContext(AuthContext);
   const [startDate, setStartDate] = useState(new Date());
   const [monthPick, setMonthPick] = useState(new Date());
-
   const [originalData, setOriginalData] = useState([]); 
+
   useEffect(() => {
     const token = isUserData?.token;
     Promise.all([
@@ -45,10 +44,8 @@ const RevenueAndUsersBarChart = () => {
       const orderDataMap = orderData.data.reduce((acc, item) => {
         acc[item._id] = item.order_count;
         return acc;
-      }, {});
-      
+      }, {});    
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      
       // Combine revenue and order data
       const updatedData = revenueData.data.map(item => {
         const month = item._id - 1;
@@ -58,7 +55,6 @@ const RevenueAndUsersBarChart = () => {
           Order: orderDataMap[item._id] || 0, 
         };
       });
-      
       // Set the full data (and store it as originalData)
       setOriginalData(updatedData);
       setData(updatedData);  // Set the data initially

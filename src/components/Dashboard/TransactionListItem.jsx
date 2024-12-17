@@ -36,7 +36,7 @@ const TransactionListItem = () => {
             <p className="text-xs font-medium">Jane Smith</p>
           </div>
           <p className="text-xs font-medium">$89</p>
-        </div>
+        </div >
         <div className="w-full flex items-center justify-between">
           <p className="text-xs font-medium">09:43 PM</p>
           <p className="text-xs font-medium">24 May, 2024</p>
