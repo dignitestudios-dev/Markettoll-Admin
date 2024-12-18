@@ -3,7 +3,8 @@ import { IoClose } from "react-icons/io5";
 import BASE_URL from "../../constants/BaseUrl";
 
 const CreateNotification = ({ showModal, onclick, token }) => {
-   const [ScheduleCheck,setScheduleCheck]=useState(false)
+  const [ScheduleCheck, setScheduleCheck] = useState(false);
+  const [SchedulteDate, setSchedulteDate] = useState("");
   const [data, setData] = useState({
     notification_title: "",
     notification_message: "",
@@ -15,6 +16,8 @@ const CreateNotification = ({ showModal, onclick, token }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(SchedulteDate, "scheduleDate");
+
     fetch(`${BASE_URL}/admin/notification`, {
       method: "POST",
       headers: {
@@ -24,6 +27,7 @@ const CreateNotification = ({ showModal, onclick, token }) => {
       body: JSON.stringify({
         title: data?.notification_title,
         body: data?.notification_message,
+        scheduleDate: SchedulteDate,
       }),
     })
       .then((res) => {
@@ -40,8 +44,11 @@ const CreateNotification = ({ showModal, onclick, token }) => {
         console.error("Error:", err);
       });
   };
-  console.log(ScheduleCheck,"schedule Check");
-  
+
+  const handleDateChange = (e) => {
+    const date = new Date(e.target.value); 
+    setSchedulteDate(date.toISOString());
+  };
 
   return (
     showModal && (
@@ -99,30 +106,31 @@ const CreateNotification = ({ showModal, onclick, token }) => {
                 id="scheduled_notification"
                 className="mr-1"
                 value={ScheduleCheck}
-                onChange={(e)=>setScheduleCheck(e.target.checked)}
+                onChange={(e) => setScheduleCheck(e.target.checked)}
               />
               Scheduled Notification
             </label>
           </div>
-          {
-            ScheduleCheck&&(
-              <div className="w-full flex flex-col gap-1">
-              <label htmlFor="notification_title" className="text-sm font-medium">
+          {ScheduleCheck && (
+            <div className="w-full flex flex-col gap-1">
+              <label
+                htmlFor="notification_title"
+                className="text-sm font-medium"
+              >
                 Select Date Time
               </label>
               <input
                 type="datetime-local"
                 name="notification_title"
                 id="notification_title"
-                value={data.notification_title}
-                onChange={handleChange}
+                value={SchedulteDate ? SchedulteDate.slice(0, 19) : ""} // Display in input without 'Z' (it’s not needed in the field)
+                onChange={handleDateChange}
                 className="w-full border rounded-lg text-sm py-2.5 px-3.5 focus:border-[#0085FF] focus:ring focus:ring-[#rgb(177 226 253)] outline-none"
                 placeholder="Title"
               />
             </div>
-            )
-          }
-         
+          )}
+
           <div className="w-full mt-2">
             <button
               type="submit"

@@ -6,7 +6,6 @@ import { AuthContext } from "../../context/AuthContext";
 const DeletedUserList = () => {
   const { isUserData } = useContext(AuthContext);
   const [DeleteAcc,SetDeleteAcc]=useState([]);
-  
   useEffect(() => {
     const token = isUserData?.token; 
     fetch(`${BASE_URL}/admin/deleted-accounts?name=&page=1`, {

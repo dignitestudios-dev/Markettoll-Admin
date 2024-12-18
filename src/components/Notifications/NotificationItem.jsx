@@ -15,6 +15,9 @@ const NotificationItem = ({ item }) => {
           </time>
         </div>
         <p className="text-sm">{item?.body}</p>
+        <div>
+          <span className={` text-sm font-thik ${item?.sentDate?"text-green-600":"text-red-600"}`} >{item?.sentDate?"Sent":"Pending"}</span>
+        </div>
       </div>
     </div>
   );
