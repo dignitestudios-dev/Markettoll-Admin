@@ -22,7 +22,7 @@ const Login = () => {
       autoClose: false, 
     });
   
-    fetch(`${BASE_URL}/users/email-password-login`, {
+    fetch(`${BASE_URL}/admin/email-password-login`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',

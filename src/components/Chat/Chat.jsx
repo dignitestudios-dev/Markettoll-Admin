@@ -33,11 +33,11 @@ function ChatUIComponent() {
       const messagesRef = collection(db, "Adminchats", chat_id, "messages");
       await addDoc(messagesRef, messageData);
       await setDoc(doc(db, "userChats", chatId?.id), {
-        user: { 
+        user: {
           name: chatId?.user?.name,
           pic: chatId?.user?.pic,
         },
-        chatId:chat_id,
+        chatId: chat_id,
         lastMessage: message,
         timestamp: new Date().toISOString(),
       });
@@ -154,30 +154,32 @@ function ChatUIComponent() {
         </div>
         {/* end search compt */}
         {/* user list */}
-        {users?.map((item) => (
-          <div
-            onClick={() => {
-              setChatId(item);
-            }}
-            className="flex gap-2 cursor-pointer flex-row py-4 px-2 justify-center items-center border"
-          >
-            <div className="">
-              <img
-                src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODB8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww"
-                className="object-cover h-12 w-12 rounded-full"
-                alt=""
-              />
-            </div>
-            <div className="w-full">
-              <div className="text-[13px]  font-semibold">
-                {item?.user?.name}
+        {users
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+          ?.map((item) => (
+            <div
+              onClick={() => {
+                setChatId(item);
+              }}
+              className="flex gap-2 cursor-pointer flex-row py-4 px-2 justify-center items-center border"
+            >
+              <div className="">
+                <img
+                  src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODB8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww"
+                  className="object-cover h-12 w-12 rounded-full"
+                  alt=""
+                />
               </div>
-              <span className="text-gray-500 text-[12px] font-[400]">
-                {item?.lastMessage}
-              </span>
+              <div className="w-full">
+                <div className="text-[13px]  font-semibold">
+                  {item?.user?.name}
+                </div>
+                <span className="text-gray-500 text-[12px] font-[400]">
+                  {item?.lastMessage}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
         {/* end user list */}
       </div>
 

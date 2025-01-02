@@ -26,6 +26,7 @@ const ProductReviewsList = ({Producid}) => {
         setLoader(false);
       });
   }, [isUserData]);
+  
   const sumArr = Review?.reduce((a, b) => a + (b?.rating || 0), 0);
   const averageRating = Review.length > 0 ? sumArr / Review.length : 0;
   const ratingCount = Review.reduce((acc, user) => {

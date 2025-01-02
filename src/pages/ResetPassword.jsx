@@ -17,6 +17,7 @@ const ResetPassword = () => {
       method: "PUT",
       headers: {
         'Content-Type': 'application/json',
+        
       },
       body: JSON.stringify({
         email: state.state?.email,
@@ -59,8 +60,8 @@ const ResetPassword = () => {
                     type={showPass ? "text" : "password"}
                     className="w-full text-sm py-3 outline-none"
                     placeholder="Enter password"
-                    value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
+                      value={password}
+                      onChange={(e)=>setPassword(e.target.value)}
                   />
                   <div className="cursor-pointer" onClick={() => setShowPass(!showPass)}>
                     {showPass ? (
