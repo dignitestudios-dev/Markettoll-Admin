@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DeletedFilter from "../components/DeletedAccounts/Filter";
 import DeletedUserList from "../components/DeletedAccounts/UserList";
 
@@ -10,11 +10,11 @@ const DeletedAccounts = () => {
     };
     scrollToTop()
   }, []);
-
+  const [filterData,setFilterData]=useState([])
   return (
     <div className="w-full flex flex-col gap-y-4">
-      <DeletedFilter />
-      <DeletedUserList />
+      <DeletedFilter setFilterData={setFilterData} />
+      <DeletedUserList filterData={filterData} />
     </div>
   );
 };

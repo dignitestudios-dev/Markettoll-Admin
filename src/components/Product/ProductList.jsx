@@ -11,7 +11,7 @@ import {
 
 const ProductList = ({ filterData }) => {
   const [active, SetActive] = useState("products");
-  const { isUserData, setLoader } = useContext(AuthContext);
+  const { isUserData, setLoader,loader } = useContext(AuthContext);
   const [Product, SetProduct] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [dataToDisplay, setDataToDisplay] = useState([]);
@@ -140,11 +140,13 @@ const ProductList = ({ filterData }) => {
               </th>             
             </tr>
           </thead>
+           {loader ? <span className="loader"></span> : (
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
             {dataToDisplay?.map((item) => (
               <ProductListItem item={item} />
             ))}
           </tbody>
+           )}
         </table>
       </div>
       <div className="flex justify-end gap-3 w-full">

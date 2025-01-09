@@ -3,12 +3,12 @@ import DeletedUserListItem from "./UserListItem";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 
-const DeletedUserList = () => {
+const DeletedUserList = ({filterData}) => {
   const { isUserData } = useContext(AuthContext);
   const [DeleteAcc,SetDeleteAcc]=useState([]);
   useEffect(() => {
     const token = isUserData?.token; 
-    fetch(`${BASE_URL}/admin/deleted-accounts?name=&page=1`, {
+    fetch(`${BASE_URL}/admin/deleted-accounts?name=${filterData}&page=1`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -23,7 +23,7 @@ const DeletedUserList = () => {
       .catch((error) => {
         console.error("Error fetching users:", error);
       });
-  }, [isUserData]);
+  }, [isUserData,filterData]);
   return (
     <div className="w-full overflow-x-auto h-[600px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
        {DeleteAcc?.length > 0 ? (

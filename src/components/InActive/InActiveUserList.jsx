@@ -5,7 +5,7 @@ import InActiveUserListItem from "./InActiveUserListItem";
 import ConfirmBlockModal from "../Users/ConfirmModal";
 
 const InActiveUserList = ({ filterData }) => {
-  const { isUserData, setLoader } = useContext(AuthContext);
+  const { isUserData, setLoader,loader } = useContext(AuthContext);
   const [users, SetUsers] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [BlockedUserId, setBlockedUserId] = useState("");
@@ -121,6 +121,7 @@ const InActiveUserList = ({ filterData }) => {
               </th>
             </tr>
           </thead>
+           {loader ? <span className="loader"></span> : (
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
             {users
               ?.filter((item) => item.adminStatus != "active")
@@ -132,6 +133,7 @@ const InActiveUserList = ({ filterData }) => {
                 />
               ))}
           </tbody>
+           )}
         </table>
       </div>
       {/* <div className="flex justify-end gap-3 w-full">

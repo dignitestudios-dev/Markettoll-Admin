@@ -8,7 +8,7 @@ const SubscriptionList = () => {
   const [ActiveSubscription, SetActiveSubscription] = useState([]);
   const [BoostingPackage, SetBoostingPackage] = useState([]);
 
-  const { isUserData, setLoader, FilterMonthUser, setFilterMonthUser } =
+  const { isUserData, setLoader, FilterMonthUser, loader, setFilterMonthUser } =
     useContext(AuthContext);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [dataToDisplay, setDataToDisplay] = useState([]);
@@ -165,11 +165,18 @@ const SubscriptionList = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y  divide-gray-100 border-t border-gray-100">
-            {dataToDisplay?.map((item) => (
-              <SubscriptionListItem item={item}  FilterMonthUser={FilterMonthUser} />
-            ))}
-          </tbody>
+          {loader ? (
+            <span className="loader"></span>
+          ) : (
+            <tbody className="divide-y  divide-gray-100 border-t border-gray-100">
+              {dataToDisplay?.map((item) => (
+                <SubscriptionListItem
+                  item={item}
+                  FilterMonthUser={FilterMonthUser}
+                />
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
       <div className="flex justify-end gap-3 w-full">

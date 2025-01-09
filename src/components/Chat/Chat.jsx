@@ -55,38 +55,26 @@ function ChatUIComponent() {
       chatId?.chatId,
       "messages"
     );
-
-    // Create a query to fetch the messages
     const messagesQuery = query(messagesRef);
-
-    // Listen for real-time changes in the messages collection
-    const unsubscribe = onSnapshot(
-      messagesQuery,
-      (querySnapshot) => {
+    const unsubscribe = onSnapshot(messagesQuery,(querySnapshot) => {
         const messagesList = querySnapshot.docs.map((doc) => doc.data());
         console.log(messagesList, "messageList");
-
-        // Update state with the fetched messages
         setMessages(messagesList);
       },
       (error) => {
         console.error("Error fetching messages: ", error);
       }
     );
-
-    // Cleanup listener when component unmounts or chatId changes
     return unsubscribe;
   };
 
   useEffect(() => {
-    // Only fetch messages if chatId exists
     if (chatId?.chatId) {
       const unsubscribe = fetchMessages();
-
-      // Cleanup the real-time listener when the chatId changes or component unmounts
       return () => unsubscribe();
     }
   }, [chatId]);
+
   const [originalUserList, setOriginalUserList] = useState([]);
   useEffect(() => {
     const fetchUsers = () => {

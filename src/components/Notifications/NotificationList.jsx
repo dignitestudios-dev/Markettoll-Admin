@@ -43,7 +43,7 @@ const NotificationList = () => {
         </button>
         <CreateNotification showModal={showModal} token={token} onclick={handleShowModal} />
       </div>
-      <div className="w-full rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="w-full rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4 h-[80vh] px-2 overflow-auto description-scroll">
         {
           Notifications?.map((item) => (
             <NotificationItem item={item} />

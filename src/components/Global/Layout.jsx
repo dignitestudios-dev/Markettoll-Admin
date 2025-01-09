@@ -62,7 +62,7 @@ const Layout = ({ pages }) => {
           </div>
         </div>
 
-        {loader ? <span className="loader"></span> : ""}
+       
         <ToastContainer />
         <div className="w-full p-6 bg-white">{pages}
 

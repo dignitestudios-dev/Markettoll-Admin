@@ -129,7 +129,7 @@ const ReportList = () => {
                       setIsBlocked(item?.reportedUser.adminStatus);
                       setBlockedUserId(item?.reportedUser._id);
                     } else {
-                      alert("hi");
+                      // alert("hi");
                       setIsBlocked(item?.reportedUser.adminStatus);
                       setBlockedModal(true);
                       setBlockedUserId(item?.reportedUser._id);

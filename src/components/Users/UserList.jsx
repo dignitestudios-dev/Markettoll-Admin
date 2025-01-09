@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import ConfirmBlockModal from "./ConfirmModal";
 
 const UserList = ({ filterData }) => {
-  const { isUserData, setLoader,FilterMonthUser } = useContext(AuthContext);
+  const { isUserData, setLoader,FilterMonthUser,loader } = useContext(AuthContext);
   const [users, SetUsers] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [BlockedUserId, setBlockedUserId] = useState("");
@@ -174,6 +174,7 @@ const UserList = ({ filterData }) => {
               </th>
             </tr>
           </thead>
+           {loader ? <span className="loader"></span> : (
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
             {dataToDisplay
               ?.filter((item) => item.adminStatus == "active")
@@ -185,6 +186,7 @@ const UserList = ({ filterData }) => {
                 />
               ))}
           </tbody>
+           )}
         </table>
       </div>
       <div className="flex justify-end gap-3 w-full">
