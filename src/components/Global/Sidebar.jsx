@@ -65,7 +65,7 @@ const Sidebar = () => {
                 : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
             }`}
           >
-           <TbAlertCircleOff className="text-lg"/> InActive Users
+           <TbAlertCircleOff className="text-lg"/> Inactive Users
           </button>
         </li>
         <li className="w-full">
@@ -90,7 +90,7 @@ const Sidebar = () => {
             }`}
           >
             <FaTruckRampBox className="text-lg" />
-            Order
+            Orders
           </button>
         </li>
         <li className="w-full">
@@ -102,7 +102,7 @@ const Sidebar = () => {
                 : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
             }`}
           >
-            <PiDresser className="text-lg" /> Category
+            <PiDresser className="text-lg" /> Categories
           </button>
         </li>
 

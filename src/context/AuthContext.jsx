@@ -8,15 +8,16 @@ export const AuthContext = createContext();
 const AuthContextProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isUserData, setUserData] = useState(false);
-  const [loader, setLoader] = useState(false)
-  const [showModal,setShowModal]=useState(false);
-  const [blockedModal,setBlockedModal]=useState(false);
-  const [DesclimarModal,setDesclimarModal ]=useState(false);
-  const [SubCatModal,setSubCatModal ]=useState(false);
-  const [FilterMonthUser,setFilterMonthUser]=useState("");
+  const [loader, setLoader] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [blockedModal, setBlockedModal] = useState(false);
+  const [DesclimarModal, setDesclimarModal] = useState(false);
+  const [SubCatModal, setSubCatModal] = useState(false);
+  const [ViewSubCatModal, setViewSubCatModal] = useState(false);
+  const [FilterMonthUser, setFilterMonthUser] = useState("");
 
   const token = Cookie.get("data");
-  const navigate = useNavigate("")
+  const navigate = useNavigate("");
   useEffect(() => {
     if (token) {
       try {
@@ -32,7 +33,6 @@ const AuthContextProvider = ({ children }) => {
       navigate("/login");
     }
   }, [token]);
-
 
   const [Categories, SetCategories] = useState([]);
 
@@ -57,12 +57,35 @@ const AuthContextProvider = ({ children }) => {
       });
   }, [isUserData]);
 
-
   const ToggleUser = () => {
     setIsLoggedIn(!isLoggedIn);
   };
   return (
-    <AuthContext.Provider value={{SubCatModal,setSubCatModal,FilterMonthUser,setFilterMonthUser,DesclimarModal,setDesclimarModal ,isLoggedIn, setIsLoggedIn, ToggleUser, setUserData,SetCategories,Categories,isUserData, loader, setLoader,setShowModal,showModal,setBlockedModal,blockedModal }}>
+    <AuthContext.Provider
+      value={{
+        SubCatModal,
+        setSubCatModal,
+        FilterMonthUser,
+        setFilterMonthUser,
+        DesclimarModal,
+        setDesclimarModal,
+        isLoggedIn,
+        setIsLoggedIn,
+        ToggleUser,
+        setUserData,
+        SetCategories,
+        Categories,
+        isUserData,
+        loader,
+        setLoader,
+        setShowModal,
+        showModal,
+        setBlockedModal,
+        blockedModal,
+        ViewSubCatModal,
+        setViewSubCatModal,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

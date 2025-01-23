@@ -6,8 +6,10 @@ import BASE_URL from "../../constants/BaseUrl";
 
 const CustomerList = ({filterData}) => {
   const [showModal, setShowModal] = useState(false);
+  const [ticketRes, setticketRes] = useState(false);
   const [CustomerSupport, setCustomerSupport] = useState([]);
   const [SupportId, setSupportId] = useState("");
+
   const { isUserData, setLoader } = useContext(AuthContext);
 
   const handleShowModal = (itemId) => {
@@ -16,12 +18,10 @@ const CustomerList = ({filterData}) => {
     setShowModal(!showModal);
   };
 
-  console.log(filterData,"filer--->");
-  
-
+  const token = isUserData?.token;
   useEffect(() => {
     setLoader(true);
-    const token = isUserData?.token;
+   
     fetch(`${BASE_URL}/admin/email-support-request?name=${filterData?filterData:""}&page=1`, {
       method: "GET",
       headers: {
@@ -39,7 +39,7 @@ const CustomerList = ({filterData}) => {
         console.error("Error fetching users:", error);
         setLoader(false);
       });
-  }, [isUserData,filterData]);
+  }, [isUserData,filterData,ticketRes]);
 
   const TicketResolved = (id) => {
     fetch(`${BASE_URL}admin/email-support-request-close-ticket/${id}`, {
@@ -53,6 +53,7 @@ const CustomerList = ({filterData}) => {
         if (!res.ok) {
           throw new Error("Failed to log in");
         }
+        setticketRes(!ticketRes)
         return res.json();
       })
       .then((data) => {
@@ -109,6 +110,7 @@ const CustomerList = ({filterData}) => {
         id={SupportId}
         onclick={handleShowModal}
         token={isUserData?.token}
+        setShowModal={setShowModal}
       />
     </div>
   );

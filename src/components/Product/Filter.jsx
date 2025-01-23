@@ -78,7 +78,7 @@ export function FilterProductCategory({
           aria-expanded="true"
           aria-haspopup="true"
         >
-          {displayValue}
+          {displayValue || "Category"}
           <svg
             className="-mr-1 size-5 text-gray-400"
             viewBox="0 0 20 20"
@@ -104,11 +104,22 @@ export function FilterProductCategory({
           tabIndex={-1}
         >
           <div className="py-1" role="none">
+            <a
+              onClick={() => {
+                setIsOpen(!isOpen);
+                setSubCategFill("Sub Category");
+                setDisplayValue("");
+              }}
+              className="block px-4 cursor-pointer py-2 text-sm text-gray-700"
+              role="menuitem"
+              id="menu-item-0"
+            >
+              All
+            </a>
             {Categories.map((item, i) => (
               <a
                 onClick={() => {
                   setIsOpen(!isOpen);
-
                   setSubCategFill("Sub Category");
                   setDisplayValue(item.name);
                 }}
@@ -141,14 +152,18 @@ export function FilterProductSubCategory({
     <div className="relative inline-block text-left">
       <div>
         <button
-          onClick={() => displayValue != "Category" && setIsOpen(!isOpen)}
+          onClick={() =>
+            displayValue != "Category" &&
+            displayValue != "" &&
+            setIsOpen(!isOpen)
+          }
           type="button"
           className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-transparent   px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
           id="menu-button"
           aria-expanded="true"
           aria-haspopup="true"
         >
-          {SubCategFill}
+          {SubCategFill || "Sub Category"}
           <svg
             className="-mr-1 size-5 text-gray-400"
             viewBox="0 0 20 20"
@@ -177,7 +192,7 @@ export function FilterProductSubCategory({
             {Categories.filter((item) => item.name === displayValue).map(
               (item, i) => (
                 <div key={i}>
-                  <a
+                  {/* <a
                     onClick={() => {
                       setIsOpen(!isOpen);
                     }}
@@ -187,9 +202,19 @@ export function FilterProductSubCategory({
                     id="menu-item-0"
                   >
                     {SubCategFill}
-                  </a>
+                  </a> */}
                   {item.subCategories && item.subCategories.length > 0 && (
                     <div className="subcategories">
+                      <a
+                        onClick={() => {
+                          setSubCategFill("");
+                          setIsOpen(!isOpen);
+                        }}
+                        className="block px-4 cursor-pointer py-2 text-sm text-gray-600"
+                        role="menuitem"
+                      >
+                        All
+                      </a>
                       {item.subCategories.map((subItem, subIndex) => (
                         <a
                           key={subIndex}
@@ -329,10 +354,10 @@ export const MultiRangeSlider = ({
     const filteredProducts = dataToDisplay.filter(
       (product) => product.price >= minVal && product.price <= maxVal
     );
-    
-    setDataToDisplay(filteredProducts); 
+
+    setDataToDisplay(filteredProducts);
   }, [minVal, maxVal, setDataToDisplay]);
-  
+
   return (
     <div className="relative inline-block text-left">
       <div>

@@ -10,7 +10,7 @@ const InActiveUserListItem = ({ item, blockedUserId, setIsBlocked }) => {
     <tr className="cursor-pointer">
       <th
         onClick={() => navigate(`/user/${blockedUserId}`,{state:{data:item}})}
-        className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900"
+        className="px-6 lg:px-4 xl:px-3 flex gap-3 items-center py-4 font-normal text-gray-900"
       >
         <div className="relative h-10 w-10">
           <img

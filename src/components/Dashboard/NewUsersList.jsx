@@ -3,11 +3,14 @@ import NewUserListItem from "./NewUserListItem";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import BASE_URL from "../../constants/BaseUrl";
+import ConfirmBlockModal from "../Users/ConfirmModal";
 
 const NewUsersList = () => {
   const { isUserData, setLoader } = useContext(AuthContext);
   const [users, SetUsers] = useState([]);
-
+  const [BlockedUserId, setBlockedUserId] = useState("");
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [unblockState, setUnblockState] = useState(false);
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
@@ -47,8 +50,65 @@ const NewUsersList = () => {
         console.error("Error fetching users:", error);
         setLoader(false);
       });
-  }, [isUserData?.token]);
-  console.log(users, "userss");
+  }, [isUserData?.token,unblockState]);
+
+  const handleBlockUser = (UserId) => {
+    setLoader(true);
+    const token = isUserData?.token;
+    fetch(`${BASE_URL}/admin/block-user/${UserId}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        setLoader(false);
+        if (!res.ok) {
+          throw new Error("Failed to Block User");
+        }
+       
+        return res.json();
+      })
+      .then((data) => {
+        setLoader(false);
+        setUnblockState(!unblockState);
+        console.log(data);
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.error("Error:", err);
+      });
+  };
+
+  const handleUnBlockUser = (id) => {
+    setLoader(true);
+    const token = isUserData?.token;
+    fetch(`${BASE_URL}/admin/unblock-user/${id}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        setLoader(false);
+        if (!res.ok) {
+          throw new Error("Failed to Block User");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setLoader(false);
+        setUnblockState(!unblockState);
+        console.log(data);
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.error("Error:", err);
+      });
+  };
+
   return (
     <div className="w-full flex flex-col border rounded-xl p-4">
       <div className="flex justify-between">
@@ -99,11 +159,21 @@ const NewUsersList = () => {
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
             {users.map((item) => (
-              <NewUserListItem item={item} />
+              <NewUserListItem
+                setIsBlocked={setIsBlocked}
+                item={item}
+                blockedUserId={setBlockedUserId}
+              />
             ))}
           </tbody>
         </table>
       </div>
+      <ConfirmBlockModal
+        isBlocked={isBlocked}
+        handleBlockUser={handleBlockUser}
+        handleUnBlockUser={handleUnBlockUser}
+        UserId={BlockedUserId}
+      />
     </div>
   );
 };

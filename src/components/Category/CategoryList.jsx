@@ -4,11 +4,13 @@ import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import SubCategoryModal from "./CreateSubCategModal";
+import ViewSubCategModal from "./ViewSubCategModal";
 
 const CategoryList = () => {
  const navigate=useNavigate("");
-  const { isUserData, setLoader,setSubCatModal,SubCatModal } = useContext(AuthContext);
+  const { isUserData, setLoader,setSubCatModal,SubCatModal,ViewSubCatModal, setViewSubCatModal} = useContext(AuthContext);
   const [Categories, SetCategories] = useState([]);
+  const [ViewCategories, SetViewCategories] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [dataToDisplay, setDataToDisplay] = useState([]);
   const TOTAL_VALUES_PER_PAGE = 10;
@@ -84,7 +86,7 @@ const CategoryList = () => {
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
           {
             dataToDisplay?.map((item) => (
-              <CategoryListItem item={item} />
+              <CategoryListItem item={item} SetViewCategories={SetViewCategories} setViewSubCatModal={setViewSubCatModal} />
             ))
           }
 
@@ -155,6 +157,8 @@ const CategoryList = () => {
       </div> 
 
       <SubCategoryModal Categories={Categories} />
+      <ViewSubCategModal Categories={ViewCategories} />
+
       </>
   );
 };

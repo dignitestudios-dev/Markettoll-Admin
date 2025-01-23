@@ -5,6 +5,7 @@ import {
   XAxis,
   Tooltip,
   ResponsiveContainer,
+  YAxis,
 } from "recharts";
 import { AuthContext } from "../../context/AuthContext";
 import BASE_URL from "../../constants/BaseUrl";
@@ -60,7 +61,7 @@ const RevenueChart = () => {
         console.error("Error fetching users:", error);
         setLoader(false);
       });
-  }, [isUserData]);
+  }, [isUserData,startDate]);
 
   const customHeader = ({ date, changeYear, changeMonth }) => (
     <div
@@ -112,7 +113,7 @@ const RevenueChart = () => {
                    className="w-[80px] px-1  focus:border-[#0098EA]  focus:outline-[#0098EA]  border rounded-lg"
                    selected={startDate}
                    onChange={(date) => setStartDate(date)}
-                   minDate={new Date()}
+                   maxDate={new Date()}
                    showYearPicker
                    dateFormat="yyyy"
                  />
@@ -123,6 +124,7 @@ const RevenueChart = () => {
         <ResponsiveContainer width="100%" height="100%">
           <LineChart width={"100%"} height={"100%"} data={data}>
             <XAxis dataKey="name" className="text-xs text-gray-500" />
+            <YAxis className="text-xs text-gray-500" />
             <Tooltip />
             <Line
               type="monotone"

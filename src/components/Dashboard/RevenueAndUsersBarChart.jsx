@@ -18,7 +18,7 @@ const RevenueAndUsersBarChart = () => {
   const { isUserData, setLoader } = useContext(AuthContext);
   const [startDate, setStartDate] = useState(new Date());
   const [monthPick, setMonthPick] = useState(new Date());
-  const [originalData, setOriginalData] = useState([]); 
+  const [originalData, setOriginalData] = useState([]);
 
   useEffect(() => {
     const token = isUserData?.token;
@@ -26,45 +26,61 @@ const RevenueAndUsersBarChart = () => {
       fetch(`${BASE_URL}admin/yearly-orders?year=${startDate.getFullYear()}`, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }).then(res => res.json()),
-      
-      fetch(`${BASE_URL}admin/yearly-subscription-revenue?year=${startDate.getFullYear()}`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }).then(res => res.json())
+      }).then((res) => res.json()),
+
+      fetch(
+        `${BASE_URL}admin/yearly-subscription-revenue?year=${startDate.getFullYear()}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => res.json()),
     ])
-    .then(([orderData, revenueData]) => {
-      // Process and map order data
-      const orderDataMap = orderData.data.reduce((acc, item) => {
-        acc[item._id] = item.order_count;
-        return acc;
-      }, {});    
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      // Combine revenue and order data
-      const updatedData = revenueData.data.map(item => {
-        const month = item._id - 1;
-        return {
-          name: monthNames[month] || item._id,
-          Revenue: item.revenue,
-          Order: orderDataMap[item._id] || 0, 
-        };
+      .then(([orderData, revenueData]) => {
+        // Process and map order data
+        const orderDataMap = orderData.data.reduce((acc, item) => {
+          acc[item._id] = item.order_count;
+          return acc;
+        }, {});
+        const monthNames = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        // Combine revenue and order data
+        const updatedData = revenueData.data.map((item) => {
+          const month = item._id - 1;
+          return {
+            name: monthNames[month] || item._id,
+            Revenue: item.revenue,
+            Order: orderDataMap[item._id] || 0,
+          };
+        });
+        // Set the full data (and store it as originalData)
+        setOriginalData(updatedData);
+        setData(updatedData); // Set the data initially
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoader(false);
       });
-      // Set the full data (and store it as originalData)
-      setOriginalData(updatedData);
-      setData(updatedData);  // Set the data initially
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-      setLoader(false);
-    });
   }, [isUserData, startDate]);
-  
+
   const [lineVisibility, setLineVisibility] = useState({
     Order: true,
     Revenue: true,
@@ -128,10 +144,10 @@ const RevenueAndUsersBarChart = () => {
         </div>
         <div>
           <DatePicker
-            className="w-[80px] px-1  focus:border-[#0098EA]  focus:outline-[#0098EA]  border rounded-lg"
+            className="w-[80px] px-1 focus:border-[#0098EA] focus:outline-[#0098EA] border rounded-lg"
             selected={startDate}
             onChange={(date) => setStartDate(date)}
-            minDate={new Date()}
+            maxDate={new Date()} // This will disable future dates
             showYearPicker
             dateFormat="yyyy"
           />

@@ -86,18 +86,18 @@ const ReportList = () => {
       });
   };
 
-  console.log(Reported);
+  console.log(Reported,"reportedUserss");
 
   return (
     <div className="w-full mt-4">
       <div className="w-full">
         <table className="w-full text-start overflow-x-scroll border">
           <tr className="border-b border-t bg-gray-100">
-            <th className="text-sm font-semibold text-start py-4 md:pl-2">
-              Reported User
-            </th>
             <th className="text-sm font-semibold text-start py-4">
               Reported By
+            </th>
+            <th className="text-sm font-semibold text-start py-4 md:pl-2">
+              Reported User
             </th>
             <th className="text-sm font-semibold text-start py-4">Category</th>
             <th className="text-sm font-semibold text-start py-4">Reason</th>

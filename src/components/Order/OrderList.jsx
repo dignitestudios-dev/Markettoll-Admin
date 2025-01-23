@@ -68,22 +68,22 @@ const OrderList = ({ filterData }) => {
             </th>
             <th
               scope="col"
-              className="px-6 lg:px-4 xl:px-2  py-3 text-sm font-semibold"
+              className="px-6 lg:px-4 xl:px-2  py-3 text-xm font-semibold"
             >
               Delivery Address{" "}
             </th>
             <th
               scope="col"
-              className="px-6 lg:px-4 xl:px-2  py-3 text-sm font-semibold"
+              className="px-6 lg:px-4 text-nowrap xl:px-2  py-3 text-sm font-semibold"
             >
               Total Price
             </th>
-            {/* <th
+            <th
               scope="col"
               className="px-6 lg:px-4 xl:px-2  py-3 text-sm font-semibold"
             >
-              Action
-            </th> */}
+              Created At
+            </th>
           </tr>
         </thead>
          {loader ? <span className="loader"></span> : (

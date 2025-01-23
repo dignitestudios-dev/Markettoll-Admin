@@ -21,8 +21,9 @@ const OrderListItem = ({ item }) => {
       <td className="px-6 lg:px-4 xl:px-3 py-4">
         {item?.placerDetails?.email?.value}
       </td>
-      <td className="px-6 lg:px-4 xl:px-3 py-4">{formattedAddress}</td>
+      <td className="px-6 lg:px-4 xl:px-3 py-4 text-xs">{formattedAddress}</td>
       <td className="px-6 lg:px-4 xl:px-3 py-4">{item?.total}</td>
+      <td className="px-6 lg:px-4 xl:px-3 py-4">{new Date(item?.createdAt).toLocaleDateString("en-US",{year:"numeric",month:"short",day:"2-digit"}) }</td>
       {/* <td className="px-6 lg:px-4 xl:px-3 py-4">
         {" "}
         <button className="w-auto px-3 py-1 bg-[#0098EA] text-nowrap hover:opacity-80 text-white rounded-md text-xs">
