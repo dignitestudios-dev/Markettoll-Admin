@@ -5,17 +5,17 @@ import UserList from "../components/Users/UserList";
 const Users = () => {
   useEffect(() => {
     const scrollToTop = () => {
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
       document.title = "Market-Toll - Users";
     };
-    scrollToTop()
+    scrollToTop();
   }, []);
-  const [filterData,setFilterData]=useState([])
+  const [filterData, setFilterData] = useState([]);
 
   return (
     <div className="w-full flex flex-col gap-y-4">
-         <h1 className="text-xl font-bold">Users</h1>
-      <Filter  setFilterData={setFilterData} />
+      <h1 className="text-xl font-bold">Users</h1>
+      <Filter setFilterData={setFilterData} />
       <UserList filterData={filterData} />
     </div>
   );

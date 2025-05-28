@@ -65,7 +65,7 @@ const Sidebar = () => {
                 : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
             }`}
           >
-           <TbAlertCircleOff className="text-lg"/> Inactive Users
+            <TbAlertCircleOff className="text-lg" /> Inactive Users
           </button>
         </li>
         <li className="w-full">
@@ -105,6 +105,18 @@ const Sidebar = () => {
             <PiDresser className="text-lg" /> Categories
           </button>
         </li>
+        <li className="w-full">
+          <button
+            onClick={() => navigateToLink("/affiliate", "Affiliate")}
+            className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
+              activeLink === "Affiliate"
+                ? "bg-[#0098EA] text-white"
+                : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
+            }`}
+          >
+           { activeLink === "Affiliate"?( <img src="/src/assets/affiliate.png" className="w-5" alt="affiliate.png" />):( <img src="/src/assets/affiliate-dark.png"  className="w-5" alt="affiliate.png" />)} Affiliate
+          </button>
+        </li>
 
         <li className="w-full">
           <button
@@ -124,7 +136,7 @@ const Sidebar = () => {
           <button
             onClick={() => setIsDropdownOpen((prevState) => !prevState)} // Toggle dropdown
             className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
-              isDropdownOpen 
+              isDropdownOpen
                 ? "bg-[#0098EA] text-white"
                 : "bg-transparent text-black hover:bg-[#0098EA] text-nowrap hover:text-white transition-all duration-300"
             }`}
@@ -158,7 +170,7 @@ const Sidebar = () => {
                   }`}
                 >
                   <BiMessageRounded className="text-lg" />
-                 Live Chat
+                  Live Chat
                 </button>
               </li>
             </ul>

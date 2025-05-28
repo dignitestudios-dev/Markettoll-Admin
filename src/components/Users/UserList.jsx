@@ -5,7 +5,8 @@ import { AuthContext } from "../../context/AuthContext";
 import ConfirmBlockModal from "./ConfirmModal";
 
 const UserList = ({ filterData }) => {
-  const { isUserData, setLoader,FilterMonthUser,loader } = useContext(AuthContext);
+  const { isUserData, setLoader, FilterMonthUser, loader } =
+    useContext(AuthContext);
   const [users, SetUsers] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [BlockedUserId, setBlockedUserId] = useState("");
@@ -35,35 +36,38 @@ const UserList = ({ filterData }) => {
       });
   }, [isUserData, filterData, unblockState]);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
-    const formateDate=FilterMonthUser&&FilterMonthUser?.split("-");  
+    const formateDate = FilterMonthUser && FilterMonthUser?.split("-");
     if (formateDate) {
-      
-      fetch(`${BASE_URL}/admin/users-registered-in-month?month=${formateDate[1]||""}&year=${formateDate[0]||""}&page=1`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-      .then((res) => res.json())
-      .then((res) => {  
-        console.log(res.data,"filter by months");
-        if (res.data) {        
-          SetUsers(res?.data);
-          setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-          setLoader(false);
+      fetch(
+        `${BASE_URL}/admin/users-registered-in-month?month=${
+          formateDate[1] || ""
+        }&year=${formateDate[0] || ""}&page=1`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-        setLoader(false);
-      });
-    }  
-    },[FilterMonthUser])
+      )
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.data, "filter by months");
+          if (res.data) {
+            SetUsers(res?.data);
+            setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
+            setLoader(false);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+          setLoader(false);
+        });
+    }
+  }, [FilterMonthUser]);
 
   const goOnPrevPage = () => {
     if (currentPageNumber === 1) return; // Don't go back if already on the first page
@@ -108,8 +112,6 @@ const UserList = ({ filterData }) => {
         console.error("Error:", err);
       });
   };
-
-  
 
   const handleUnBlockUser = (id) => {
     const token = isUserData?.token;
@@ -174,19 +176,21 @@ const UserList = ({ filterData }) => {
               </th>
             </tr>
           </thead>
-           {loader ? <span className="loader"></span> : (
-          <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-            {dataToDisplay
-              ?.filter((item) => item.adminStatus == "active")
-              ?.map((item) => (
-                <UserListItem
-                  setIsBlocked={setIsBlocked}
-                  item={item}
-                  blockedUserId={setBlockedUserId}
-                />
-              ))}
-          </tbody>
-           )}
+          {loader ? (
+            <span className="loader"></span>
+          ) : (
+            <tbody className="divide-y divide-gray-100 border-t border-gray-100">
+              {dataToDisplay
+                ?.filter((item) => item.adminStatus == "active")
+                ?.map((item) => (
+                  <UserListItem
+                    setIsBlocked={setIsBlocked}
+                    item={item}
+                    blockedUserId={setBlockedUserId}
+                  />
+                ))}
+            </tbody>
+          )}
         </table>
       </div>
       <div className="flex justify-end gap-3 w-full">

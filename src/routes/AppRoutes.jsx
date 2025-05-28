@@ -1,6 +1,8 @@
 import Auth from "../components/Global/Auth";
 import Layout from "../components/Global/Layout";
 import UserInfo from "../components/UserDetails/UserInfo";
+import Affiliate from "../pages/Affiliate/Affiliate";
+import AffiliateDetail from "../pages/Affiliate/AffiliateDetail";
 import Category from "../pages/Category/Category";
 import CreateCategory from "../pages/Category/CreateCategory";
 import EditCategory from "../pages/Category/EditCategory";
@@ -81,6 +83,18 @@ export const AppRoutes = [
     Title: "Category",
     url: "/category",
     page: <Layout pages={<Category />} />,
+    isPrivate: true,
+  },
+  {
+    Title: "Affiliate",
+    url: "/affiliate",
+    page: <Layout pages={<Affiliate />} />,
+    isPrivate: true,
+  },
+  {
+    Title: "Affiliate",
+    url: "/affiliate/:id",
+    page: <Layout pages={<AffiliateDetail />} />,
     isPrivate: true,
   },
   {
