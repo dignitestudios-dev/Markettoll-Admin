@@ -1,26 +1,65 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import BASE_URL from "../../constants/BaseUrl";
+import { AuthContext } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-export default function Stats() {
+export default function Stats({setTotalAffiliate,totalAffiliate}) {
+ const { isUserData, setLoader, loader } = useContext(AuthContext);
+  const [Sats, setSats] = useState([]);
+  const navigate=useNavigate("");
+  const fetchInfluencer = () => {
+    setLoader(!loader);
+    try {
+      const token = isUserData?.token;
+      fetch(`${BASE_URL}/admin/influencers-stats`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res, "response");
+          setSats(res?.data);
+          setLoader(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+          setLoader(false);
+        });
+    } catch (error) {
+      console.log(error);
+      toast.error("error.message");
+    }
+  };
+
+  useEffect(() => {
+    fetchInfluencer();
+  }, []);
+
+
   const affiliateData = [
     {
       name: "Total Affiliate",
-      value: 254,
+      value:Sats.totalAffiliates,
     },
     {
       name: "Pending Request",
-      value: 5,
+      value:Sats.pendingRequests,
     },
     {
       name: "Total Referred",
-      value: 12,
+      value:Sats.totalReferredUsers,
     },
     {
       name: "Total Earnings",
-      value: "$1520",
+      value: Sats.totalEarnings,
     },
     {
       name: "Wallet Balance",
-      value: "$110520",
+      value:isUserData.walletBalance,
     },
   ];
   return (
@@ -28,7 +67,8 @@ export default function Stats() {
       {affiliateData?.map((item, i) => (
         <div
           key={i}
-          className="bg-[#FFFFFF] border p-3 border-[#E5E7EB] rounded-[12px]"
+          onClick={()=>i==0?setTotalAffiliate(!totalAffiliate):i==1&&navigate("/pending-request")}
+          className={`${i==0?"cursor-pointer":i==1&&"cursor-pointer"}   bg-[#FFFFFF] border p-3 border-[#E5E7EB] rounded-[12px]`}
         >
           <h3 className="font-[500] text-[14px] ">{item?.name}</h3>
           <p className="font-bold text-[22px] mt-3 bg-gradient-to-r from-[#0033A5] via-[#0995E7] to-[#0995E7] bg-clip-text text-transparent">

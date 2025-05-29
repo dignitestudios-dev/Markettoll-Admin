@@ -3,6 +3,7 @@ import Layout from "../components/Global/Layout";
 import UserInfo from "../components/UserDetails/UserInfo";
 import Affiliate from "../pages/Affiliate/Affiliate";
 import AffiliateDetail from "../pages/Affiliate/AffiliateDetail";
+import PendingRequest from "../pages/Affiliate/PendingRequest";
 import Category from "../pages/Category/Category";
 import CreateCategory from "../pages/Category/CreateCategory";
 import EditCategory from "../pages/Category/EditCategory";
@@ -89,6 +90,12 @@ export const AppRoutes = [
     Title: "Affiliate",
     url: "/affiliate",
     page: <Layout pages={<Affiliate />} />,
+    isPrivate: true,
+  },
+  {
+    Title: "Affiliate",
+    url: "/pending-request",
+    page: <Layout pages={<PendingRequest />} />,
     isPrivate: true,
   },
   {
