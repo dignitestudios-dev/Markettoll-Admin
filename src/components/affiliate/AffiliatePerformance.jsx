@@ -169,9 +169,9 @@ export default function AffiliatePerformance({ totalAffiliate }) {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                           <img
                             src={
-                              item?.influencerStatus === "active"
+                              item?.adminStatus == "active"
                                 ? "/active.png"
-                                : item?.influencerStatus == "suspend"
+                                : item?.adminStatus == "blocked"
                                 ? "/block.png"
                                 : "/suspend.png"
                             }

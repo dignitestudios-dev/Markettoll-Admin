@@ -114,7 +114,7 @@ const Sidebar = () => {
                 : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
             }`}
           >
-           { activeLink === "Affiliate"?( <img src="/src/assets/affiliate.png" className="w-5" alt="affiliate.png" />):( <img src="/src/assets/affiliate-dark.png"  className="w-5" alt="affiliate.png" />)} Affiliate
+           { activeLink === "Affiliate"?( <img src="/affiliate.png" className="w-5" alt="affiliate.png" />):( <img src="/affiliate-dark.png"  className="w-5" alt="affiliate.png" />)} Affiliate
           </button>
         </li>
 

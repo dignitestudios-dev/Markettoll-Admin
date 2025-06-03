@@ -22,14 +22,14 @@ export default function AffiliateDetail() {
   };
 
   console.log(state, "influencerRate");
-  const [accountStatus, setAccountStatus] = useState(state.status);
+  const [accountStatus, setAccountStatus] = useState(state.adminStatus=="active"?true:false);
   const [commissionRate, setCommissionRate] = useState(state?.influencerRate);
   const [linkActive, setLinkActive] = useState(
-    state?.status == "active" ? true : false
+    state?.isActive == "active" ? true : false
   );
   useEffect(() => {
-    setLinkActive(Settings == "manual" ? false : true);
-  }, [Settings]);
+    setLinkActive(state?.isActive == "active" ? true :false);
+  }, [state?.isActive]);
 
   const handleUnBlockUser = () => {
     const token = isUserData?.token;
@@ -79,12 +79,12 @@ export default function AffiliateDetail() {
         console.error("Error:", err);
       });
   };
-
+console.log(state,"stateData")
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="flex justify-between items-center mb-5">
         <h1 className="text-xl font-bold">Details</h1>
-        <img src={"/active.png"} alt="active.png" className="w-24" />
+        <img src={state?.adminStatus=="active"?"/active.png":"/block.png"} alt="active.png" className="w-24" />
       </div>
       <div className=" mx-auto bg-white rounded-xl shadow-sm border border-gray-200 p-8">
         {/* Profile Section */}
@@ -196,7 +196,7 @@ export default function AffiliateDetail() {
                 Account Status
               </span>
               <div className="relative">
-                {accountStatus == "block" ? (
+                {!accountStatus ? (
                   <button
                     onClick={() => {
                       handleUnBlockUser();
@@ -275,8 +275,10 @@ export default function AffiliateDetail() {
               <span className="text-gray-700 font-medium">Affiliate Link</span>
               <div className="flex items-center space-x-2 flex-1">
                 <span className="text-gray-600 text-sm truncate max-w-md">
-                  {affiliateLink}
+                  {state?.referralLink?state?.referralLink:"----"}
                 </span>
+                {
+                  state?.referralLink&&(
                 <button
                   onClick={handleCopyLink}
                   className="p-1 hover:bg-gray-200 rounded transition-colors"
@@ -284,6 +286,8 @@ export default function AffiliateDetail() {
                 >
                   <BiCopy className="w-4 h-4 text-gray-500" />
                 </button>
+                  )
+                }
                 {copied && (
                   <span className="text-green-600 text-xs font-medium">
                     Copied!
@@ -298,6 +302,7 @@ export default function AffiliateDetail() {
                   {linkActive ? "Active" : "InActive"}
                 </span>
                 <button
+                disabled={state?.isActive=="active"?false:true}
                   onClick={async () => {
                     setLinkActive(!linkActive);
                     try {
