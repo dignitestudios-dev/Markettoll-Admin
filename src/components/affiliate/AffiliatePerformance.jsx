@@ -4,10 +4,14 @@ import { AuthContext } from "../../context/AuthContext";
 import BASE_URL from "../../constants/BaseUrl";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { LuArrowUpDown } from "react-icons/lu";
+import { BiChevronDown } from "react-icons/bi";
 
 export default function AffiliatePerformance({ totalAffiliate }) {
   const { isUserData, setLoader, loader } = useContext(AuthContext);
   const [affiliate, setAffiliate] = useState([]);
+  const [refDrop, setRefDrop] = useState(false);
+  const [CommisionDrop, setCommisionDrop] = useState(false);
   const navigate = useNavigate("");
   const fetchInfluencer = () => {
     setLoader(!loader);
@@ -47,16 +51,7 @@ export default function AffiliatePerformance({ totalAffiliate }) {
           {totalAffiliate ? "Total Affiliate" : "Affiliate Performance Table"}
         </h1>
         {!totalAffiliate && (
-          <div className="grid grid-cols-3 gap-2">
-            <select
-              name=""
-              id=""
-              className="bg-[#FFFFFF] border p-2 border-[#E5E7EB] rounded-[12px] focus:outline-[#E5E7EB] font-[300] text-[14px]"
-            >
-              <option value="" selected>
-                Sort by commission
-              </option>
-            </select>
+          <div className="grid grid-cols-2 gap-2">
             <input
               type="date"
               className="p-2 px-2 bg-[#FFFFFF] border border-[#E5E7EB] focus:outline-[#E5E7EB] rounded-[12px] "
@@ -95,7 +90,37 @@ export default function AffiliatePerformance({ totalAffiliate }) {
                       scope="col"
                       className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
-                      Total Referred Users
+                      <div className="relative">
+                        <button
+                          onClick={() => setRefDrop(!refDrop)}
+                          className="flex items-center justify-between w-full sm:w-50 px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer"
+                        >
+                          <div className="flex items-center">
+                            <LuArrowUpDown className="w-4 h-4 text-gray-500 mr-2" />
+                            <span className="text-gray-700">
+                              Total Referred Users
+                            </span>
+                          </div>
+                          <BiChevronDown className="w-4 h-4 text-gray-500" />
+                        </button>
+
+                        {/* Static Dropdown Options (hidden by default) */}
+                        <div
+                          className={`absolute top-full left-0 w-full sm:w-50 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10  ${
+                            refDrop ? "block" : "hidden"
+                          } `}
+                        >
+                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700 rounded-t-lg">
+                            Default Order
+                          </button>
+                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700">
+                            Low to High
+                          </button>
+                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700">
+                            High to Low
+                          </button>
+                        </div>
+                      </div>
                     </th>
                     <th
                       scope="col"
@@ -113,7 +138,37 @@ export default function AffiliatePerformance({ totalAffiliate }) {
                       scope="col"
                       className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
-                      Commission Rate
+                      <div className="relative">
+                        <button
+                          onClick={() => setCommisionDrop(!CommisionDrop)}
+                          className="flex items-center justify-between w-full sm:w-50 px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer"
+                        >
+                          <div className="flex items-center">
+                            <LuArrowUpDown className="w-4 h-4 text-gray-500 mr-2" />
+                            <span className="text-gray-700">
+                              Commission Rate
+                            </span>
+                          </div>
+                          <BiChevronDown className="w-4 h-4 text-gray-500" />
+                        </button>
+
+                        {/* Static Dropdown Options (hidden by default) */}
+                        <div
+                          className={`absolute top-full left-0 w-full sm:w-50 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10  ${
+                            CommisionDrop ? "block" : "hidden"
+                          } `}
+                        >
+                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700 rounded-t-lg">
+                            Default Order
+                          </button>
+                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700">
+                            Low to High
+                          </button>
+                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700">
+                            High to Low
+                          </button>
+                        </div>
+                      </div>
                     </th>
                     <th
                       scope="col"
@@ -131,69 +186,71 @@ export default function AffiliatePerformance({ totalAffiliate }) {
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {affiliate && affiliate.length > 0 ? (
-                    affiliate.filter(item=>item.influencerStatus=="active").map((item, i) => (
-                      <tr key={i}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                          <div className="flex items-center gap-2">
+                    affiliate
+                      .filter((item) => item.influencerStatus == "active")
+                      .map((item, i) => (
+                        <tr key={i}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                            <div className="flex items-center gap-2">
+                              <img
+                                src={
+                                  item?.profileImage
+                                    ? item?.profileImage
+                                    : "/circle.png"
+                                }
+                                className="w-10"
+                                alt="circle.png"
+                              />
+                              <div>
+                                <p className="text-[14px] font-[400] text-[#000000]">
+                                  {item?.name}
+                                </p>
+                                <p className="text-[14px] font-[300] text-[#6B7280]">
+                                  {item?.email?.value}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                            {item?.referredUsersCount}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                            ${item?.totalEarning}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                            ${item?.totalPaid}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                            %{item?.influencerRate}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                             <img
                               src={
-                                item?.profileImage
-                                  ? item?.profileImage
-                                  : "/circle.png"
+                                item?.adminStatus == "active"
+                                  ? "/active.png"
+                                  : item?.adminStatus == "blocked"
+                                  ? "/block.png"
+                                  : "/suspend.png"
                               }
-                              className="w-10"
-                              alt="circle.png"
+                              alt="influencerStatus"
+                              className="w-24"
                             />
-                            <div>
-                              <p className="text-[14px] font-[400] text-[#000000]">
-                                {item?.name}
-                              </p>
-                              <p className="text-[14px] font-[300] text-[#6B7280]">
-                                {item?.email?.value}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                          {item?.referredUsersCount}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                          ${item?.totalEarning}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                          ${item?.totalPaid}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                          %{item?.influencerRate}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                          <img
-                            src={
-                              item?.adminStatus == "active"
-                                ? "/active.png"
-                                : item?.adminStatus == "blocked"
-                                ? "/block.png"
-                                : "/suspend.png"
-                            }
-                            alt="influencerStatus"
-                            className="w-24"
-                          />
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                          <button
-                            onClick={() =>
-                              navigate(`/affiliate/${item?._id}`, {
-                                state: item,
-                              })
-                            }
-                            type="button"
-                            className="inline-flex items-center gap-x-2 text-sm p-2 rounded-[8px] text-white bg-[#0098EA]"
-                          >
-                            View
-                          </button>
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                            <button
+                              onClick={() =>
+                                navigate(`/affiliate/${item?._id}`, {
+                                  state: item,
+                                })
+                              }
+                              type="button"
+                              className="inline-flex items-center gap-x-2 text-sm p-2 rounded-[8px] text-white bg-[#0098EA]"
+                            >
+                              View
+                            </button>
+                          </td>
+                        </tr>
+                      ))
                   ) : (
                     <tr>
                       <td

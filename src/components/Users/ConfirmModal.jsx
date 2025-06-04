@@ -12,7 +12,7 @@ const ConfirmBlockModal = ({UserId,handleBlockUser,isBlocked,handleUnBlockUser})
           <div className="flex items-center flex-col justify-center gap-y-4 h-full">
             <div  className="flex flex-col gap-y-2 items-center" >
               <BiBlock className="text-[#0098EA]" size={40} />
-              <h3 className="text-2xl" > {isBlocked?"Blocked User":"UnBlocked User"} </h3>
+              <h3 className="text-2xl" > {isBlocked?"Block User":"UnBlock User"} </h3>
             </div>
           <p className="text-center text-wrap mt-4 text-gray-600" >{isBlocked?"Are you sure you want to Block":"Are you sure you want to UnBlocked"}  </p>
           <div className="flex items-center justify-center gap-5 " >
@@ -28,7 +28,7 @@ const ConfirmBlockModal = ({UserId,handleBlockUser,isBlocked,handleUnBlockUser})
                     handleUnBlockUser(UserId);   
                     setBlockedModal(!blockedModal);
                 }
-            }}  className="bg-red-500 text-white text-sm px-4 py-2 rounded-md">{isBlocked=="active"?"Block":"UnBlocked"}</button>
+            }}  className="bg-red-500 text-white text-sm px-4 py-2 rounded-md">{isBlocked=="active"?"Block":"UnBlock"}</button>
           </div>
           </div>
         </div>
