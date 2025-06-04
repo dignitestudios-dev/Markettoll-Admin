@@ -12,37 +12,62 @@ export default function AffiliatePerformance({ totalAffiliate }) {
   const [affiliate, setAffiliate] = useState([]);
   const [refDrop, setRefDrop] = useState(false);
   const [CommisionDrop, setCommisionDrop] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [search, setSearch] = useState("");
+  const [commissionSort, setCommissionSort] = useState(""); // "asc" | "desc" | ""
+  const [referralSort, setReferralSort] = useState(""); // "asc" | "desc" | ""
+
   const navigate = useNavigate("");
-  const fetchInfluencer = () => {
-    setLoader(!loader);
-    try {
-      const token = isUserData?.token;
-      fetch(`${BASE_URL}/admin/get-influencers`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res, "response");
-          setAffiliate(res?.data);
-          setLoader(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error);
-          setLoader(false);
-        });
-    } catch (error) {
-      console.log(error);
-      toast.error("error.message");
+const fetchInfluencer = () => {
+  setLoader(true);
+  try {
+    const token = isUserData?.token;
+
+    const params = new URLSearchParams();
+    if (startDate) params.append("startDate", startDate);
+    if (endDate) params.append("endDate", endDate);
+    if (search) {
+      params.append("name", search);
+      params.append("email", search);
+      params.append("referrals", search);
+      params.append("commission", search);
     }
-  };
+
+    // Only one sort param at a time
+    if (commissionSort) {
+      params.append("referrals", "");
+      params.append("commission", commissionSort); // "asc" or "desc"
+    } else if (referralSort) {
+      params.append("commission", "");
+      params.append("referrals", referralSort); // "asc" or "desc"
+    }
+
+    fetch(`${BASE_URL}/admin/get-influencers?${params.toString()}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setAffiliate(res?.data);
+        setLoader(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        setLoader(false);
+      });
+  } catch (error) {
+    toast.error(error.message || "An error occurred");
+  }
+};
+
 
   useEffect(() => {
     fetchInfluencer();
-  }, []);
+  }, [startDate, endDate, search, commissionSort, referralSort]);
 
   return (
     <div>
@@ -51,19 +76,46 @@ export default function AffiliatePerformance({ totalAffiliate }) {
           {totalAffiliate ? "Total Affiliate" : "Affiliate Performance Table"}
         </h1>
         {!totalAffiliate && (
-          <div className="grid grid-cols-2 gap-2">
-            <input
-              type="date"
-              className="p-2 px-2 bg-[#FFFFFF] border border-[#E5E7EB] focus:outline-[#E5E7EB] rounded-[12px] "
-              placeholder="Date"
-            />
+          <div className="grid grid-cols-3">
+            <div>
+              <label htmlFor="" className="text-xs text-gray-500">
+                Start Date
+              </label>{" "}
+              <br />
+              <input
+                type="date"
+                className="p-2 px-2 bg-[#FFFFFF] border border-[#E5E7EB] focus:outline-[#E5E7EB] rounded-[12px]"
+                placeholder="Start Date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="" className="text-xs text-gray-500">
+                End Date
+              </label>{" "}
+              <br />
+              <input
+                type="date"
+                className="p-2 px-2 bg-[#FFFFFF] border border-[#E5E7EB] focus:outline-[#E5E7EB] rounded-[12px]"
+                placeholder="End Date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
             <div className="relative">
+              <label htmlFor="" className="text-xs text-gray-500">
+                Search
+              </label>{" "}
+              <br />
               <input
                 type="text"
-                className="p-2 px-2 bg-[#FFFFFF] border focus:outline-[#E5E7EB] border-[#E5E7EB] rounded-[12px] "
+                className="p-2 px-2 bg-[#FFFFFF] border focus:outline-[#E5E7EB] border-[#E5E7EB] rounded-[12px]"
                 placeholder="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
-              <div className="absolute inset-y-0 end-0 flex items-center pointer-events-none z-20 pe-1">
+              <div className="absolute inset-y-0 end-0 top-5 flex items-center pointer-events-none z-20 pe-1">
                 <button className="bg-[#0098EA] text-white  px-2 py-2 rounded-[10px]">
                   <CiSearch size={18} />
                 </button>
@@ -98,7 +150,11 @@ export default function AffiliatePerformance({ totalAffiliate }) {
                           <div className="flex items-center">
                             <LuArrowUpDown className="w-4 h-4 text-gray-500 mr-2" />
                             <span className="text-gray-700">
-                              Total Referred Users
+                              {referralSort == ""
+                                ? "Total Referred Users"
+                                : referralSort == "asc"
+                                ? "Low to High"
+                                : " High to Low"}
                             </span>
                           </div>
                           <BiChevronDown className="w-4 h-4 text-gray-500" />
@@ -106,17 +162,38 @@ export default function AffiliatePerformance({ totalAffiliate }) {
 
                         {/* Static Dropdown Options (hidden by default) */}
                         <div
-                          className={`absolute top-full left-0 w-full sm:w-50 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10  ${
+                          className={`absolute top-full left-0 w-full sm:w-50 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10 ${
                             refDrop ? "block" : "hidden"
-                          } `}
+                          }`}
                         >
-                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700 rounded-t-lg">
+                          <button
+                            onClick={() => {
+                              setReferralSort("");
+                              setCommissionSort("");
+                              setRefDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700 rounded-t-lg"
+                          >
                             Default Order
                           </button>
-                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700">
+                          <button
+                            onClick={() => {
+                              setReferralSort("asc");
+                              setCommissionSort("");
+                              setRefDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700"
+                          >
                             Low to High
                           </button>
-                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700">
+                          <button
+                            onClick={() => {
+                              setReferralSort("desc");
+                              setCommissionSort("");
+                              setRefDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700"
+                          >
                             High to Low
                           </button>
                         </div>
@@ -146,7 +223,11 @@ export default function AffiliatePerformance({ totalAffiliate }) {
                           <div className="flex items-center">
                             <LuArrowUpDown className="w-4 h-4 text-gray-500 mr-2" />
                             <span className="text-gray-700">
-                              Commission Rate
+                              {commissionSort == ""
+                                ? "Commission Rate"
+                                : commissionSort == "asc"
+                                ? "Low to High"
+                                : " High to Low"}
                             </span>
                           </div>
                           <BiChevronDown className="w-4 h-4 text-gray-500" />
@@ -154,17 +235,38 @@ export default function AffiliatePerformance({ totalAffiliate }) {
 
                         {/* Static Dropdown Options (hidden by default) */}
                         <div
-                          className={`absolute top-full left-0 w-full sm:w-50 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10  ${
+                          className={`absolute top-full left-0 w-full sm:w-50 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10 ${
                             CommisionDrop ? "block" : "hidden"
-                          } `}
+                          }`}
                         >
-                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700 rounded-t-lg">
+                          <button
+                            onClick={() => {
+                              setReferralSort("");
+                              setCommissionSort("");
+                              setCommisionDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700 rounded-t-lg"
+                          >
                             Default Order
                           </button>
-                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700">
+                          <button
+                            onClick={() => {
+                              setReferralSort("");
+                              setCommissionSort("asc");
+                              setCommisionDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700"
+                          >
                             Low to High
                           </button>
-                          <button className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700">
+                          <button
+                            onClick={() => {
+                              setCommissionSort("desc");
+                              setReferralSort("");
+                              setCommisionDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700"
+                          >
                             High to Low
                           </button>
                         </div>
