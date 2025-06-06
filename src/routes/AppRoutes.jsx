@@ -11,6 +11,8 @@ import Chat from "../pages/Chat";
 import Customer from "../pages/CustomerSupport";
 import Dashboard from "../pages/Dashboard";
 import DeletedAccounts from "../pages/DeletedAccounts";
+import Goal from "../pages/Goals/Goal";
+import GoalAchiever from "../pages/Goals/GoalAchiever";
 import InActiveUser from "../pages/InActiveUser";
 import Login from "../pages/Login";
 import Notifications from "../pages/Notifications";
@@ -90,6 +92,18 @@ export const AppRoutes = [
     Title: "Affiliate",
     url: "/affiliate",
     page: <Layout pages={<Affiliate />} />,
+    isPrivate: true,
+  },
+  {
+    Title: "Goal",
+    url: "/goal",
+    page: <Layout pages={<Goal />} />,
+    isPrivate: true,
+  },
+  {
+    Title: "Goal",
+    url: "/achiever",
+    page: <Layout pages={<GoalAchiever />} />,
     isPrivate: true,
   },
   {

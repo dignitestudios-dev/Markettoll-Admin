@@ -58,7 +58,7 @@ export default function Stats({setTotalAffiliate,totalAffiliate}) {
       value: Sats.totalEarnings,
     },
     {
-      name: "Wallet Balance",
+      name: "Bonus Commission ",
       value:isUserData.walletBalance,
     },
   ];
