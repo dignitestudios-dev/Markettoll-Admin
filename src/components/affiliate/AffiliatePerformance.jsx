@@ -12,11 +12,13 @@ export default function AffiliatePerformance({ totalAffiliate }) {
   const [affiliate, setAffiliate] = useState([]);
   const [refDrop, setRefDrop] = useState(false);
   const [CommisionDrop, setCommisionDrop] = useState(false);
+  const [EarningDrop, setEarningDrop] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [search, setSearch] = useState("");
   const [commissionSort, setCommissionSort] = useState(""); // "asc" | "desc" | ""
   const [referralSort, setReferralSort] = useState(""); // "asc" | "desc" | ""
+  const [earningSort, setEarningSort] = useState(""); // "asc" | "desc" | ""
 
   const navigate = useNavigate("");
 const fetchInfluencer = () => {
@@ -32,15 +34,23 @@ const fetchInfluencer = () => {
       params.append("email", search);
       params.append("referrals", search);
       params.append("commission", search);
+      params.append("totalEarning", search);
     }
 
     // Only one sort param at a time
     if (commissionSort) {
+      params.append("totalEarning", "");
       params.append("referrals", "");
       params.append("commission", commissionSort); // "asc" or "desc"
     } else if (referralSort) {
       params.append("commission", "");
+        params.append("totalEarning", "");
       params.append("referrals", referralSort); // "asc" or "desc"
+    }
+     else if (earningSort) {
+       params.append("totalEarning", earningSort);
+      params.append("commission", "");
+      params.append("referrals", ""); // "asc" or "desc"
     }
 
     fetch(`${BASE_URL}/admin/get-influencers?${params.toString()}`, {
@@ -67,7 +77,7 @@ const fetchInfluencer = () => {
 
   useEffect(() => {
     fetchInfluencer();
-  }, [startDate, endDate, search, commissionSort, referralSort]);
+  }, [startDate, endDate, search, commissionSort, referralSort,earningSort]);
 
   return (
     <div>
@@ -203,7 +213,65 @@ const fetchInfluencer = () => {
                       scope="col"
                       className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
-                      Total Earnings
+                      
+                      <div className="relative">
+                        <button
+                          onClick={() => setEarningDrop(!EarningDrop)}
+                          className="flex items-center justify-between w-full sm:w-50 px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer"
+                        >
+                          <div className="flex items-center">
+                            <LuArrowUpDown className="w-4 h-4 text-gray-500 mr-2" />
+                            <span className="text-gray-700">
+                              {earningSort == ""
+                                ? "Total Earnings"
+                                : earningSort == "asc"
+                                ? "Low to High"
+                                : " High to Low"}
+                            </span>
+                          </div>
+                          <BiChevronDown className="w-4 h-4 text-gray-500" />
+                        </button>
+
+                        {/* Static Dropdown Options (hidden by default) */}
+                        <div
+                          className={`absolute top-full left-0 w-full sm:w-50 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10 ${
+                            EarningDrop ? "block" : "hidden"
+                          }`}
+                        >
+                          <button
+                            onClick={() => {
+                              setReferralSort("");
+                              setCommissionSort("");
+                              setEarningDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700 rounded-t-lg"
+                          >
+                            Default Order
+                          </button>
+                          <button
+                            onClick={() => {
+                              setEarningSort("asc")
+                              setReferralSort("");
+                              setCommissionSort("");
+                              setEarningDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700"
+                          >
+                            Low to High
+                          </button>
+                          <button
+                            onClick={() => {
+                               setEarningSort("desc")
+                              setReferralSort("");
+                              setCommissionSort("");
+                              setEarningDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700"
+                          >
+                            High to Low
+                          </button>
+                        </div>
+                      </div>
                     </th>
                     <th
                       scope="col"
