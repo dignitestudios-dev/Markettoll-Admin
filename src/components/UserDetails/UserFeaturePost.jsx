@@ -11,7 +11,7 @@ export default function UserFeaturePosting({userId}) {
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
-    fetch(`${BASE_URL}admin/user-listings-boosted/${userId}?page=1`, {
+    fetch(`${BASE_URL}/admin/user-listings-boosted/${userId}?page=1`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

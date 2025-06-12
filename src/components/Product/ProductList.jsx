@@ -24,7 +24,7 @@ const ProductList = ({ filterData }) => {
     setLoader(true);
     const token = isUserData?.token;
     fetch(
-      `${BASE_URL}admin/${active}?name=${filterData || ""}&category=${
+      `${BASE_URL}/admin/${active}?name=${filterData || ""}&category=${
         displayValue == "Category" ? "" : displayValue
       }&subCategory=${
         SubCategFill != "Sub Category" ? SubCategFill : ""

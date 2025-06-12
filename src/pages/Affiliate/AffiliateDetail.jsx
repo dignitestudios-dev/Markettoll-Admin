@@ -5,11 +5,13 @@ import { useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import BASE_URL from "../../constants/BaseUrl";
+import ViewRefferal from "../../components/affiliate/ViewRefferal";
 
 export default function AffiliateDetail() {
   const { isUserData, setLoader, loader } = useContext(AuthContext);
   const [edit, setEdit] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [refferals, setRefferals] = useState([]);
   const { state } = useLocation();
   const [Settings, setSettings] = useState("");
   const affiliateLink =
@@ -27,13 +29,45 @@ export default function AffiliateDetail() {
   const [linkActive, setLinkActive] = useState(
     state?.isActive == "active" ? true : false
   );
+
+const fetchInfluencer = () => {
+  setLoader(true);
+  try {
+    const token = isUserData?.token;
+    fetch(`${BASE_URL}/admin/get-influencers/${state?._id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setRefferals(res?.data);
+        setLoader(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        setLoader(false);
+      });
+  } catch (error) {
+    toast.error(error.message || "An error occurred");
+  }
+};
+
+
+  useEffect(() => {
+    fetchInfluencer();
+  }, []);
+
+
   useEffect(() => {
     setLinkActive(state?.isActive == "active" ? true :false);
   }, [state?.isActive]);
 
   const handleUnBlockUser = () => {
     const token = isUserData?.token;
-    fetch(`${BASE_URL}admin/unblock-user/${state._id}`, {
+    fetch(`${BASE_URL}/admin/unblock-user/${state._id}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -57,7 +91,7 @@ export default function AffiliateDetail() {
   };
   const handleBlockUser = () => {
     const token = isUserData?.token;
-    fetch(`${BASE_URL}admin/block-user/${state._id}`, {
+    fetch(`${BASE_URL}/admin/block-user/${state._id}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -79,7 +113,6 @@ export default function AffiliateDetail() {
         console.error("Error:", err);
       });
   };
-console.log(state,"stateData")
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="flex justify-between items-center mb-5">
@@ -230,7 +263,7 @@ console.log(state,"stateData")
                     try {
                       setLoader(true);
                       const response = await fetch(
-                        `${BASE_URL}admin/update-influencer-rate`,
+                        `${BASE_URL}/admin/update-influencer-rate`,
                         {
                           method: "PUT",
                           headers: {
@@ -308,7 +341,7 @@ console.log(state,"stateData")
                     try {
                       setLoader(true);
                       const response = await fetch(
-                        `${BASE_URL}admin/toggle-referral-status`,
+                        `${BASE_URL}/admin/toggle-referral-status`,
                         {
                           method: "POST",
                           headers: {
@@ -353,6 +386,7 @@ console.log(state,"stateData")
           </div>
         </div>
       </div>
+      <ViewRefferal refferals={refferals}/>
     </div>
   );
 }

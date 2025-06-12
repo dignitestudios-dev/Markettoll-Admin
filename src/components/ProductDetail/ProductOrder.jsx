@@ -12,7 +12,7 @@ export default function ProductOrder({ Producid }) {
     const token = isUserData?.token;
     console.log(Producid, "Producidd");
 
-    fetch(`${BASE_URL}admin/product-orders/${Producid}?page=1`, {
+    fetch(`${BASE_URL}/admin/product-orders/${Producid}?page=1`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

@@ -4,7 +4,7 @@ import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 import ConfirmBlockModal from "./ConfirmModal";
 
-const UserList = ({ filterData }) => {
+const UserList = ({ filterData,setUserCount }) => {
   const { isUserData, setLoader, FilterMonthUser, loader } =
     useContext(AuthContext);
   const [users, SetUsers] = useState([]);
@@ -28,6 +28,7 @@ const UserList = ({ filterData }) => {
       .then((res) => {
         SetUsers(res?.data);
         setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
+        setUserCount(res?.data?.length)
         setLoader(false);
       })
       .catch((error) => {
@@ -136,7 +137,7 @@ const UserList = ({ filterData }) => {
         console.error("Error:", err);
       });
   };
-
+console.log(dataToDisplay,"data0")
   return (
     <>
       <div className="w-full overflow-x-auto h-[400px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">

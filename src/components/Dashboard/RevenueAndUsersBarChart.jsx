@@ -23,7 +23,7 @@ const RevenueAndUsersBarChart = () => {
   useEffect(() => {
     const token = isUserData?.token;
     Promise.all([
-      fetch(`${BASE_URL}admin/yearly-orders?year=${startDate.getFullYear()}`, {
+      fetch(`${BASE_URL}/admin/yearly-orders?year=${startDate.getFullYear()}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -32,7 +32,7 @@ const RevenueAndUsersBarChart = () => {
       }).then((res) => res.json()),
 
       fetch(
-        `${BASE_URL}admin/yearly-subscription-revenue?year=${startDate.getFullYear()}`,
+        `${BASE_URL}/admin/yearly-subscription-revenue?year=${startDate.getFullYear()}`,
         {
           method: "GET",
           headers: {

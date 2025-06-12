@@ -117,7 +117,7 @@ const Sidebar = () => {
            { activeLink === "Affiliate"?( <img src="/affiliate.png" className="w-5" alt="affiliate.png" />):( <img src="/affiliate-dark.png"  className="w-5" alt="affiliate.png" />)} Affiliate
           </button>
         </li>
-        <li className="w-full">
+        {/* <li className="w-full">
           <button
             onClick={() => navigateToLink("/goal", "Goal")}
             className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
@@ -128,7 +128,7 @@ const Sidebar = () => {
           >
            { activeLink == "Goal"?( <img src="/goal.png" className="w-5" alt="goal.png" />):( <img src="/goal-dark.png"  className="w-5" alt="goal.png" />)} Goal
           </button>
-        </li>
+        </li> */}
 
         <li className="w-full">
           <button

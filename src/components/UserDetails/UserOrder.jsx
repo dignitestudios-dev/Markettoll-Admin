@@ -12,7 +12,7 @@ export default function UserOrder({ userId }) {
     const token = isUserData?.token;
     console.log(userId, "userIdd");
 
-    fetch(`${BASE_URL}admin/user-orders/${userId}?page=1`, {
+    fetch(`${BASE_URL}/admin/user-orders/${userId}?page=1`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

@@ -42,7 +42,7 @@ const CustomerList = ({filterData}) => {
   }, [isUserData,filterData,ticketRes]);
 
   const TicketResolved = (id) => {
-    fetch(`${BASE_URL}admin/email-support-request-close-ticket/${id}`, {
+    fetch(`${BASE_URL}/admin/email-support-request-close-ticket/${id}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

@@ -9,7 +9,7 @@ const UserReviewsList = ({ userId }) => {
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
-    fetch(`${BASE_URL}admin/user-reviews/671bc9d2b25262600108bde8?page=1`, {
+    fetch(`${BASE_URL}/admin/user-reviews/671bc9d2b25262600108bde8?page=1`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

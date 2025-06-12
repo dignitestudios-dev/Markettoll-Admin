@@ -11,12 +11,13 @@ const Users = () => {
     scrollToTop();
   }, []);
   const [filterData, setFilterData] = useState([]);
+  const [UserCount, setUserCount] = useState(0);
 
   return (
     <div className="w-full flex flex-col gap-y-4">
-      <h1 className="text-xl font-bold">Users</h1>
+      <h1 className="text-xl font-bold">Users <span className="text-[#0098EA] text-sm" >({UserCount})</span></h1>
       <Filter setFilterData={setFilterData} />
-      <UserList filterData={filterData} />
+      <UserList filterData={filterData} setUserCount={setUserCount} />
     </div>
   );
 };

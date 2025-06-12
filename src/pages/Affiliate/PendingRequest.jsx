@@ -97,7 +97,7 @@ export default function PendingRequest() {
               try {
                 setLoader(true);
                 const response = await fetch(
-                  `${BASE_URL}admin/update-influencer-settings`,
+                  `${BASE_URL}/admin/update-influencer-settings`,
                   {
                     method: "PUT",
                     headers: {
@@ -258,7 +258,7 @@ export default function PendingRequest() {
                                 try {
                                   setStatusLoader(true);
                                   const response = await fetch(
-                                    `${BASE_URL}admin/approve-influencer-request`,
+                                    `${BASE_URL}/admin/approve-influencer-request`,
                                     {
                                       method: "PUT",
                                       headers: {

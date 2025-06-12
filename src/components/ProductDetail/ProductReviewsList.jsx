@@ -9,7 +9,7 @@ const ProductReviewsList = ({Producid}) => {
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
-    fetch(`${BASE_URL}admin/product-reviews/${Producid}?page=1`, {
+    fetch(`${BASE_URL}/admin/product-reviews/${Producid}?page=1`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

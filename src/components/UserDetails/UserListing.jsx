@@ -12,7 +12,7 @@ export default function UserListing({ userId, userData }) {
     const token = isUserData?.token;
     console.log(userId, "userIdd");
 
-    fetch(`${BASE_URL}admin/user-listings/${userId}?page=1`, {
+    fetch(`${BASE_URL}/admin/user-listings/${userId}?page=1`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

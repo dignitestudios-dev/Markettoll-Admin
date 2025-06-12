@@ -19,7 +19,7 @@ const CustomerReply = ({ showModal, onclick, id, token, setShowModal }) => {
       autoClose: false,
     });
 
-    fetch(`${BASE_URL}admin/email-support-request-reply/${id}`, {
+    fetch(`${BASE_URL}/admin/email-support-request-reply/${id}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

@@ -21,7 +21,7 @@ const RevenueChart = () => {
     setLoader(true);
     const token = isUserData?.token;
     fetch(
-      `${BASE_URL}admin/yearly-subscription-revenue?year=${startDate.getFullYear()}`,
+      `${BASE_URL}/admin/yearly-subscription-revenue?year=${startDate.getFullYear()}`,
       {
         method: "GET",
         headers: {

@@ -31,7 +31,7 @@ export default function GoalList({ setIsGoal }) {
       .then((res) => {
         setGoals(res?.data);
         console.log(res?.data, "SetNotifications");
-        if (res?.data) {
+        if (res?.data?.totalReferrals) {
           setIsGoal(true);
         } else {
           setIsGoal(false);
@@ -81,7 +81,7 @@ export default function GoalList({ setIsGoal }) {
       toast.error("Error updating goal:", error);
     }
   };
-
+console.log(Goals,"goalss")
   return (
     <div className="flex flex-col mt-5">
       <div className="-m-1.5 overflow-x-auto">
@@ -119,7 +119,7 @@ export default function GoalList({ setIsGoal }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {Goals ? (
+                {Goals?.totalReferrals ? (
                   <tr>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                       {Goals?.totalReferrals}

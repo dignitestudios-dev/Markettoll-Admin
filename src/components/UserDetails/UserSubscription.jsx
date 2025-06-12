@@ -7,7 +7,7 @@ export default function UserSubscription({ userId }) {
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
-    fetch(`${BASE_URL}admin/user-subscriptions/${userId}?page=1`, {
+    fetch(`${BASE_URL}/admin/user-subscriptions/${userId}?page=1`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

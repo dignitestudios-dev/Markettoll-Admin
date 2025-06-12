@@ -159,7 +159,7 @@ const fetchInfluencer = () => {
                         >
                           <div className="flex items-center">
                             <LuArrowUpDown className="w-4 h-4 text-gray-500 mr-2" />
-                            <span className="text-gray-700">
+                            <span className="text-gray-700 text-nowrap">
                               {referralSort == ""
                                 ? "Total Referred Users"
                                 : referralSort == "asc"
@@ -221,7 +221,7 @@ const fetchInfluencer = () => {
                         >
                           <div className="flex items-center">
                             <LuArrowUpDown className="w-4 h-4 text-gray-500 mr-2" />
-                            <span className="text-gray-700">
+                            <span className="text-gray-700 text-nowrap">
                               {earningSort == ""
                                 ? "Total Earnings"
                                 : earningSort == "asc"
@@ -275,7 +275,7 @@ const fetchInfluencer = () => {
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                      className="px-6 py-3 text-nowrap text-start text-xs font-medium text-gray-500 uppercase"
                     >
                       Amount Paid
                     </th>
@@ -290,7 +290,7 @@ const fetchInfluencer = () => {
                         >
                           <div className="flex items-center">
                             <LuArrowUpDown className="w-4 h-4 text-gray-500 mr-2" />
-                            <span className="text-gray-700">
+                            <span className="text-gray-700 text-nowrap">
                               {commissionSort == ""
                                 ? "Commission Rate"
                                 : commissionSort == "asc"
@@ -342,7 +342,7 @@ const fetchInfluencer = () => {
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                      className="px-6 py-3  text-start text-xs font-medium text-gray-500 uppercase"
                     >
                       Status
                     </th>

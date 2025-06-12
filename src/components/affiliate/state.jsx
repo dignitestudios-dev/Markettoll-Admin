@@ -4,10 +4,10 @@ import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-export default function Stats({setTotalAffiliate,totalAffiliate}) {
- const { isUserData, setLoader, loader } = useContext(AuthContext);
+export default function Stats({ setTotalAffiliate, totalAffiliate }) {
+  const { isUserData, setLoader, loader } = useContext(AuthContext);
   const [Sats, setSats] = useState([]);
-  const navigate=useNavigate("");
+  const navigate = useNavigate("");
   const fetchInfluencer = () => {
     setLoader(!loader);
     try {
@@ -39,19 +39,18 @@ export default function Stats({setTotalAffiliate,totalAffiliate}) {
     fetchInfluencer();
   }, []);
 
-
   const affiliateData = [
     {
       name: "Total Affiliate",
-      value:Sats.totalAffiliates,
+      value: Sats.totalAffiliates,
     },
     {
       name: "Pending Request",
-      value:Sats.pendingRequests,
+      value: Sats.pendingRequests,
     },
     {
       name: "Total Referred",
-      value:Sats.totalReferredUsers,
+      value: Sats.totalReferredUsers,
     },
     {
       name: "Total Earnings",
@@ -59,23 +58,39 @@ export default function Stats({setTotalAffiliate,totalAffiliate}) {
     },
     {
       name: "Bonus Commission ",
-      value:isUserData.walletBalance,
+      value: isUserData.walletBalance,
     },
   ];
   return (
     <div className="grid grid-cols-5 gap-2">
-      {affiliateData?.map((item, i) => (
-        <div
-          key={i}
-          onClick={()=>i==0?setTotalAffiliate(!totalAffiliate):i==1&&navigate("/pending-request")}
-          className={`${i==0?"cursor-pointer":i==1&&"cursor-pointer"}   bg-[#FFFFFF] border p-3 border-[#E5E7EB] rounded-[12px]`}
-        >
-          <h3 className="font-[500] text-[14px] ">{item?.name}</h3>
-          <p className="font-bold text-[22px] mt-3 bg-gradient-to-r from-[#0033A5] via-[#0995E7] to-[#0995E7] bg-clip-text text-transparent">
-            {item?.value}
-          </p>
-        </div>
-      ))}
+      {affiliateData?.map((item, i) => {
+        const handleClick = () => {
+          if (i === 0) {
+            setTotalAffiliate(!totalAffiliate);
+          } else if (i === 1) {
+            navigate("/pending-request");
+          } else if (i === 4) {
+            navigate("/goal");
+          }
+        };
+
+        const isClickable = i === 0 || i === 1 || i === 4;
+
+        return (
+          <div
+            key={i}
+            onClick={handleClick}
+            className={`${
+              isClickable ? "cursor-pointer" : ""
+            } bg-[#FFFFFF] border p-3 border-[#E5E7EB] rounded-[12px]`}
+          >
+            <h3 className="font-[500] text-[14px]">{item?.name}</h3>
+            <p className="font-bold text-[22px] mt-3 bg-gradient-to-r from-[#0033A5] via-[#0995E7] to-[#0995E7] bg-clip-text text-transparent">
+              {item?.value}
+            </p>
+          </div>
+        );
+      })}
     </div>
   );
 }
