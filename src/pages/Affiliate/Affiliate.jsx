@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AffiliatePerformance from "../../components/affiliate/AffiliatePerformance";
 import Stats from "../../components/affiliate/state";
 import { IoIosArrowBack } from "react-icons/io";
@@ -7,8 +7,13 @@ import AllInfluencerRate from "../../components/affiliate/AllInfluencerRate";
 export default function Affiliate() {
   const [totalAffiliate, setTotalAffiliate] = useState(false);
   const [linkActive, setLinkActive] = useState(false);
-  const [showModal,setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
+ useEffect(()=>{
+    const getVal=localStorage.getItem("influencer-rate");
+    console.log(getVal,getVal=="false"?false:true,"valuess")
+    setLinkActive(getVal=="false"?false:true);
+ },[])
 
   return (
     <div className="w-full flex flex-col gap-y-4">
@@ -32,6 +37,7 @@ export default function Affiliate() {
                 </span>
                 <button
                   onClick={async () => {
+                     localStorage.setItem("influencer-rate", !linkActive);
                     setLinkActive(!linkActive);
                   }}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
@@ -46,7 +52,12 @@ export default function Affiliate() {
                 </button>
               </div>
               {linkActive && (
-                <button onClick={()=>setShowModal(true)} className="bg-[#0098EA] p-2 px-3 rounded-md text-white mt-3">
+                <button
+                  onClick={() => {
+                   
+                  }}
+                  className="bg-[#0098EA] p-2 px-3 rounded-md text-white mt-3"
+                >
                   Update Influencer Rate
                 </button>
               )}
