@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { LuArrowUpDown } from "react-icons/lu";
 import { BiChevronDown } from "react-icons/bi";
+import StatusIndicator from "../Global/StatusIndicator";
 
 export default function AffiliatePerformance({ totalAffiliate }) {
   const { isUserData, setLoader, loader } = useContext(AuthContext);
@@ -21,63 +22,61 @@ export default function AffiliatePerformance({ totalAffiliate }) {
   const [earningSort, setEarningSort] = useState(""); // "asc" | "desc" | ""
 
   const navigate = useNavigate("");
-const fetchInfluencer = () => {
-  setLoader(true);
-  try {
-    const token = isUserData?.token;
+  const fetchInfluencer = () => {
+    setLoader(true);
+    try {
+      const token = isUserData?.token;
 
-    const params = new URLSearchParams();
-    if (startDate) params.append("startDate", startDate);
-    if (endDate) params.append("endDate", endDate);
-    if (search) {
-      params.append("name", search);
-      params.append("email", search);
-      params.append("referrals", search);
-      params.append("commission", search);
-      params.append("totalEarning", search);
-    }
+      const params = new URLSearchParams();
+      if (startDate) params.append("startDate", startDate);
+      if (endDate) params.append("endDate", endDate);
+      if (search) {
+        params.append("name", search);
+        params.append("email", search);
+        params.append("referrals", search);
+        params.append("commission", search);
+        params.append("totalEarning", search);
+      }
 
-    // Only one sort param at a time
-    if (commissionSort) {
-      params.append("totalEarning", "");
-      params.append("referrals", "");
-      params.append("commission", commissionSort); // "asc" or "desc"
-    } else if (referralSort) {
-      params.append("commission", "");
+      // Only one sort param at a time
+      if (commissionSort) {
         params.append("totalEarning", "");
-      params.append("referrals", referralSort); // "asc" or "desc"
-    }
-     else if (earningSort) {
-       params.append("totalEarning", earningSort);
-      params.append("commission", "");
-      params.append("referrals", ""); // "asc" or "desc"
-    }
+        params.append("referrals", "");
+        params.append("commission", commissionSort); // "asc" or "desc"
+      } else if (referralSort) {
+        params.append("commission", "");
+        params.append("totalEarning", "");
+        params.append("referrals", referralSort); // "asc" or "desc"
+      } else if (earningSort) {
+        params.append("totalEarning", earningSort);
+        params.append("commission", "");
+        params.append("referrals", ""); // "asc" or "desc"
+      }
 
-    fetch(`${BASE_URL}/admin/get-influencers?${params.toString()}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setAffiliate(res?.data);
-        setLoader(false);
+      fetch(`${BASE_URL}/admin/get-influencers?${params.toString()}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-        setLoader(false);
-      });
-  } catch (error) {
-    toast.error(error.message || "An error occurred");
-  }
-};
-
+        .then((res) => res.json())
+        .then((res) => {
+          setAffiliate(res?.data);
+          setLoader(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+          setLoader(false);
+        });
+    } catch (error) {
+      toast.error(error.message || "An error occurred");
+    }
+  };
 
   useEffect(() => {
     fetchInfluencer();
-  }, [startDate, endDate, search, commissionSort, referralSort,earningSort]);
+  }, [startDate, endDate, search, commissionSort, referralSort, earningSort]);
 
   return (
     <div>
@@ -213,7 +212,6 @@ const fetchInfluencer = () => {
                       scope="col"
                       className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
-                      
                       <div className="relative">
                         <button
                           onClick={() => setEarningDrop(!EarningDrop)}
@@ -250,7 +248,7 @@ const fetchInfluencer = () => {
                           </button>
                           <button
                             onClick={() => {
-                              setEarningSort("asc")
+                              setEarningSort("asc");
                               setReferralSort("");
                               setCommissionSort("");
                               setEarningDrop(false);
@@ -261,7 +259,7 @@ const fetchInfluencer = () => {
                           </button>
                           <button
                             onClick={() => {
-                               setEarningSort("desc")
+                              setEarningSort("desc");
                               setReferralSort("");
                               setCommissionSort("");
                               setEarningDrop(false);
@@ -394,7 +392,8 @@ const fetchInfluencer = () => {
                             %{item?.influencerRate}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                            <img
+                            <StatusIndicator adminStatus={item?.adminStatus} />
+                            {/* <img
                               src={
                                 item?.adminStatus == "active"
                                   ? "/active.png"
@@ -403,8 +402,8 @@ const fetchInfluencer = () => {
                                   : "/suspend.png"
                               }
                               alt="influencerStatus"
-                              className="w-24"
-                            />
+                              className="md:w-26 lg:w-24"
+                            /> */}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                             <button
