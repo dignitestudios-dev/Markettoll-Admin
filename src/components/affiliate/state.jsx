@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { BiLeftArrow } from "react-icons/bi";
+import { FaArrowRight } from "react-icons/fa6";
 
 export default function Stats({ setTotalAffiliate, totalAffiliate }) {
   const { isUserData, setLoader, loader } = useContext(AuthContext);
@@ -38,7 +40,6 @@ export default function Stats({ setTotalAffiliate, totalAffiliate }) {
   useEffect(() => {
     fetchInfluencer();
   }, []);
-
   const affiliateData = [
     {
       name: "Total Affiliate",
@@ -86,7 +87,7 @@ export default function Stats({ setTotalAffiliate, totalAffiliate }) {
           >
             <h3 className="font-[500] text-[14px]">{item?.name}</h3>
             <p className="font-bold text-[22px] mt-3 bg-gradient-to-r from-[#0033A5] via-[#0995E7] to-[#0995E7] bg-clip-text text-transparent">
-              {item?.value}
+              {i === 4 ? <FaArrowRight color="#0098EA" /> : item?.value}
             </p>
           </div>
         );
