@@ -77,7 +77,6 @@ export default function AffiliatePerformance({ totalAffiliate }) {
   useEffect(() => {
     fetchInfluencer();
   }, [startDate, endDate, search, commissionSort, referralSort, earningSort]);
-
   return (
     <div>
       <div className="flex items-center justify-between">
