@@ -53,7 +53,7 @@ export default function Affiliate() {
               {linkActive && (
                 <button
                   onClick={() => {
-                   
+                   setShowModal(true)
                   }}
                   className="bg-[#0098EA] p-2 px-3 rounded-md text-white mt-3"
                 >

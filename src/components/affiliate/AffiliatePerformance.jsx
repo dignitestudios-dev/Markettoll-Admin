@@ -289,7 +289,7 @@ export default function AffiliatePerformance({ totalAffiliate }) {
                             <LuArrowUpDown className="w-4 h-4 text-gray-500 mr-2" />
                             <span className="text-gray-700 text-nowrap">
                               {commissionSort == ""
-                                ? "Commission Rate"
+                                ? "Additional Comission rate"
                                 : commissionSort == "asc"
                                 ? "Low to High"
                                 : " High to Low"}
