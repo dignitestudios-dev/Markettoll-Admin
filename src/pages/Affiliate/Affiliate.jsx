@@ -11,7 +11,6 @@ export default function Affiliate() {
 
  useEffect(()=>{
     const getVal=localStorage.getItem("influencer-rate");
-    console.log(getVal,getVal=="false"?false:true,"valuess")
     setLinkActive(getVal=="false"?false:true);
  },[])
 
