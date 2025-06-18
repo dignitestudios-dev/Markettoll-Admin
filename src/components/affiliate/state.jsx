@@ -11,30 +11,33 @@ export default function Stats({ setTotalAffiliate, totalAffiliate }) {
   const [Sats, setSats] = useState([]);
   const navigate = useNavigate("");
   const fetchInfluencer = () => {
-    setLoader(!loader);
-    try {
-      const token = isUserData?.token;
-      fetch(`${BASE_URL}/admin/influencers-stats`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res, "response");
-          setSats(res?.data);
-          setLoader(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error);
-          setLoader(false);
-        });
-    } catch (error) {
-      console.log(error);
-      toast.error("error.message");
+    const token = isUserData?.token;
+    if (!token) {
+      console.warn("No token found. Cannot fetch influencer stats.");
+
+      return;
     }
+
+    setLoader(true); // Start loading
+
+    fetch(`${BASE_URL}/admin/influencers-stats`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res, "response");
+        setSats(res?.data || []);
+        setLoader(false); // Stop loading
+      })
+      .catch((error) => {
+        console.error("Error fetching influencer stats:", error);
+        toast.error("Failed to fetch influencer stats.");
+        setLoader(false); // Stop loading
+      });
   };
 
   useEffect(() => {

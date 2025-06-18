@@ -14,11 +14,12 @@ export default function Affiliate() {
   const [showModal, setShowModal] = useState(false);
   const [statusLoader, setStatusLoader] = useState(false);
   const [Settings, setSettings] = useState("");
- const [refetch, SetRefetch] = useState(() => () => {});
+  const [refetch, SetRefetch] = useState(() => () => {});
   const fetchInfluencerSettings = () => {
     setLoader(!loader);
     try {
       const token = isUserData?.token;
+        if (!token) return;
       fetch(`${BASE_URL}/admin/rate-settings`, {
         method: "GET",
         headers: {
@@ -133,8 +134,15 @@ export default function Affiliate() {
           />
         </>
       )}
-      <AllInfluencerRate refetch={refetch} setShowModal={setShowModal} showModal={showModal}  />
-      <AffiliatePerformance SetRefetch={SetRefetch} totalAffiliate={totalAffiliate} />
+      <AllInfluencerRate
+        refetch={refetch}
+        setShowModal={setShowModal}
+        showModal={showModal}
+      />
+      <AffiliatePerformance
+        SetRefetch={SetRefetch}
+        totalAffiliate={totalAffiliate}
+      />
     </div>
   );
 }

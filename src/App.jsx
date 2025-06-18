@@ -2,13 +2,31 @@ import "./App.css";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { AppRoutes } from "./routes/AppRoutes";
 import UserProvider from "./context/UserContext";
-import { useContext} from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "./context/AuthContext";
+import Cookie from "js-cookie";
 
 function App() {
-  const { isLoggedIn } = useContext(AuthContext);
-  console.log(isLoggedIn,"isLog");
-  
+  const { isLoggedIn, setUserData, setIsLoggedIn } = useContext(AuthContext);
+  console.log(isLoggedIn, "isLog");
+
+  const token = Cookie.get("data");
+  const navigate = useNavigate("");
+  useEffect(() => {
+    if (token) {
+      try {
+        const parsedToken = JSON.parse(token);
+        setUserData(parsedToken);
+        console.log("data", parsedToken);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error("Failed to parse token:", error);
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, []);
   return (
     <UserProvider>
       <Routes>
@@ -20,7 +38,6 @@ function App() {
         })}
       </Routes>
     </UserProvider>
-    
   );
 }
 

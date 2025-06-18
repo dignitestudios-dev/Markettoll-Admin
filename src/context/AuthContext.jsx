@@ -7,24 +7,26 @@ export const AuthContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isUserData, setUserData] = useState(false);
+  const [isUserData, setUserData] = useState("");
   const [loader, setLoader] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [blockedModal, setBlockedModal] = useState(false);
-  const [DesclimarModal, setDesclimarModal] = useState(false);
-  const [SubCatModal, setSubCatModal] = useState(false);
-  const [ViewSubCatModal, setViewSubCatModal] = useState(false);
-  const [FilterMonthUser, setFilterMonthUser] = useState("");
+  const [disclaimerModal, setDisclaimerModal] = useState(false);
+  const [subCatModal, setSubCatModal] = useState(false);
+  const [viewSubCatModal, setViewSubCatModal] = useState(false);
+  const [filterMonthUser, setFilterMonthUser] = useState("");
+  const [categories, setCategories] = useState([]);
 
-  const token = Cookie.get("data");
-  const navigate = useNavigate("");
+  const navigate = useNavigate();
+  const cookieToken = Cookie.get("data");
+
   useEffect(() => {
-    if (token) {
+    if (cookieToken) {
       try {
-        const parsedToken = JSON.parse(token);
+        const parsedToken = JSON.parse(cookieToken);
         setUserData(parsedToken);
-        console.log("data", parsedToken);
         setIsLoggedIn(true);
+        fetchCategories(parsedToken.token); // API call right after setting user
       } catch (error) {
         console.error("Failed to parse token:", error);
         navigate("/login");
@@ -32,13 +34,11 @@ const AuthContextProvider = ({ children }) => {
     } else {
       navigate("/login");
     }
-  }, [token]);
+  }, []);
 
-  const [Categories, SetCategories] = useState([]);
-
-  useEffect(() => {
+  const fetchCategories = (token) => {
+    if (!token) return;
     setLoader(true);
-    const token = isUserData?.token;
     fetch(`${BASE_URL}/users/product-categories`, {
       method: "GET",
       headers: {
@@ -48,33 +48,34 @@ const AuthContextProvider = ({ children }) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        SetCategories(res?.data);
+        setCategories(res?.data || []);
         setLoader(false);
       })
       .catch((error) => {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching categories:", error);
         setLoader(false);
       });
-  }, [isUserData]);
+  };
 
-  const ToggleUser = () => {
+  const toggleUser = () => {
     setIsLoggedIn(!isLoggedIn);
   };
+
   return (
     <AuthContext.Provider
       value={{
-        SubCatModal,
+        subCatModal,
         setSubCatModal,
-        FilterMonthUser,
+        filterMonthUser,
         setFilterMonthUser,
-        DesclimarModal,
-        setDesclimarModal,
+        disclaimerModal,
+        setDisclaimerModal,
         isLoggedIn,
         setIsLoggedIn,
-        ToggleUser,
+        toggleUser,
         setUserData,
-        SetCategories,
-        Categories,
+        setCategories,
+        categories,
         isUserData,
         loader,
         setLoader,
@@ -82,7 +83,7 @@ const AuthContextProvider = ({ children }) => {
         showModal,
         setBlockedModal,
         blockedModal,
-        ViewSubCatModal,
+        viewSubCatModal,
         setViewSubCatModal,
       }}
     >

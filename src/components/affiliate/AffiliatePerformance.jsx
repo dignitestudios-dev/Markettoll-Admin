@@ -26,7 +26,7 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
     setLoader(true);
     try {
       const token = isUserData?.token;
-
+      if (!token) return;
       const params = new URLSearchParams();
       if (startDate) params.append("startDate", startDate);
       if (endDate) params.append("endDate", endDate);

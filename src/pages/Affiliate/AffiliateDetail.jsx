@@ -24,45 +24,46 @@ export default function AffiliateDetail() {
   };
 
   console.log(state, "influencerRate");
-  const [accountStatus, setAccountStatus] = useState(state.adminStatus=="active"?true:false);
+  const [accountStatus, setAccountStatus] = useState(
+    state.adminStatus == "active" ? true : false
+  );
   const [commissionRate, setCommissionRate] = useState(state?.influencerRate);
   const [linkActive, setLinkActive] = useState(
     state?.isActive == "active" ? true : false
   );
 
-const fetchInfluencer = () => {
-  setLoader(true);
-  try {
-    const token = isUserData?.token;
-    fetch(`${BASE_URL}/admin/get-influencers/${state?._id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setRefferals(res?.data);
-        setLoader(false);
+  const fetchInfluencer = () => {
+    setLoader(true);
+    try {
+      const token = isUserData?.token;
+      if (!token) return;
+      fetch(`${BASE_URL}/admin/get-influencers/${state?._id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-        setLoader(false);
-      });
-  } catch (error) {
-    toast.error(error.message || "An error occurred");
-  }
-};
-
+        .then((res) => res.json())
+        .then((res) => {
+          setRefferals(res?.data);
+          setLoader(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+          setLoader(false);
+        });
+    } catch (error) {
+      toast.error(error.message || "An error occurred");
+    }
+  };
 
   useEffect(() => {
     fetchInfluencer();
   }, []);
 
-
   useEffect(() => {
-    setLinkActive(state?.isActive == "active" ? true :false);
+    setLinkActive(state?.isActive == "active" ? true : false);
   }, [state?.isActive]);
 
   const handleUnBlockUser = () => {
@@ -117,7 +118,11 @@ const fetchInfluencer = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="flex justify-between items-center mb-5">
         <h1 className="text-xl font-bold">Details</h1>
-        <img src={state?.adminStatus=="active"?"/active.png":"/block.png"} alt="active.png" className="w-24" />
+        <img
+          src={state?.adminStatus == "active" ? "/active.png" : "/block.png"}
+          alt="active.png"
+          className="w-24"
+        />
       </div>
       <div className=" mx-auto bg-white rounded-xl shadow-sm border border-gray-200 p-8">
         {/* Profile Section */}
@@ -308,19 +313,17 @@ const fetchInfluencer = () => {
               <span className="text-gray-700 font-medium">Affiliate Link</span>
               <div className="flex items-center space-x-2 flex-1">
                 <span className="text-gray-600 text-sm truncate max-w-md">
-                  {state?.referralLink?state?.referralLink:"----"}
+                  {state?.referralLink ? state?.referralLink : "----"}
                 </span>
-                {
-                  state?.referralLink&&(
-                <button
-                  onClick={handleCopyLink}
-                  className="p-1 hover:bg-gray-200 rounded transition-colors"
-                  title="Copy link"
-                >
-                  <BiCopy className="w-4 h-4 text-gray-500" />
-                </button>
-                  )
-                }
+                {state?.referralLink && (
+                  <button
+                    onClick={handleCopyLink}
+                    className="p-1 hover:bg-gray-200 rounded transition-colors"
+                    title="Copy link"
+                  >
+                    <BiCopy className="w-4 h-4 text-gray-500" />
+                  </button>
+                )}
                 {copied && (
                   <span className="text-green-600 text-xs font-medium">
                     Copied!
@@ -335,7 +338,7 @@ const fetchInfluencer = () => {
                   {linkActive ? "Active" : "InActive"}
                 </span>
                 <button
-                disabled={state?.isActive=="active"?false:true}
+                  disabled={state?.isActive == "active" ? false : true}
                   onClick={async () => {
                     setLinkActive(!linkActive);
                     try {
@@ -386,7 +389,7 @@ const fetchInfluencer = () => {
           </div>
         </div>
       </div>
-      <ViewRefferal refferals={refferals}/>
+      <ViewRefferal refferals={refferals} />
     </div>
   );
 }
