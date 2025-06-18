@@ -8,7 +8,7 @@ import { LuArrowUpDown } from "react-icons/lu";
 import { BiChevronDown } from "react-icons/bi";
 import StatusIndicator from "../Global/StatusIndicator";
 
-export default function AffiliatePerformance({ totalAffiliate }) {
+export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
   const { isUserData, setLoader, loader } = useContext(AuthContext);
   const [affiliate, setAffiliate] = useState([]);
   const [refDrop, setRefDrop] = useState(false);
@@ -76,6 +76,7 @@ export default function AffiliatePerformance({ totalAffiliate }) {
 
   useEffect(() => {
     fetchInfluencer();
+    SetRefetch(() => fetchInfluencer);
   }, [startDate, endDate, search, commissionSort, referralSort, earningSort]);
   return (
     <div>
@@ -354,8 +355,8 @@ export default function AffiliatePerformance({ totalAffiliate }) {
                 <tbody className="divide-y divide-gray-200">
                   {affiliate && affiliate.length > 0 ? (
                     affiliate
-                      .filter((item) => item.influencerStatus == "active")
-                      .map((item, i) => (
+                      ?.filter((item) => item.influencerStatus == "active")
+                      ?.map((item, i) => (
                         <tr key={i}>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                             <div className="flex items-center gap-2">

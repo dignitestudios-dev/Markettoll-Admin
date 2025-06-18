@@ -7,7 +7,7 @@ import { FaXmark } from "react-icons/fa6";
 import BASE_URL from "../../constants/BaseUrl";
 
 import { toast } from "react-toastify";
-const AllInfluencerRate = ({ showModal, setShowModal }) => {
+const AllInfluencerRate = ({ showModal, setShowModal, refetch }) => {
   const [value, setValue] = useState("5");
   const { isUserData } = useContext(AuthContext);
   const token = isUserData?.token;
@@ -31,8 +31,11 @@ const AllInfluencerRate = ({ showModal, setShowModal }) => {
       }
 
       const data = await res.json();
-      console.log(data)
+      console.log(data);
       toast.success("Rates updated successfully");
+      if (typeof refetch === "function") {
+        refetch(); 
+      }
       setShowModal(false);
     } catch (error) {
       toast.error(error.message || "Failed to update influencer rates");

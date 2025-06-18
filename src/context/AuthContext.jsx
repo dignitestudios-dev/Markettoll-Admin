@@ -22,8 +22,8 @@ const AuthContextProvider = ({ children }) => {
     if (token) {
       try {
         const parsedToken = JSON.parse(token);
-        console.log("data", parsedToken);
         setUserData(parsedToken);
+        console.log("data", parsedToken);
         setIsLoggedIn(true);
       } catch (error) {
         console.error("Failed to parse token:", error);
