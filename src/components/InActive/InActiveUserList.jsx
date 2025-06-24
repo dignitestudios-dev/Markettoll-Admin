@@ -5,7 +5,7 @@ import InActiveUserListItem from "./InActiveUserListItem";
 import ConfirmBlockModal from "../Users/ConfirmModal";
 
 const InActiveUserList = ({ filterData }) => {
-  const { isUserData, setLoader,loader } = useContext(AuthContext);
+  const { isUserData, setLoader, loader } = useContext(AuthContext);
   const [users, SetUsers] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [BlockedUserId, setBlockedUserId] = useState("");
@@ -16,6 +16,7 @@ const InActiveUserList = ({ filterData }) => {
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
+    if (!token) return;
     fetch(`${BASE_URL}/admin/users?name=${filterData || ""}&page=1`, {
       method: "GET",
       headers: {
@@ -99,7 +100,7 @@ const InActiveUserList = ({ filterData }) => {
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
               >
-                Email 
+                Email
               </th>
               <th
                 scope="col"
@@ -121,19 +122,21 @@ const InActiveUserList = ({ filterData }) => {
               </th>
             </tr>
           </thead>
-           {loader ? <span className="loader"></span> : (
-          <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-            {users
-              ?.filter((item) => item.adminStatus != "active")
-              ?.map((item) => (
-                <InActiveUserListItem
-                  setIsBlocked={setIsBlocked}
-                  item={item}
-                  blockedUserId={setBlockedUserId}
-                />
-              ))}
-          </tbody>
-           )}
+          {loader ? (
+            <span className="loader"></span>
+          ) : (
+            <tbody className="divide-y divide-gray-100 border-t border-gray-100">
+              {users
+                ?.filter((item) => item.adminStatus != "active")
+                ?.map((item) => (
+                  <InActiveUserListItem
+                    setIsBlocked={setIsBlocked}
+                    item={item}
+                    blockedUserId={setBlockedUserId}
+                  />
+                ))}
+            </tbody>
+          )}
         </table>
       </div>
       {/* <div className="flex justify-end gap-3 w-full">

@@ -4,7 +4,7 @@ import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 import ConfirmBlockModal from "./ConfirmModal";
 
-const UserList = ({ filterData,setUserCount }) => {
+const UserList = ({ filterData, setUserCount }) => {
   const { isUserData, setLoader, FilterMonthUser, loader } =
     useContext(AuthContext);
   const [users, SetUsers] = useState([]);
@@ -17,6 +17,7 @@ const UserList = ({ filterData,setUserCount }) => {
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
+    if (!token) return;
     fetch(`${BASE_URL}/admin/users?name=${filterData || ""}&page=1`, {
       method: "GET",
       headers: {
@@ -28,7 +29,7 @@ const UserList = ({ filterData,setUserCount }) => {
       .then((res) => {
         SetUsers(res?.data);
         setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-        setUserCount(res?.data?.length)
+        setUserCount(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE).length);
         setLoader(false);
       })
       .catch((error) => {
@@ -137,7 +138,7 @@ const UserList = ({ filterData,setUserCount }) => {
         console.error("Error:", err);
       });
   };
-console.log(dataToDisplay,"data0")
+  console.log(dataToDisplay, "data0");
   return (
     <>
       <div className="w-full overflow-x-auto h-[400px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">

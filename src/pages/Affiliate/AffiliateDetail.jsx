@@ -14,8 +14,7 @@ export default function AffiliateDetail() {
   const [refferals, setRefferals] = useState([]);
   const { state } = useLocation();
   const [Settings, setSettings] = useState("");
-  const affiliateLink =
-    "https://www.markettoll.com/wyferg45wpg|gwl5gwr.g/res?htrf";
+  const affiliateLink = state?.referralLink;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(affiliateLink);
@@ -315,7 +314,7 @@ export default function AffiliateDetail() {
                 <span className="text-gray-600 text-sm truncate max-w-md">
                   {state?.referralLink ? state?.referralLink : "----"}
                 </span>
-                {state?.referralLink && (
+                {state?.referralLink && linkActive && (
                   <button
                     onClick={handleCopyLink}
                     className="p-1 hover:bg-gray-200 rounded transition-colors"

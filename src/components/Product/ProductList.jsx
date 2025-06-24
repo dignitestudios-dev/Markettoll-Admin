@@ -9,7 +9,7 @@ import {
   MultiRangeSlider,
 } from "./Filter";
 
-const ProductList = ({ filterData }) => {
+const ProductList = ({ filterData,setFilterLength }) => {
   const [active, SetActive] = useState("products");
   const { isUserData, setLoader,loader } = useContext(AuthContext);
   const [Product, SetProduct] = useState([]);
@@ -41,6 +41,7 @@ const ProductList = ({ filterData }) => {
       .then((res) => {
         SetProduct(res.data);
         setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
+        setFilterLength(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE)?.length)
         setLoader(false);
       })
       .catch((error) => {
