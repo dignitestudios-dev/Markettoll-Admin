@@ -73,7 +73,7 @@ export default function Affiliate() {
                 </span>
                 <button
                   onClick={async () => {
-                    const newStatus = Settings === "auto" ? "manual" : "auto"; // Toggle value
+                    const newStatus = Settings === "auto" ? "manual" : "auto";
                     try {
                       setStatusLoader(true);
                       const response = await fetch(

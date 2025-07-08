@@ -20,7 +20,10 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
   const [commissionSort, setCommissionSort] = useState(""); // "asc" | "desc" | ""
   const [referralSort, setReferralSort] = useState(""); // "asc" | "desc" | ""
   const [earningSort, setEarningSort] = useState(""); // "asc" | "desc" | ""
-
+  const [influencerRefSort, setInfluencerRefSort] = useState("");
+  const [affiliateRefSort, setAffiliateRefSort] = useState("");
+  const [influencerRefDrop, setInfluencerRefDrop] = useState(false);
+  const [affiliateRefDrop, setAffiliateRefDrop] = useState(false);
   const navigate = useNavigate("");
   const fetchInfluencer = () => {
     setLoader(true);
@@ -36,19 +39,31 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
         params.append("referrals", search);
         params.append("commission", search);
         params.append("totalEarning", search);
+        params.append("affiliateRefSort", "");
       }
 
       // Only one sort param at a time
       if (commissionSort) {
         params.append("totalEarning", "");
         params.append("referrals", "");
+        params.append("affiliateRefSort", "");
+
         params.append("commission", commissionSort); // "asc" or "desc"
       } else if (referralSort) {
         params.append("commission", "");
+        params.append("affiliateRefSort", "");
+
         params.append("totalEarning", "");
         params.append("referrals", referralSort); // "asc" or "desc"
       } else if (earningSort) {
         params.append("totalEarning", earningSort);
+        params.append("affiliateRefSort", "");
+        params.append("commission", "");
+        params.append("referrals", ""); // "asc" or "desc"
+      } else if (affiliateRefSort) {
+       
+        params.append("affiliateRefSort", affiliateRefSort);
+        params.append("totalEarning", "");
         params.append("commission", "");
         params.append("referrals", ""); // "asc" or "desc"
       }
@@ -77,7 +92,15 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
   useEffect(() => {
     fetchInfluencer();
     SetRefetch(() => fetchInfluencer);
-  }, [startDate, endDate, search, commissionSort, referralSort, earningSort]);
+  }, [
+    startDate,
+    endDate,
+    search,
+    commissionSort,
+    referralSort,
+    earningSort,
+    affiliateRefSort,
+  ]);
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -208,6 +231,67 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
                         </div>
                       </div>
                     </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                    >
+                      <div className="relative">
+                        <button
+                          onClick={() => setAffiliateRefDrop(!affiliateRefDrop)}
+                          className="flex items-center justify-between w-full sm:w-50 px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer"
+                        >
+                          <div className="flex items-center">
+                            <LuArrowUpDown className="w-4 h-4 text-gray-500 mr-2" />
+                            <span className="text-gray-700 text-nowrap">
+                              {affiliateRefSort === ""
+                                ? "Total Affiliate Referred Users"
+                                : affiliateRefSort === "asc"
+                                ? "Low to High"
+                                : "High to Low"}
+                            </span>
+                          </div>
+                          <BiChevronDown className="w-4 h-4 text-gray-500" />
+                        </button>
+
+                        <div
+                          className={`absolute top-full left-0 w-full sm:w-50 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10 ${
+                            affiliateRefDrop ? "block" : "hidden"
+                          }`}
+                        >
+                          <button
+                            onClick={() => {
+                              setAffiliateRefSort("");
+                              setCommissionSort("");
+                              setAffiliateRefDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700 rounded-t-lg"
+                          >
+                            Default Order
+                          </button>
+                          <button
+                            onClick={() => {
+                              setAffiliateRefSort("asc");
+                              setCommissionSort("");
+                              setAffiliateRefDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700"
+                          >
+                            Low to High
+                          </button>
+                          <button
+                            onClick={() => {
+                              setAffiliateRefSort("desc");
+                              setCommissionSort("");
+                              setAffiliateRefDrop(false);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-gray-700"
+                          >
+                            High to Low
+                          </button>
+                        </div>
+                      </div>
+                    </th>
+
                     <th
                       scope="col"
                       className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
@@ -378,6 +462,9 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
                                 </p>
                               </div>
                             </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                            {item?.referredUsersCount}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                             {item?.referredUsersCount}
