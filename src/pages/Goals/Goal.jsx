@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import GoalList from "../../components/Goal/GoalList";
 import AddGoal from "../../components/Goal/AddGoal";
 import { AuthContext } from "../../context/AuthContext";
+import AffiliateGoalList from "../../components/Goal/AffiliateGoalList";
 
 export default function Goal() {
   const { isUserData, loader } = useContext(AuthContext);
@@ -12,6 +13,8 @@ export default function Goal() {
       
       <GoalList setIsGoal={setIsGoal} />
       <AddGoal isGoal={isGoal}/>
+      <h1 className="text-xl font-bold">Affiliate Goals</h1>
+      <AffiliateGoalList />
     </div>
   );
 }

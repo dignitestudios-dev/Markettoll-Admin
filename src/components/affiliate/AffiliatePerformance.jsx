@@ -39,30 +39,30 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
         params.append("referrals", search);
         params.append("commission", search);
         params.append("totalEarning", search);
-        params.append("affiliateRefSort", "");
+        params.append("affiliateReferredCount", "");
       }
 
       // Only one sort param at a time
       if (commissionSort) {
         params.append("totalEarning", "");
         params.append("referrals", "");
-        params.append("affiliateRefSort", "");
+        params.append("affiliateReferredCount", "");
 
         params.append("commission", commissionSort); // "asc" or "desc"
       } else if (referralSort) {
         params.append("commission", "");
-        params.append("affiliateRefSort", "");
+        params.append("affiliateReferredCount", "");
 
         params.append("totalEarning", "");
         params.append("referrals", referralSort); // "asc" or "desc"
       } else if (earningSort) {
         params.append("totalEarning", earningSort);
-        params.append("affiliateRefSort", "");
+        params.append("affiliateReferredCount", "");
         params.append("commission", "");
         params.append("referrals", ""); // "asc" or "desc"
       } else if (affiliateRefSort) {
        
-        params.append("affiliateRefSort", affiliateRefSort);
+        params.append("affiliateReferredCount", affiliateRefSort);
         params.append("totalEarning", "");
         params.append("commission", "");
         params.append("referrals", ""); // "asc" or "desc"
