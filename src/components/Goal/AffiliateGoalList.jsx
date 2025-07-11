@@ -125,6 +125,7 @@ export default function AffiliateGoalList() {
                     <td className="px-6 py-4   whitespace-nowrap ">
                       <NavLink
                         to={"/achiever"}
+                        state={{endPoint:"affiliate-goal-achievers"}}
                         className="flex gap-2 text-gray-800 text-end text-sm font-medium items-center justify-center"
                       >
                         {" "}

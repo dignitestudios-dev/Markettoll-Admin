@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import BASE_URL from "../../constants/BaseUrl";
+import { useLocation } from "react-router-dom";
 
 export default function GoalAchiverList() {
   const { isUserData, setLoader } = useContext(AuthContext);
   const [Achiever, setAchiever] = useState([]);
   const token = isUserData?.token;
+  const location=useLocation("");
   useEffect(() => {
     setLoader(true);
-
-    fetch(`${BASE_URL}/admin/goal-achievers`, {
+    fetch(`${BASE_URL}/admin/${location?.state?.endPoint}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -85,7 +86,7 @@ export default function GoalAchiverList() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                        {item?.referredCount}
+                        {location.state.endPoint=="goal-achievers"?item?.referredCount:item?.affiliateReferredCount} 
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                         {item?.influencerRate}
