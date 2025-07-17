@@ -41,7 +41,7 @@ const ProductList = ({ filterData,setFilterLength }) => {
       .then((res) => {
         SetProduct(res.data);
         setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-        setFilterLength(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE)?.length)
+        setFilterLength(res?.data?.length)
         setLoader(false);
       })
       .catch((error) => {
