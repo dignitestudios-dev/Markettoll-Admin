@@ -1,11 +1,12 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
 
-const CategoryListItem = ({item,setViewSubCatModal,SetViewCategories}) => {
+const CategoryListItem = ({item,setViewSubCatModal,SetViewCategories,onCategoryClick,selectedCategoryId}) => {
   return (
-    <tr className="cursor-pointer" onClick={()=>{
+    <tr className={`cursor-pointer rounded-[10px] ${selectedCategoryId === item?._id ? "bg-blue-50" : ""} `} onClick={()=>{
       setViewSubCatModal(true)
       SetViewCategories(item?.subCategories);
+      onCategoryClick(item.subCategories)
       }} >
       <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
         <div className="relative h-10 w-10">
