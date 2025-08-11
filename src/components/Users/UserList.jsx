@@ -29,7 +29,7 @@ const UserList = ({ filterData, setUserCount }) => {
       .then((res) => {
         SetUsers(res?.data);
         setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-        setUserCount(res?.data?.length);
+        setUserCount(res?.totalUsers);
         setLoader(false);
       })
       .catch((error) => {
