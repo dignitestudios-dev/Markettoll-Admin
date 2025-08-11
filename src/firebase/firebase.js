@@ -9,8 +9,7 @@ import {
   getDocs,
   onSnapshot,
 } from "firebase/firestore";
-import dotenv from "dotenv";
-dotenv.config();
+
 export const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
