@@ -42,7 +42,7 @@ export default function Stats({ setTotalAffiliate, totalAffiliate }) {
 
   useEffect(() => {
     fetchInfluencer();
-  }, []);
+  }, [isUserData]);
   const affiliateData = [
     {
       name: "Total Affiliate",

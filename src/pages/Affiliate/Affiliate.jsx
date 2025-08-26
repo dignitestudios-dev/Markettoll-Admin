@@ -45,7 +45,7 @@ export default function Affiliate() {
 
   useEffect(() => {
     fetchInfluencerSettings();
-  }, []);
+  }, [isUserData]);
 
   useEffect(() => {
     setLinkActive(Settings == "manual" ? false : true);

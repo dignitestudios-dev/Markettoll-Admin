@@ -29,6 +29,7 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
     setLoader(true);
     try {
       const token = isUserData?.token;
+      console.log(token,"token")
       if (!token) return;
       const params = new URLSearchParams();
       if (startDate) params.append("startDate", startDate);
@@ -61,7 +62,6 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
         params.append("commission", "");
         params.append("referrals", ""); // "asc" or "desc"
       } else if (affiliateRefSort) {
-       
         params.append("affiliateReferredCount", affiliateRefSort);
         params.append("totalEarning", "");
         params.append("commission", "");
@@ -88,7 +88,9 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
       toast.error(error.message || "An error occurred");
     }
   };
-
+  useEffect(() => {
+    fetchInfluencer();
+  }, []);
   useEffect(() => {
     fetchInfluencer();
     SetRefetch(() => fetchInfluencer);
@@ -100,7 +102,9 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
     referralSort,
     earningSort,
     affiliateRefSort,
+    isUserData
   ]);
+
   return (
     <div>
       <div className="flex items-center justify-between">
