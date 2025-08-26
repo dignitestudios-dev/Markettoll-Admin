@@ -112,7 +112,10 @@ const SubscriptionList = () => {
 
   return (
     <div className="w-full flex flex-col gap-6 mt-6">
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <div>
+         <h1 className="text-xl font-bold flex items-center gap-2">Active Subscription <span className="text-[#0098EA] text-sm mt-1">({dataToDisplay?.length})</span></h1> 
+        </div>
         <div>
           <label className="text-sm mb-2 block">Date</label>
           <div className="relative flex items-center">
@@ -195,7 +198,7 @@ const SubscriptionList = () => {
           Next
         </button>
       </div>
-      <h1 className="text-xl font-bold">Boosting Packages Report</h1>
+      <h1 className="text-xl font-bold flex items-center gap-2">Boosting Packages Report <span className="text-[#0098EA] text-sm ">({BoostingPackage?.length})</span></h1> 
       <div className="w-full overflow-x-auto h-[500px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
         <table className="w-full border-collapse text-left text-sm text-gray-500">
           <thead className="">
