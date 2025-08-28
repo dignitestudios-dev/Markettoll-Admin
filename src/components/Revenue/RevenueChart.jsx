@@ -90,7 +90,7 @@ const RevenueChart = () => {
   return (
     <div className="w-full flex flex-col gap-6">
       <div className="w-ful flex flex-col items-start lg:flex-row lg:items-center justify-between gap-y-3">
-        <h1 className="text-xl font-bold">Subscriptions</h1>
+        <h1 className="text-xl font-bold flex items-center gap-2">Subscriptions <span className="text-[#0098EA] text-sm mt-1"> (4)</span></h1>
          <div className="w-full flex gap-2  text-end justify-end">
                <div>
                  <DatePicker
