@@ -79,12 +79,12 @@ const CategoryList = () => {
             <table className="w-full border-collapse  text-left text-sm text-gray-500">
               <thead className="">
                 <tr className="">
-                  <th
+                  {/* <th
                     scope="col"
                     className="px-6 lg:px-4 xl:px-3 rounded-s-lg py-4 text-sm font-semibold"
                   >
                     Image
-                  </th>
+                  </th> */}
                   <th
                     scope="col"
                     className="px-6 lg:px-4 xl:px-3  py-4 text-sm font-semibold"
@@ -125,12 +125,12 @@ const CategoryList = () => {
             <table className="w-full border-collapse  text-left text-sm text-gray-500">
               <thead className="">
                 <tr className="">
-                  <th
+                  {/* <th
                     scope="col"
                     className="px-6 lg:px-4 xl:px-3 rounded-s-lg py-4 text-sm font-semibold"
                   >
                     Image
-                  </th>
+                  </th> */}
                   <th
                     scope="col"
                     className="px-6 lg:px-4 xl:px-2  rounded-r-lg py-4 text-sm font-semibold"
@@ -143,7 +143,7 @@ const CategoryList = () => {
                 {selectedSubCategories.length > 0 ? (
                   selectedSubCategories.map((subCateg, index) => (
                     <tr key={index}>
-                      <td className="px-6 lg:px-4 xl:px-3 py-4">
+                      {/* <td className="px-6 lg:px-4 xl:px-3 py-4">
                         <div className="relative h-10 w-10">
                           <img
                             className="h-full w-full rounded-md object-cover object-center"
@@ -155,7 +155,7 @@ const CategoryList = () => {
                             alt="Subcategory"
                           />
                         </div>
-                      </td>
+                      </td> */}
                       <td className="px-6 lg:px-4 xl:px-3 py-4">
                         {subCateg?.name}
                       </td>

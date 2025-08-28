@@ -8,7 +8,7 @@ const CategoryListItem = ({item,setViewSubCatModal,SetViewCategories,onCategoryC
       SetViewCategories(item?.subCategories);
       onCategoryClick(item.subCategories)
       }} >
-      <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
+      {/* <th className="px-6 lg:px-4 xl:px-3 flex gap-3  py-4 font-normal text-gray-900">
         <div className="relative h-10 w-10">
           <img
             className="h-full w-full rounded-md object-cover object-center"
@@ -16,7 +16,7 @@ const CategoryListItem = ({item,setViewSubCatModal,SetViewCategories,onCategoryC
             alt=""
           />         
         </div>
-      </th>
+      </th> */}
       <td className="px-6 lg:px-4 xl:px-3 py-4">{item?.name}</td>
     
     </tr>
