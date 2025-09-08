@@ -3,7 +3,7 @@ import OrderListItem from "./OrderListItem";
 import { AuthContext } from "../../context/AuthContext";
 import BASE_URL from "../../constants/BaseUrl";
 
-const OrderList = ({ filterData }) => {
+const OrderList = ({ filterData,setOrderCount }) => {
   const { isUserData, setLoader,loader } = useContext(AuthContext);
   const [Order, SetOrder] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
@@ -23,6 +23,7 @@ const OrderList = ({ filterData }) => {
       .then((res) => {
         console.log(res.data, "orderss");
         setDataToDisplay(res.data);
+        setOrderCount(res?.ordersCount)
         SetOrder(res.data);
         setLoader(false);
       })

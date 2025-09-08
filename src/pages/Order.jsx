@@ -2,21 +2,24 @@ import React, { useEffect, useState } from "react";
 import OrderList from "../components/Order/OrderList";
 import OrderFilter from "../components/Order/OrderFilter";
 
-
 const Order = () => {
   useEffect(() => {
     const scrollToTop = () => {
       window.scrollTo(0, 0);
       document.title = "Market-Toll - Order";
     };
-    scrollToTop()
+    scrollToTop();
   }, []);
-  const [filterData, setFilterData] = useState("")
+  const [filterData, setFilterData] = useState("");
+  const [orderCount, setOrderCount] = useState(0);
   return (
     <div className="w-full flex flex-col gap-y-4">
       <h1 className="text-xl font-bold">Order</h1>
+      <h1 className="text-xl font-bold">
+        Order <span className="text-[#0098EA] text-sm">({orderCount})</span>
+      </h1>
       <OrderFilter setFilterData={setFilterData} />
-      <OrderList filterData={filterData} />
+      <OrderList setOrderCount={setOrderCount} filterData={filterData} />
     </div>
   );
 };
