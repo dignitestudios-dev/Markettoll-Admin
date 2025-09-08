@@ -14,7 +14,6 @@ const Order = () => {
   const [orderCount, setOrderCount] = useState(0);
   return (
     <div className="w-full flex flex-col gap-y-4">
-      <h1 className="text-xl font-bold">Order</h1>
       <h1 className="text-xl font-bold">
         Order <span className="text-[#0098EA] text-sm">({orderCount})</span>
       </h1>
