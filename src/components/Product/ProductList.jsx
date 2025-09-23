@@ -9,17 +9,17 @@ import {
   MultiRangeSlider,
 } from "./Filter";
 
-const ProductList = ({ filterData,setFilterLength }) => {
+const ProductList = ({ filterData, setFilterLength }) => {
   const [active, SetActive] = useState("products");
-  const { isUserData, setLoader,loader } = useContext(AuthContext);
+  const { isUserData, setLoader, loader } = useContext(AuthContext);
   const [Product, SetProduct] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [dataToDisplay, setDataToDisplay] = useState([]);
   const TOTAL_VALUES_PER_PAGE = 10;
   const [displayValue, setDisplayValue] = useState("Category");
   const [SubCategFill, setSubCategFill] = useState("Sub Category");
-  console.log(dataToDisplay,"productData");
-  
+  console.log(dataToDisplay, "productData");
+
   useEffect(() => {
     setLoader(true);
     const token = isUserData?.token;
@@ -41,7 +41,7 @@ const ProductList = ({ filterData,setFilterLength }) => {
       .then((res) => {
         SetProduct(res.data);
         setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-        setFilterLength(res?.totalProducts)
+        setFilterLength(res?.totalProducts);
         setLoader(false);
       })
       .catch((error) => {
@@ -51,7 +51,7 @@ const ProductList = ({ filterData,setFilterLength }) => {
   }, [isUserData, filterData, active, displayValue, SubCategFill]);
 
   const goOnPrevPage = () => {
-    if (currentPageNumber === 1) return; 
+    if (currentPageNumber === 1) return;
     setCurrentPageNumber((prev) => prev - 1);
   };
 
@@ -128,7 +128,6 @@ const ProductList = ({ filterData,setFilterLength }) => {
                 <MultiRangeSlider
                   min={0}
                   max={100000}
-               
                   dataToDisplay={dataToDisplay}
                   setDataToDisplay={setDataToDisplay}
                 />
@@ -138,16 +137,26 @@ const ProductList = ({ filterData,setFilterLength }) => {
                 className="px-6 lg:px-4 xl:px-2  py-4 text-sm font-semibold"
               >
                 <FilterProductStatus SetActive={SetActive} />
-              </th>             
+              </th>
             </tr>
           </thead>
-           {loader ? <span className="loader"></span> : (
-          <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-            {dataToDisplay?.map((item) => (
-              <ProductListItem item={item} />
-            ))}
-          </tbody>
-           )}
+          {loader ? (
+            <span className="loader"></span>
+          ) : (
+            <tbody className="divide-y divide-gray-100 border-t border-gray-100">
+              {dataToDisplay && dataToDisplay.length > 0 ? (
+                dataToDisplay.map((item) => (
+                  <ProductListItem key={item.id} item={item} />
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="100%" className="text-center py-40 text-gray-500">
+                    No products found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          )}
         </table>
       </div>
       <div className="flex justify-end gap-3 w-full">

@@ -182,15 +182,25 @@ const UserList = ({ filterData, setUserCount }) => {
             <span className="loader"></span>
           ) : (
             <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-              {dataToDisplay
-                ?.filter((item) => item.adminStatus == "active")
-                ?.map((item) => (
-                  <UserListItem
-                    setIsBlocked={setIsBlocked}
-                    item={item}
-                    blockedUserId={setBlockedUserId}
-                  />
-                ))}
+              {dataToDisplay?.filter((item) => item.adminStatus == "active")
+                ?.length > 0 ? (
+                dataToDisplay
+                  ?.filter((item) => item.adminStatus === "active")
+                  ?.map((item) => (
+                    <UserListItem
+                      key={item.id} // id ya unique key use karo
+                      setIsBlocked={setIsBlocked}
+                      item={item}
+                      blockedUserId={setBlockedUserId}
+                    />
+                  ))
+              ) : (
+                <tr>
+                  <td colSpan="100%" className="text-center py-40 text-gray-500">
+                    No users found
+                  </td>
+                </tr>
+              )}
             </tbody>
           )}
         </table>
