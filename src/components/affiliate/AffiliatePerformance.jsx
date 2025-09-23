@@ -104,7 +104,7 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
     affiliateRefSort,
     isUserData
   ]);
-
+console.log(affiliate,"affiliates")
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -471,7 +471,7 @@ export default function AffiliatePerformance({ totalAffiliate, SetRefetch }) {
                             {item?.referredUsersCount}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                            {item?.referredUsersCount}
+                            {item?.affiliateReferredCount}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                             ${item?.totalEarning}
