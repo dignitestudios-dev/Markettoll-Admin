@@ -40,12 +40,6 @@ export const AppRoutes = [
     isPrivate: true,
   },
   {
-    Title: "Subscription Plans Page",
-    url: "/plans",
-    page: <Layout pages={<Plans />} />,
-    isPrivate: true,
-  },
-  {
     Title: "Users Page",
     url: "/users",
     page: <Layout pages={<Users />} />,
@@ -81,7 +75,7 @@ export const AppRoutes = [
     page: <Layout pages={<OrderDetail />} />,
     isPrivate: true,
   },
-  
+
   {
     Title: "Category",
     url: "/category",
@@ -136,7 +130,6 @@ export const AppRoutes = [
     page: <Layout pages={<EditCategory />} />,
     isPrivate: true,
   },
-
 
   {
     Title: "SubCategory",

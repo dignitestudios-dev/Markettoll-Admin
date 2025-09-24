@@ -50,7 +50,7 @@ const NewUsersList = () => {
         console.error("Error fetching users:", error);
         setLoader(false);
       });
-  }, [isUserData?.token,unblockState]);
+  }, [isUserData?.token, unblockState]);
 
   const handleBlockUser = (UserId) => {
     setLoader(true);
@@ -67,7 +67,7 @@ const NewUsersList = () => {
         if (!res.ok) {
           throw new Error("Failed to Block User");
         }
-       
+
         return res.json();
       })
       .then((data) => {
@@ -158,13 +158,19 @@ const NewUsersList = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-            {users.map((item) => (
-              <NewUserListItem
-                setIsBlocked={setIsBlocked}
-                item={item}
-                blockedUserId={setBlockedUserId}
-              />
-            ))}
+            {!users.length ? (
+              <tr>
+                <td colSpan={5} className="text-center h-[320px]">No new user</td>
+              </tr>
+            ) : (
+              users?.map((item) => (
+                <NewUserListItem
+                  setIsBlocked={setIsBlocked}
+                  item={item}
+                  blockedUserId={setBlockedUserId}
+                />
+              ))
+            )}
           </tbody>
         </table>
       </div>
