@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { BiChevronDown, BiChevronDownCircle, BiCopy } from "react-icons/bi";
 import { CiEdit } from "react-icons/ci";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import BASE_URL from "../../constants/BaseUrl";
@@ -10,16 +10,17 @@ import ViewRefferal from "../../components/affiliate/ViewRefferal";
 export default function AffiliateDetail() {
   const { isUserData, setLoader, loader } = useContext(AuthContext);
   const [edit, setEdit] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(null);
   const [refferals, setRefferals] = useState([]);
+  const navigate = useNavigate();
   const { state } = useLocation();
   const [Settings, setSettings] = useState("");
   const affiliateLink = state?.referralLink;
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(affiliateLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyLink = (link) => {
+    navigator.clipboard.writeText(link);
+    setCopied(link);
+    setTimeout(() => setCopied(null), 2000);
   };
 
   console.log(state, "influencerRate");
@@ -27,8 +28,9 @@ export default function AffiliateDetail() {
     state.adminStatus == "active" ? true : false
   );
   const [commissionRate, setCommissionRate] = useState(state?.influencerRate);
-  const [linkActive, setLinkActive] = useState(
-    state?.isActive ? true : false
+  const [linkActive, setLinkActive] = useState(state?.isActive ? true : false);
+  const [affiliateLinkActive, setAffiliateLinkActive] = useState(
+    state?.affiliateIsActive ? true : false
   );
 
   const fetchInfluencer = () => {
@@ -63,7 +65,8 @@ export default function AffiliateDetail() {
 
   useEffect(() => {
     setLinkActive(state?.isActive ? true : false);
-  }, [state?.isActive]);
+    setAffiliateLinkActive(state?.affiliateIsActive ? true : false);
+  }, [state]);
 
   const handleUnBlockUser = () => {
     const token = isUserData?.token;
@@ -112,6 +115,16 @@ export default function AffiliateDetail() {
       .catch((err) => {
         console.error("Error:", err);
       });
+  };
+
+  const updateState = (name, value) => {
+    navigate(".", {
+      replace: true, // stays on the same route but updates state
+      state: {
+        ...state, // keep previous state if needed
+        [name]: value,
+      },
+    });
   };
 
   return (
@@ -306,25 +319,25 @@ export default function AffiliateDetail() {
             )}
           </div>
         </div>
-        {/* Affiliate Link Section */}
+        {/* Refferal Link Section */}
         <div className="border-t border-gray-200 pt-6">
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
             <div className="flex items-center space-x-4 flex-1">
-              <span className="text-gray-700 font-medium">Affiliate Link</span>
+              <span className="text-gray-700 font-medium">Refferal Link</span>
               <div className="flex items-center space-x-2 flex-1">
                 <span className="text-gray-600 text-sm truncate max-w-md">
                   {state?.referralLink ? state?.referralLink : "----"}
                 </span>
                 {state?.referralLink && linkActive && (
                   <button
-                    onClick={handleCopyLink}
+                    onClick={() => handleCopyLink(state?.referralLink)}
                     className="p-1 hover:bg-gray-200 rounded transition-colors"
                     title="Copy link"
                   >
                     <BiCopy className="w-4 h-4 text-gray-500" />
                   </button>
                 )}
-                {copied && (
+                {copied === state?.referralLink && (
                   <span className="text-green-600 text-xs font-medium">
                     Copied!
                   </span>
@@ -338,9 +351,7 @@ export default function AffiliateDetail() {
                   {linkActive ? "Active" : "InActive"}
                 </span>
                 <button
-                  disabled={state?.isActive == "active" ? false : true}
                   onClick={async () => {
-                    setLinkActive(!linkActive);
                     try {
                       setLoader(true);
                       const response = await fetch(
@@ -352,7 +363,7 @@ export default function AffiliateDetail() {
                           },
                           body: JSON.stringify({
                             influencer: state?._id,
-                            isActive: true,
+                            isActive: !linkActive,
                           }),
                         }
                       );
@@ -363,6 +374,7 @@ export default function AffiliateDetail() {
                         console.log("Success:", result);
 
                         toast.success("Link Updated");
+                        updateState("isActive", result?.data?.isActive);
                       } else {
                         setLoader(false);
                         console.error("API error:", result);
@@ -381,6 +393,92 @@ export default function AffiliateDetail() {
                   <span
                     className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
                       linkActive ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Affiliate Refferal Link Section */}
+        <div className="border-t border-gray-200 pt-6">
+          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center space-x-4 flex-1">
+              <span className="text-gray-700 font-medium">
+                Affiliate Refferal Link
+              </span>
+              <div className="flex items-center space-x-2 flex-1">
+                <span className="text-gray-600 text-sm truncate max-w-sm">
+                  {state?.affiliateReferralLink
+                    ? state?.affiliateReferralLink
+                    : "----"}
+                </span>
+                {state?.affiliateReferralLink && affiliateLinkActive && (
+                  <button
+                    onClick={() => handleCopyLink(state?.affiliateReferralLink)}
+                    className="p-1 hover:bg-gray-200 rounded transition-colors"
+                    title="Copy link"
+                  >
+                    <BiCopy className="w-4 h-4 text-gray-500" />
+                  </button>
+                )}
+                {copied === state?.affiliateReferralLink && (
+                  <span className="text-green-600 text-xs font-medium">
+                    Copied!
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3">
+                <span className="text-gray-700 font-medium">
+                  {affiliateLinkActive ? "Active" : "InActive"}
+                </span>
+                <button
+                  onClick={async () => {
+                    try {
+                      setLoader(true);
+                      const response = await fetch(
+                        `${BASE_URL}/admin/toggle-affiliate-referral-status`,
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            influencer: state?._id,
+                            isActive: !affiliateLinkActive,
+                          }),
+                        }
+                      );
+
+                      const result = await response.json();
+                      if (response.ok) {
+                        setLoader(false);
+                        console.log("Success:", result);
+
+                        toast.success("Link Updated");
+                        updateState("affiliateIsActive", result?.data?.isActive);
+                      } else {
+                        setLoader(false);
+                        console.error("API error:", result);
+                        toast.error(result.error.message);
+                      }
+                    } catch (error) {
+                      setLoader(false);
+                      toast.error(error.error.message);
+                      console.error("Network error:", error);
+                    }
+                  }}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
+                    affiliateLinkActive ? "bg-green-500" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      affiliateLinkActive ? "translate-x-6" : "translate-x-1"
                     }`}
                   />
                 </button>
