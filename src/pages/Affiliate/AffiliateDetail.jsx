@@ -28,7 +28,7 @@ export default function AffiliateDetail() {
   );
   const [commissionRate, setCommissionRate] = useState(state?.influencerRate);
   const [linkActive, setLinkActive] = useState(
-    state?.isActive == "active" ? true : false
+    state?.isActive ? true : false
   );
 
   const fetchInfluencer = () => {
@@ -62,7 +62,7 @@ export default function AffiliateDetail() {
   }, []);
 
   useEffect(() => {
-    setLinkActive(state?.isActive == "active" ? true : false);
+    setLinkActive(state?.isActive ? true : false);
   }, [state?.isActive]);
 
   const handleUnBlockUser = () => {
