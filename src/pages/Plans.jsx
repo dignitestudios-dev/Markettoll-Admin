@@ -166,9 +166,9 @@ const Plans = () => {
                     </p>
                   </div>
                 </div>
-                <button className="w-full h-10 mt-4 rounded-md hover:opacity-90 bg-[#028EE6] text-white text-sm font-medium">
+                {/* <button className="w-full h-10 mt-4 rounded-md hover:opacity-90 bg-[#028EE6] text-white text-sm font-medium">
                   View Details
-                </button>
+                </button> */}
                 <div>
                   <span className="absolute right-0 top-7 z-[-1]">
                     <svg
