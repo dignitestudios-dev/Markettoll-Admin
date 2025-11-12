@@ -60,6 +60,7 @@ const AuthContextProvider = ({ children }) => {
   const toggleUser = () => {
     setIsLoggedIn(!isLoggedIn);
   };
+  console.log(categories, "categoriescategories");
 
   return (
     <AuthContext.Provider

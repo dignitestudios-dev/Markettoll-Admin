@@ -18,7 +18,6 @@ const ProductList = ({ filterData, setFilterLength }) => {
   const TOTAL_VALUES_PER_PAGE = 10;
   const [displayValue, setDisplayValue] = useState("Category");
   const [SubCategFill, setSubCategFill] = useState("Sub Category");
-  console.log(dataToDisplay, "productData");
 
   useEffect(() => {
     setLoader(true);
@@ -144,8 +143,8 @@ const ProductList = ({ filterData, setFilterLength }) => {
             <span className="loader"></span>
           ) : (
             <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-              {dataToDisplay && dataToDisplay.length > 0 ? (
-                dataToDisplay.map((item) => (
+              {dataToDisplay && dataToDisplay?.length > 0 ? (
+                dataToDisplay?.map((item) => (
                   <ProductListItem key={item.id} item={item} />
                 ))
               ) : (

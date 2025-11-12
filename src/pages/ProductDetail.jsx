@@ -1,20 +1,93 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FiHeart } from "react-icons/fi";
 import { GoArrowLeft } from "react-icons/go";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ProductReviewsList from "../components/ProductDetail/ProductReviewsList";
 import ProductSeller from "../components/ProductDetail/ProductSeller";
 import ProductOrder from "../components/ProductDetail/ProductOrder";
-
+import {
+  ErrorToast,
+  SuccessToast,
+} from "../components/Global/ToasterContainer";
+import BASE_URL from "../constants/BaseUrl";
+import axios from "axios";
+import Cookies from "js-cookie";
 export default function ProductDetail() {
-  const loc = useLocation("");
-  const navigate=useNavigate("");
-  console.log(loc?.state?.data,"data");
-  useEffect(()=>{
+ const loc = useLocation();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
     if (!loc?.state?.data) {
-      navigate("/products")
+      navigate("/products");
     }
-  })
+  }, [loc, navigate]);
+
+  const token = JSON.parse(Cookies.get("data"))?.token;
+  const product = loc?.state?.data;
+  const productId = product?._id;
+
+  // 🧩 Deactivate Product Function
+  const handleDeactivate = async () => {
+    if (!productId) return ErrorToast("Product ID not found!");
+
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `${BASE_URL}/admin/deactivate-product/${productId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res?.data?.success || res?.status === 200) {
+        SuccessToast("Product deactivated successfully!");
+        navigate("/products");
+      } else {
+        ErrorToast(res?.data?.message || "Failed to deactivate product.");
+      }
+    } catch (error) {
+      console.error("Deactivate Error:", error);
+      ErrorToast(error?.response?.data?.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🧩 Activate Product Function
+  const handleActivate = async () => {
+    if (!productId) return ErrorToast("Product ID not found!");
+
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `${BASE_URL}/admin/activate-product/${productId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res?.data?.success || res?.status === 200) {
+        SuccessToast("Product activated successfully!");
+        navigate("/products");
+      } else {
+        ErrorToast(res?.data?.message || "Failed to activate product.");
+      }
+    } catch (error) {
+      console.error("Activate Error:", error);
+      ErrorToast(error?.response?.data?.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isBlocked = product?.adminStatus === "blocked";
   return (
     <div className="w-full relative">
       <div className="w-full p-4 rounded-[30px] bg-[#F7F7F7]">
@@ -24,11 +97,23 @@ export default function ProductDetail() {
               <GoArrowLeft className="text-xl" />
               <span className="font-medium text-sm text-[#5C5C5C]">Back</span>
             </Link>
-            <button
-              className={`w-auto px-3 py-3 bg-[#0098EA] text-white hover:opacity-80 rounded-md text-xs`}
-            >
-              Deactivate{" "}
-            </button>
+           {isBlocked ? (
+              <button
+                onClick={handleActivate}
+                disabled={loading}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-xs disabled:opacity-60"
+              >
+                {loading ? "Activating..." : "Activate"}
+              </button>
+            ) : (
+              <button
+                onClick={handleDeactivate}
+                disabled={loading}
+                className="px-4 py-2 bg-[#0098EA] hover:opacity-80 text-white rounded-md text-xs disabled:opacity-60"
+              >
+                {loading ? "Deactivating..." : "Deactivate"}
+              </button>
+            )}
           </div>
           <div className="w-full mt-2 flex flex-col lg:flex-row justify-start gap-x-8 gap-y-6">
             <div className="w-full relative">
@@ -106,11 +191,11 @@ export default function ProductDetail() {
             </div>
           </div>
           <div className="mt-3">
-          <h1 className="font-semibold mb-3 text-xl">Product Orders</h1>
+            <h1 className="font-semibold mb-3 text-xl">Product Orders</h1>
             <ProductOrder Producid={loc?.state?.data._id} />
           </div>
           <div className="mt-16 ">
-          <h1 className="font-semibold mb-3 text-xl">Product Reviews</h1>
+            <h1 className="font-semibold mb-3 text-xl">Product Reviews</h1>
             <ProductReviewsList Producid={loc?.state?.data._id} />
           </div>
         </div>

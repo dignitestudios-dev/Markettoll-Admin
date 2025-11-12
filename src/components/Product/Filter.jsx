@@ -65,7 +65,7 @@ export function FilterProductCategory({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { Categories } = useContext(AuthContext);
+  const { categories } = useContext(AuthContext);
 
   return (
     <div className="relative inline-block text-left">
@@ -116,12 +116,12 @@ export function FilterProductCategory({
             >
               All
             </a>
-            {Categories.map((item, i) => (
+            {categories?.map((item, i) => (
               <a
                 onClick={() => {
                   setIsOpen(!isOpen);
                   setSubCategFill("Sub Category");
-                  setDisplayValue(item.name);
+                  setDisplayValue(item?.name);
                 }}
                 key={i}
                 className="block px-4 cursor-pointer py-2 text-sm text-gray-700"
@@ -129,7 +129,7 @@ export function FilterProductCategory({
                 tabIndex={-1}
                 id="menu-item-0"
               >
-                {item.name}
+                {item?.name}
               </a>
             ))}
           </div>
@@ -146,7 +146,7 @@ export function FilterProductSubCategory({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { Categories } = useContext(AuthContext);
+  const { categories } = useContext(AuthContext);
 
   return (
     <div className="relative inline-block text-left">
@@ -189,7 +189,7 @@ export function FilterProductSubCategory({
           tabIndex={-1}
         >
           <div className="py-1" role="none">
-            {Categories.filter((item) => item.name === displayValue).map(
+            {categories?.filter((item) => item.name === displayValue).map(
               (item, i) => (
                 <div key={i}>
                   {/* <a
