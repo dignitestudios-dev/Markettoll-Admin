@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 import BASE_URL from "../constants/BaseUrl";
 
 export const AuthContext = createContext();
@@ -16,17 +16,26 @@ const AuthContextProvider = ({ children }) => {
   const [viewSubCatModal, setViewSubCatModal] = useState(false);
   const [filterMonthUser, setFilterMonthUser] = useState("");
   const [categories, setCategories] = useState([]);
-
   const navigate = useNavigate();
-  const cookieToken = Cookie.get("data");
+  const cookieToken = Cookies.get("data");
 
+  const [token, setToken] = useState(() => {
+    try {
+      const parsed = cookieToken ? JSON.parse(cookieToken) : null;
+      return parsed?.token || "";
+    } catch (err) {
+      console.error("Cookie parse error:", err);
+      return "";
+    }
+  });
   useEffect(() => {
     if (cookieToken) {
       try {
         const parsedToken = JSON.parse(cookieToken);
         setUserData(parsedToken);
         setIsLoggedIn(true);
-        fetchCategories(parsedToken.token); // API call right after setting user
+        setToken(parsedToken.token);
+        fetchCategories(parsedToken.token);
       } catch (error) {
         console.error("Failed to parse token:", error);
         navigate("/login");
@@ -35,6 +44,8 @@ const AuthContextProvider = ({ children }) => {
       navigate("/login");
     }
   }, []);
+
+  console.log(token);
 
   const fetchCategories = (token) => {
     if (!token) return;
@@ -60,7 +71,6 @@ const AuthContextProvider = ({ children }) => {
   const toggleUser = () => {
     setIsLoggedIn(!isLoggedIn);
   };
-  console.log(categories, "categoriescategories");
 
   return (
     <AuthContext.Provider

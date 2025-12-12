@@ -16,7 +16,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
   
-    // Display the loader toast
+   
     const loaderToast = toast.loading("Processing... Please wait.", {
       position: "top-right",
       autoClose: false, 
