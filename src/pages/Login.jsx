@@ -51,7 +51,7 @@ const Login = () => {
           isLoading:false,
           autoClose: 3000, // Close after 3 seconds
         });
-        navigate("/");
+        navigate("/products");
       })
       .catch((err) => {
         // Update loader toast to error and auto-close after 3 seconds

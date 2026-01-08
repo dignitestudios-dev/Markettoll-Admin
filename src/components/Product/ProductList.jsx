@@ -18,6 +18,11 @@ const ProductList = ({ filterData, setFilterLength }) => {
   const TOTAL_VALUES_PER_PAGE = 10;
   const [displayValue, setDisplayValue] = useState("Category");
   const [SubCategFill, setSubCategFill] = useState("Sub Category");
+  const [showBoostModal, setShowBoostModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [boostDays, setBoostDays] = useState(7);
+  const [update, setUpdate] = useState(false);
+  const [boostedLoader, setBoostedLoader] = useState(false);
 
   useEffect(() => {
     setLoader(true);
@@ -47,7 +52,7 @@ const ProductList = ({ filterData, setFilterLength }) => {
         console.error("Error fetching users:", error);
         setLoader(false);
       });
-  }, [isUserData, filterData, active, displayValue, SubCategFill]);
+  }, [isUserData, filterData, active, displayValue, SubCategFill, update]);
 
   const goOnPrevPage = () => {
     if (currentPageNumber === 1) return;
@@ -65,6 +70,36 @@ const ProductList = ({ filterData, setFilterLength }) => {
     const end = currentPageNumber * TOTAL_VALUES_PER_PAGE;
     setDataToDisplay(Product.slice(start, end));
   }, [currentPageNumber]);
+  const handleBoostClick = (product) => {
+    setSelectedProduct(product);
+    setBoostDays(7);
+    setShowBoostModal(true);
+  };
+  const confirmBoost = async () => {
+    try {
+      setBoostedLoader(true);
+
+      await fetch(`${BASE_URL}/admin/boost-product`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${isUserData?.token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: selectedProduct?.seller?._id,
+          productId: selectedProduct?._id,
+          duration: String(boostDays),
+        }),
+      });
+
+      setShowBoostModal(false);
+      setUpdate((prev) => !prev);
+    } catch (error) {
+      console.error("Boost error:", error);
+    } finally {
+      setBoostedLoader(false);
+    }
+  };
 
   return (
     <>
@@ -137,6 +172,12 @@ const ProductList = ({ filterData, setFilterLength }) => {
               >
                 <FilterProductStatus SetActive={SetActive} />
               </th>
+              <th
+                scope="col"
+                className="px-6 lg:px-4 xl:px-2 py-4 text-sm font-semibold text-center"
+              >
+                Action
+              </th>
             </tr>
           </thead>
           {loader ? (
@@ -145,11 +186,18 @@ const ProductList = ({ filterData, setFilterLength }) => {
             <tbody className="divide-y divide-gray-100 border-t border-gray-100">
               {dataToDisplay && dataToDisplay?.length > 0 ? (
                 dataToDisplay?.map((item) => (
-                  <ProductListItem key={item.id} item={item} />
+                  <ProductListItem
+                    key={item.id}
+                    item={item}
+                    onBoost={handleBoostClick}
+                  />
                 ))
               ) : (
                 <tr>
-                  <td colSpan="100%" className="text-center py-40 text-gray-500">
+                  <td
+                    colSpan="100%"
+                    className="text-center py-40 text-gray-500"
+                  >
                     No products found
                   </td>
                 </tr>
@@ -173,6 +221,44 @@ const ProductList = ({ filterData, setFilterLength }) => {
         >
           Next
         </button>
+        {showBoostModal && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-6 w-[350px]">
+              <h2 className="text-lg font-semibold mb-4">Boost Product</h2>
+
+              <p className="text-sm mb-4">
+                Boost <b>{selectedProduct?.name}</b> for:
+              </p>
+
+              {[7, 14, 30].map((day) => (
+                <label key={day} className="flex items-center gap-2 mb-2">
+                  <input
+                    type="radio"
+                    checked={boostDays === day}
+                    onChange={() => setBoostDays(day)}
+                  />
+                  {day} days
+                </label>
+              ))}
+
+              <div className="flex justify-end gap-3 mt-6">
+                <button
+                  onClick={() => setShowBoostModal(false)}
+                  className="px-4 py-2 bg-gray-200 rounded-md"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={confirmBoost}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                >
+                  {boostedLoader ? "Boosting..." : "Confirm Boost"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

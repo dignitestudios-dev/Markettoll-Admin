@@ -15,7 +15,7 @@ import LogOutModal from "../LogOut/LogOutModal";
 import { AuthContext } from "../../context/AuthContext";
 const Sidebar = () => {
   const navigate = useNavigate();
-  const [activeLink, setActiveLink] = useState("Dashboard");
+  const [activeLink, setActiveLink] = useState("Products");
   const { setShowModal } = useContext(AuthContext);
 
   const navigateToLink = (link, name) => {
