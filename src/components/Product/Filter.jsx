@@ -33,7 +33,7 @@ export function ProductFilter({ setFilterData }) {
                 setInputVal(e.target.value);
                 FilterUsers(e.target.value);
               }}
-              className="w-full text-sm border border-gray-200 px-8 py-2 rounded-md shadow-sm outline-none focus:border-[#0085FF] focus:ring focus:ring-[#0098EA] focus:ring-opacity-50 text-sm"
+              className="w-full  border border-gray-200 px-8 py-2 rounded-md shadow-sm outline-none focus:border-[#0085FF] focus:ring focus:ring-[#0098EA] focus:ring-opacity-50 text-sm"
               placeholder="Search Here..."
             />
             <CiSearch
