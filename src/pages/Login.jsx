@@ -7,66 +7,93 @@ import Cookie from "js-cookie";
 import { AuthContext } from "../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInterceptor from "../axiosInterceptor";
+import { ErrorToast, SuccessToast } from "../components/Global/ToasterContainer";
 const Login = () => {
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn, setToken } = useContext(AuthContext);
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-   
-    const loaderToast = toast.loading("Processing... Please wait.", {
-      position: "top-right",
-      autoClose: false, 
-    });
-  
-    fetch(`${BASE_URL}/admin/email-password-login`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    setLoading(true)
+    try {
+      const response = await axiosInterceptor.post('/admin/email-password-login', {
         email: email,
         password: password,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          // If the response is not OK, throw an error with the message
-          return res.json().then((errorData) => {
-            throw new Error(errorData?.message || 'Failed to log in');
-          });
-        }
-        return res.json();
-      })
-      .then((data) => {
-        // On successful login
-        Cookie.set("data", JSON.stringify(data?.data));
-        setIsLoggedIn(true);
-        toast.update(loaderToast, {
-          render: 'Logged in successfully!',
-          type: 'success',
-          isLoading:false,
-          autoClose: 3000, // Close after 3 seconds
-        });
-        navigate("/products");
-      })
-      .catch((err) => {
-        // Update loader toast to error and auto-close after 3 seconds
-        toast.update(loaderToast, {
-          render: err.message || 'An error occurred!',
-          type: 'error',
-          isLoading:false,
-          autoClose: 3000, // Close after 3 seconds
-        });
-  
-        // Optionally log the error in console for debugging
-        console.error('Error:', err);
       });
-  };
-  
+      if (response) {
+        Cookie.set("data", JSON.stringify(response?.data?.data));
+        const token = Cookie.set("token", JSON.stringify(response?.data?.data?.token));
+        setIsLoggedIn(true);
+        setToken(token)
+        SuccessToast("Logged in successfully!");
+        navigate("/products");
+      }
+    } catch (err) {
+      ErrorToast(err?.response?.data?.message || "An error occurred!");
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+
+  //   const loaderToast = toast.loading("Processing... Please wait.", {
+  //     position: "top-right",
+  //     autoClose: false, 
+  //   });
+
+  //   fetch(`${BASE_URL}/admin/email-password-login`, {
+  //     method: "POST",
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       email: email,
+  //       password: password,
+  //     }),
+  //   })
+  //     .then((res) => {
+  //       if (!res.ok) {
+  //         // If the response is not OK, throw an error with the message
+  //         return res.json().then((errorData) => {
+  //           throw new Error(errorData?.message || 'Failed to log in');
+  //         });
+  //       }
+  //       return res.json();
+  //     })
+  //     .then((data) => {
+  //       // On successful login
+  //       Cookie.set("data", JSON.stringify(data?.data));
+  //       setIsLoggedIn(true);
+  //       toast.update(loaderToast, {
+  //         render: 'Logged in successfully!',
+  //         type: 'success',
+  //         isLoading:false,
+  //         autoClose: 3000, // Close after 3 seconds
+  //       });
+  //       navigate("/products");
+  //     })
+  //     .catch((err) => {
+  //       // Update loader toast to error and auto-close after 3 seconds
+  //       toast.update(loaderToast, {
+  //         render: err.message || 'An error occurred!',
+  //         type: 'error',
+  //         isLoading:false,
+  //         autoClose: 3000, // Close after 3 seconds
+  //       });
+
+  //       // Optionally log the error in console for debugging
+  //       console.error('Error:', err);
+  //     });
+  // };
+
 
   useEffect(() => {
     document.title = "Market-Toll - Login";
@@ -74,7 +101,7 @@ const Login = () => {
 
   return (
     <div className="font-[sans-serif] text-[#333]">
-      
+
       <div className="min-h-screen flex fle-col items-center justify-center py-6 px-4">
         <div className="grid md:grid-cols-2 items-center gap-4 max-w-7xl w-full">
           <div className="rounded-md p-6 lg:p-10 max-w-md shadow-[0_2px_22px_-4px_rgba(93,96,127,0.2)] max-md:mx-auto">
@@ -153,9 +180,10 @@ const Login = () => {
               <div className="!mt-4">
                 <button
                   type="submit"
+                  disabled={loading}
                   className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-md text-white bg-[#0098EA] hover:bg-opacity-85 focus:outline-none"
                 >
-                  Log in
+                  {loading ? "Logging in..." : "Log in "}
                 </button>
               </div>
             </form>

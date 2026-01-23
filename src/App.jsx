@@ -7,26 +7,26 @@ import { AuthContext } from "./context/AuthContext";
 import Cookie from "js-cookie";
 
 function App() {
-  const { isLoggedIn, setUserData, setIsLoggedIn } = useContext(AuthContext);
-  console.log(isLoggedIn, "isLog");
+  // const { isLoggedIn, setUserData, setIsLoggedIn } = useContext(AuthContext);
+  // console.log(isLoggedIn, "isLog");
 
-  const token = Cookie.get("data");
-  const navigate = useNavigate("");
-  useEffect(() => {
-    if (token) {
-      try {
-        const parsedToken = JSON.parse(token);
-        setUserData(parsedToken);
-        console.log("data", parsedToken);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error("Failed to parse token:", error);
-        navigate("/login");
-      }
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  // const token = Cookie.get("data");
+  // const navigate = useNavigate("");
+  // useEffect(() => {
+  //   if (token) {
+  //     try {
+  //       const parsedToken = JSON.parse(token);
+  //       setUserData(parsedToken);
+  //       console.log("data", parsedToken);
+  //       setIsLoggedIn(true);
+  //     } catch (error) {
+  //       console.error("Failed to parse token:", error);
+  //       navigate("/login");
+  //     }
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
   return (
     <UserProvider>
       <Routes>

@@ -17,17 +17,19 @@ const AuthContextProvider = ({ children }) => {
   const [filterMonthUser, setFilterMonthUser] = useState("");
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+  const [token, setToken] = useState(Cookies.get("token") || null);
+
   const cookieToken = Cookies.get("data");
 
-  const [token, setToken] = useState(() => {
-    try {
-      const parsed = cookieToken ? JSON.parse(cookieToken) : null;
-      return parsed?.token || "";
-    } catch (err) {
-      console.error("Cookie parse error:", err);
-      return "";
-    }
-  });
+  // const [token, setToken] = useState(() => {
+  //   try {
+  //     const parsed = cookieToken ? JSON.parse(cookieToken) : null;
+  //     return parsed?.token || "";
+  //   } catch (err) {
+  //     console.error("Cookie parse error:", err);
+  //     return "";
+  //   }
+  // });
   useEffect(() => {
     if (cookieToken) {
       try {
@@ -96,6 +98,8 @@ const AuthContextProvider = ({ children }) => {
         blockedModal,
         viewSubCatModal,
         setViewSubCatModal,
+        setToken,
+        token
       }}
     >
       {children}
