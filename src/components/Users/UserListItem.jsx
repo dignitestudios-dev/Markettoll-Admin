@@ -26,7 +26,7 @@ const UserListItem = ({ item, blockedUserId, setIsBlocked }) => {
           />
         </div>
         <div className="text-sm">
-          <div className="font-medium text-gray-700">{item?.name}</div>
+          <div className="font-medium text-gray-700">{item?.name || "N/A"}</div>
         </div>
       </th>
       <td className="px-6 lg:px-4 xl:px-3 py-4">{item?.email?.value}</td>

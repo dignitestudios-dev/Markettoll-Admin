@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import BASE_URL from "../../constants/BaseUrl";
 import ConfirmBlockModal from "../Users/ConfirmModal";
+import axiosInterceptor from "../../axiosInterceptor";
 
 const NewUsersList = () => {
   const { isUserData, setLoader } = useContext(AuthContext);
@@ -25,32 +26,36 @@ const NewUsersList = () => {
     const month = "Oct"; // You can replace this dynamically
     const year = 2024; // Replace this dynamically if necessary
 
-    fetch(
-      `${BASE_URL}/admin/users-registered-in-month?month=${10}&year=${year}&page=1`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.data) {
-          console.log(res.data, "filter by months");
-          SetUsers(res.data); // Update users state
-          setLoader(false);
-        } else {
-          console.error("No data found in response:", res);
-          setLoader(false);
+    const getNewUsers = async () => {
+      try {
+        setLoader(true);
+
+        const year = 2024;
+
+        const response = await axiosInterceptor.get(
+          "/admin/users-registered-in-month",
+          {
+            params: {
+              month: 10,
+              year,
+              page: 1,
+            },
+          }
+        );
+
+        if (response?.data?.data) {
+          SetUsers(response.data.data);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching users:", error);
+      } finally {
         setLoader(false);
-      });
-  }, [isUserData?.token, unblockState]);
+      }
+    };
+    getNewUsers();
+
+
+  }, [unblockState]);
 
   const handleBlockUser = (UserId) => {
     setLoader(true);

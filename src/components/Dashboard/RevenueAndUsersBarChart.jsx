@@ -13,6 +13,7 @@ import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axiosInterceptor from "../../axiosInterceptor";
 const RevenueAndUsersBarChart = () => {
   const [data, setData] = useState([]);
   const { isUserData, setLoader } = useContext(AuthContext);
@@ -21,33 +22,35 @@ const RevenueAndUsersBarChart = () => {
   const [originalData, setOriginalData] = useState([]);
 
   useEffect(() => {
-    const token = isUserData?.token;
-    Promise.all([
-      fetch(`${BASE_URL}/admin/yearly-orders?year=${startDate.getFullYear()}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json()),
+    const fetchGraphData = async () => {
+      try {
+        setLoader(true);
 
-      fetch(
-        `${BASE_URL}/admin/yearly-subscription-revenue?year=${startDate.getFullYear()}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      ).then((res) => res.json()),
-    ])
-      .then(([orderData, revenueData]) => {
-        // Process and map order data
+        const [orderRes, revenueRes] = await Promise.all([
+          axiosInterceptor.get("/admin/yearly-orders", {
+            params: {
+              year: startDate.getFullYear(),
+            },
+          }),
+
+          axiosInterceptor.get(
+            "/admin/yearly-subscription-revenue",
+            {
+              params: {
+                year: startDate.getFullYear(),
+              },
+            }
+          ),
+        ]);
+
+        const orderData = orderRes.data;
+        const revenueData = revenueRes.data;
+
         const orderDataMap = orderData.data.reduce((acc, item) => {
           acc[item._id] = item.order_count;
           return acc;
         }, {});
+
         const monthNames = [
           "Jan",
           "Feb",
@@ -62,24 +65,28 @@ const RevenueAndUsersBarChart = () => {
           "Nov",
           "Dec",
         ];
-        // Combine revenue and order data
+
         const updatedData = revenueData.data.map((item) => {
           const month = item._id - 1;
+
           return {
             name: monthNames[month] || item._id,
             Revenue: item.revenue,
             Order: orderDataMap[item._id] || 0,
           };
         });
-        // Set the full data (and store it as originalData)
+
         setOriginalData(updatedData);
-        setData(updatedData); // Set the data initially
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+        setData(updatedData);
+      } catch (error) {
+        console.error("Error fetching graph data:", error);
+      } finally {
         setLoader(false);
-      });
-  }, [isUserData, startDate]);
+      }
+    };
+
+    fetchGraphData();
+  }, [startDate]);
 
   const [lineVisibility, setLineVisibility] = useState({
     Order: true,

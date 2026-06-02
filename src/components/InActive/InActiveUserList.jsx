@@ -3,10 +3,11 @@ import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 import InActiveUserListItem from "./InActiveUserListItem";
 import ConfirmBlockModal from "../Users/ConfirmModal";
+import axiosInterceptor from "../../axiosInterceptor";
 
 const InActiveUserList = ({ filterData }) => {
   const { isUserData, setLoader, loader } = useContext(AuthContext);
-  const [users, SetUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [BlockedUserId, setBlockedUserId] = useState("");
   const [dataToDisplay, setDataToDisplay] = useState([]);
@@ -14,27 +15,30 @@ const InActiveUserList = ({ filterData }) => {
   const [isBlocked, setIsBlocked] = useState(false);
   const TOTAL_VALUES_PER_PAGE = 10;
   useEffect(() => {
-    setLoader(true);
-    const token = isUserData?.token;
-    if (!token) return;
-    fetch(`${BASE_URL}/admin/users?name=${filterData || ""}&page=1`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        SetUsers(res?.data);
-        setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-        setLoader(false);
-      })
-      .catch((error) => {
+    const getUsers = async () => {
+      try {
+        setLoader(true);
+
+        const response = await axiosInterceptor.get("/admin/users", {
+          params: {
+            name: filterData || "",
+            page: 1,
+          },
+        });
+
+        setUsers(response?.data?.data);
+        setDataToDisplay(
+          response?.data?.data?.slice(0, TOTAL_VALUES_PER_PAGE)
+        );
+      } catch (error) {
         console.error("Error fetching users:", error);
+      } finally {
         setLoader(false);
-      });
-  }, [isUserData, filterData, unblockState]);
+      }
+    };
+
+    getUsers();
+  }, [filterData, unblockState]);
 
   const handleBlockUser = (UserId) => {
     const token = isUserData?.token;
@@ -83,6 +87,8 @@ const InActiveUserList = ({ filterData }) => {
         console.error("Error:", err);
       });
   };
+  
+  
 
   return (
     <>
@@ -126,15 +132,27 @@ const InActiveUserList = ({ filterData }) => {
             <span className="loader"></span>
           ) : (
             <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-              {users
-                ?.filter((item) => item.adminStatus != "active")
-                ?.map((item) => (
-                  <InActiveUserListItem
-                    setIsBlocked={setIsBlocked}
-                    item={item}
-                    blockedUserId={setBlockedUserId}
-                  />
-                ))}
+              {users?.filter((item) => item.adminStatus !== "active")?.length > 0 ? (
+                users
+                  ?.filter((item) => item.adminStatus !== "active")
+                  ?.map((item) => (
+                    <InActiveUserListItem
+                      key={item._id}
+                      setIsBlocked={setIsBlocked}
+                      item={item}
+                      blockedUserId={setBlockedUserId}
+                    />
+                  ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="text-center py-10 text-gray-500 font-medium"
+                  >
+                    No inactive users found
+                  </td>
+                </tr>
+              )}
             </tbody>
           )}
         </table>

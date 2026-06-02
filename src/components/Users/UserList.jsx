@@ -3,6 +3,7 @@ import UserListItem from "./UserListItem";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
 import ConfirmBlockModal from "./ConfirmModal";
+import axiosInterceptor from "../../axiosInterceptor";
 
 const UserList = ({ filterData, setUserCount }) => {
   const { isUserData, setLoader, FilterMonthUser, loader } =
@@ -15,60 +16,66 @@ const UserList = ({ filterData, setUserCount }) => {
   const [isBlocked, setIsBlocked] = useState(false);
   const TOTAL_VALUES_PER_PAGE = 15;
   useEffect(() => {
-    setLoader(true);
-    const token = isUserData?.token;
-    if (!token) return;
-    fetch(`${BASE_URL}/admin/users?name=${filterData || ""}&page=1`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        SetUsers(res?.data);
-        setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-        setUserCount(res?.totalUsers);
-        setLoader(false);
-      })
-      .catch((error) => {
+    const getUsers = async () => {
+      try {
+        setLoader(true);
+
+        const response = await axiosInterceptor.get("/admin/users", {
+          params: {
+            name: filterData || "",
+            page: 1,
+          },
+        });
+
+        SetUsers(response?.data?.data);
+        setDataToDisplay(
+          response?.data?.data?.slice(0, TOTAL_VALUES_PER_PAGE)
+        );
+        setUserCount(response?.data?.totalUsers);
+      } catch (error) {
         console.error("Error fetching users:", error);
+      } finally {
         setLoader(false);
-      });
-  }, [isUserData, filterData, unblockState]);
+      }
+    };
+
+    getUsers();
+  }, [filterData, unblockState]);
 
   useEffect(() => {
-    setLoader(true);
-    const token = isUserData?.token;
-    const formateDate = FilterMonthUser && FilterMonthUser?.split("-");
-    if (formateDate) {
-      fetch(
-        `${BASE_URL}/admin/users-registered-in-month?month=${
-          formateDate[1] || ""
-        }&year=${formateDate[0] || ""}&page=1`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res.data, "filter by months");
-          if (res.data) {
-            SetUsers(res?.data);
-            setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-            setLoader(false);
+    const getMonthlyUsers = async () => {
+      try {
+        if (!FilterMonthUser) return;
+
+        setLoader(true);
+
+        const formateDate = FilterMonthUser.split("-");
+
+        const response = await axiosInterceptor.get(
+          "/admin/users-registered-in-month",
+          {
+            params: {
+              month: formateDate[1] || "",
+              year: formateDate[0] || "",
+              page: 1,
+            },
           }
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error);
-          setLoader(false);
-        });
-    }
+        );
+
+        if (response?.data?.data) {
+          SetUsers(response.data.data);
+          setDataToDisplay(
+            response.data.data.slice(0, TOTAL_VALUES_PER_PAGE)
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        setLoader(false);
+      }
+    };
+
+    getMonthlyUsers();
   }, [FilterMonthUser]);
 
   const goOnPrevPage = () => {
@@ -207,9 +214,8 @@ const UserList = ({ filterData, setUserCount }) => {
       </div>
       <div className="flex justify-end gap-3 w-full">
         <button
-          className={`${
-            currentPageNumber === 1 ? " bg-[#9fdeff]" : " bg-[#0098EA]"
-          } px-2 rounded-md w-[80px] text-white py-2 `}
+          className={`${currentPageNumber === 1 ? " bg-[#9fdeff]" : " bg-[#0098EA]"
+            } px-2 rounded-md w-[80px] text-white py-2 `}
           onClick={goOnPrevPage}
         >
           Prev

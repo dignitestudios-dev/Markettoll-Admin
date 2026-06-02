@@ -27,9 +27,12 @@ const Login = () => {
       });
       if (response) {
         Cookie.set("data", JSON.stringify(response?.data?.data));
-        const token = Cookie.set("token", JSON.stringify(response?.data?.data?.token));
+        const token = response?.data?.data?.token;
+
+        Cookie.set("token", token);
+
+        setToken(token);
         setIsLoggedIn(true);
-        setToken(token)
         SuccessToast("Logged in successfully!");
         navigate("/products");
       }

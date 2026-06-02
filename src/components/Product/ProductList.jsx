@@ -8,6 +8,7 @@ import {
   FilterProductSubCategory,
   MultiRangeSlider,
 } from "./Filter";
+import axiosInterceptor from "../../axiosInterceptor";
 
 const ProductList = ({ filterData, setFilterLength }) => {
   const [active, SetActive] = useState("products");
@@ -23,36 +24,44 @@ const ProductList = ({ filterData, setFilterLength }) => {
   const [boostDays, setBoostDays] = useState(7);
   const [update, setUpdate] = useState(false);
   const [boostedLoader, setBoostedLoader] = useState(false);
-
   useEffect(() => {
-    setLoader(true);
-    const token = isUserData?.token;
-    fetch(
-      `${BASE_URL}/admin/${active}?name=${filterData || ""}&category=${
-        displayValue == "Category" ? "" : displayValue
-      }&subCategory=${
-        SubCategFill != "Sub Category" ? SubCategFill : ""
-      }&page=1`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+    const getProducts = async () => {
+      try {
+        setLoader(true);
+
+        const response = await axiosInterceptor.get(
+          `/admin/${active}`,
+          {
+            params: {
+              name: filterData || "",
+              category: displayValue === "Category" ? "" : displayValue,
+              subCategory:
+                SubCategFill !== "Sub Category" ? SubCategFill : "",
+              page: 1,
+            },
+          }
+        );
+
+        SetProduct(response.data.data);
+        setDataToDisplay(
+          response?.data?.data?.slice(0, TOTAL_VALUES_PER_PAGE)
+        );
+        setFilterLength(response?.data?.totalProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoader(false);
       }
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        SetProduct(res.data);
-        setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-        setFilterLength(res?.totalProducts);
-        setLoader(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-        setLoader(false);
-      });
-  }, [isUserData, filterData, active, displayValue, SubCategFill, update]);
+    };
+
+    getProducts();
+  }, [
+    filterData,
+    active,
+    displayValue,
+    SubCategFill,
+    update,
+  ]);
 
   const goOnPrevPage = () => {
     if (currentPageNumber === 1) return;
@@ -208,9 +217,8 @@ const ProductList = ({ filterData, setFilterLength }) => {
       </div>
       <div className="flex justify-end gap-3 w-full">
         <button
-          className={`${
-            currentPageNumber === 1 ? " bg-[#9fdeff]" : " bg-[#0098EA]"
-          } px-2 rounded-md w-[80px] text-white py-2 `}
+          className={`${currentPageNumber === 1 ? " bg-[#9fdeff]" : " bg-[#0098EA]"
+            } px-2 rounded-md w-[80px] text-white py-2 `}
           onClick={goOnPrevPage}
         >
           Prev

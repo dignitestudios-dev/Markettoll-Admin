@@ -20,25 +20,14 @@ const axiosInterceptor = axios.create({
   timeout: 10000, // 10 seconds timeout
 });
 
-axiosInterceptor.interceptors.request.use(async (request) => {
+axiosInterceptor.interceptors.request.use((request) => {
   const token = Cookies.get("token");
-  if (!navigator.onLine) {
-    // No internet connection
-    ErrorToast(
-      "No internet connection. Please check your network and try again.",
-    );
-    return;
-    // return Promise.reject(new Error("No internet connection"));
-  }
-  //   const fingerprint = await getDeviceFingerprint();
-  // Merge existing headers with token
-  request.headers = {
-    ...request.headers,
-    // devicemodel: fingerprint,
-    // deviceuniqueid: fingerprint, // Keep existing headers like devicemodel and deviceuniqueid
-    Accept: "application/json, text/plain, */*",
-    ...(token && { Authorization: `Bearer ${token}` }), // Add Authorization only if token exists
-  };
+
+  console.log("Cookie Token:", token);
+
+  request.headers.Authorization = `Bearer ${token}`;
+
+  console.log("Authorization Header:", request.headers.Authorization);
 
   return request;
 });
@@ -53,10 +42,10 @@ axiosInterceptor.interceptors.response.use(
 
     if (error.response && error.response.status === 401) {
       // Unauthorized error
-      Cookies.remove("token");
-      Cookies.remove("data");
+      // Cookies.remove("token");
+      // Cookies.remove("data");
       ErrorToast("Session expired. Please relogin");
-      window.location.href = "/";
+      // window.location.href = "/";
     }
 
     return Promise.reject(error);
