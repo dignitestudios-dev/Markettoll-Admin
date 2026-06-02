@@ -3,6 +3,7 @@ import SubscriptionListItem from "./SubscriptionListItem";
 import PackagesListItem from "./PackagesListItem";
 import BASE_URL from "../../constants/BaseUrl";
 import { AuthContext } from "../../context/AuthContext";
+import axiosInterceptor from "../../axiosInterceptor";
 
 const SubscriptionList = () => {
   const [ActiveSubscription, SetActiveSubscription] = useState([]);
@@ -13,84 +14,73 @@ const SubscriptionList = () => {
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [dataToDisplay, setDataToDisplay] = useState([]);
   const TOTAL_VALUES_PER_PAGE = 10;
-  useEffect(() => {
-    setLoader(true);
-    const token = isUserData?.token;
-    const FetchSubscriptions = () => {
-      fetch(`${BASE_URL}/admin/active-subscriptions?subscription=-1&page=1`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          setDataToDisplay(res.data);
-          SetActiveSubscription(res.data);
-          setLoader(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error);
-          setLoader(false);
-        });
-    };
-    const FetchBoostingPackage = () => {
-      fetch(`${BASE_URL}/admin/active-boosts?boost=-1&page=1`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res.data, "data -->");
 
-          SetBoostingPackage(res.data);
-          setLoader(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error);
-          setLoader(false);
-        });
+  // ✅ FETCH ACTIVE + BOOSTING (AXIOS)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoader(true);
+
+        const [subsRes, boostRes] = await Promise.all([
+          axiosInterceptor.get(
+            "/admin/active-subscriptions?subscription=-1&page=1"
+          ),
+          axiosInterceptor.get(
+            "/admin/active-boosts?boost=-1&page=1"
+          ),
+        ]);
+
+        const subs = subsRes.data.data || [];
+        const boosts = boostRes.data.data || [];
+
+        SetActiveSubscription(subs);
+        SetBoostingPackage(boosts);
+        setDataToDisplay(subs);
+
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      } finally {
+        setLoader(false);
+      }
     };
 
-    FetchBoostingPackage();
-    FetchSubscriptions();
-  }, [isUserData]);
+    fetchData();
+  }, []);
 
+  // ✅ MONTH FILTER (AXIOS)
   useEffect(() => {
-    setLoader(true);
-    const token = isUserData?.token;
-    const formateDate = FilterMonthUser && FilterMonthUser?.split("-");
-    if (formateDate) {
-      fetch(
-        `${BASE_URL}/admin/user-subscriptions-in-month?month=${
-          formateDate[1] || ""
-        }&year=${formateDate[0] || ""}&page=1`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res.data, "filter by months");
-          if (res.data) {
-            SetActiveSubscription(res?.data);
-            setDataToDisplay(res?.data?.slice(0, TOTAL_VALUES_PER_PAGE));
-            setLoader(false);
+    const fetchFiltered = async () => {
+      try {
+        if (!FilterMonthUser) return;
+
+        setLoader(true);
+
+        const [year, month] = FilterMonthUser.split("-");
+
+        const res = await axiosInterceptor.get(
+          "/admin/user-subscriptions-in-month",
+          {
+            params: {
+              month: month || "",
+              year: year || "",
+              page: 1,
+            },
           }
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error);
-          setLoader(false);
-        });
-    }
+        );
+
+        const data = res.data.data || [];
+
+        SetActiveSubscription(data);
+        setDataToDisplay(data.slice(0, TOTAL_VALUES_PER_PAGE));
+
+      } catch (err) {
+        console.error("Filter error:", err);
+      } finally {
+        setLoader(false);
+      }
+    };
+
+    fetchFiltered();
   }, [FilterMonthUser]);
 
   const goOnPrevPage = () => {
@@ -114,7 +104,7 @@ const SubscriptionList = () => {
     <div className="w-full flex flex-col gap-6 mt-6">
       <div className="flex justify-between items-center">
         <div>
-         <h1 className="text-xl font-bold flex items-center gap-2">Active Subscription <span className="text-[#0098EA] text-sm mt-1">({dataToDisplay?.length})</span></h1> 
+          <h1 className="text-xl font-bold flex items-center gap-2">Active Subscription <span className="text-[#0098EA] text-sm mt-1">({dataToDisplay?.length})</span></h1>
         </div>
         <div>
           <label className="text-sm mb-2 block">Date</label>
@@ -184,9 +174,8 @@ const SubscriptionList = () => {
       </div>
       <div className="flex justify-end gap-3 w-full">
         <button
-          className={`${
-            currentPageNumber === 1 ? " bg-[#9fdeff]" : " bg-[#0098EA]"
-          } px-2 rounded-md w-[80px] text-white py-2 `}
+          className={`${currentPageNumber === 1 ? " bg-[#9fdeff]" : " bg-[#0098EA]"
+            } px-2 rounded-md w-[80px] text-white py-2 `}
           onClick={goOnPrevPage}
         >
           Prev
@@ -198,7 +187,7 @@ const SubscriptionList = () => {
           Next
         </button>
       </div>
-      <h1 className="text-xl font-bold flex items-center gap-2">Boosting Packages Report <span className="text-[#0098EA] text-sm ">({BoostingPackage?.length})</span></h1> 
+      <h1 className="text-xl font-bold flex items-center gap-2">Boosting Packages Report <span className="text-[#0098EA] text-sm ">({BoostingPackage?.length})</span></h1>
       <div className="w-full overflow-x-auto h-[500px] description-scroll rounded-xl border border-gray-200 bg-white px-6 py-2 ">
         <table className="w-full border-collapse text-left text-sm text-gray-500">
           <thead className="">

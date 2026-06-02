@@ -1,206 +1,395 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import BASE_URL from "../../constants/BaseUrl";
-export default function DetailOrder() {
-  const { isUserData, setLoader, loader } = useContext(AuthContext);
-  const [OrderDetail, SetOrderDetail] = useState([]);
-  const params = useParams("");
+import axiosInterceptor from "../../axiosInterceptor";
+import { GoArrowLeft } from "react-icons/go";
 
-  useEffect(() => {
-    setLoader(true);
-    const token = isUserData?.token;
-    fetch(`${BASE_URL}/admin/orders?page=1`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res.data, "orderss");
-        let filterData = res.data.filter((item) => item._id == params.id);
-        SetOrderDetail(filterData);
-        setLoader(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-        setLoader(false);
-      });
-  }, [isUserData]);
-  console.log(OrderDetail[0], "orderDetail");
-  const deliveryAddress = OrderDetail[0]?.deliveryAddress;
-  const formattedAddress = `${deliveryAddress?.streetAddress}, ${deliveryAddress?.apartment_suite}, ${deliveryAddress?.city}, ${deliveryAddress?.state}, ${deliveryAddress?.country}, ${deliveryAddress?.zipCode}`;
-  const navigate = useNavigate("");
+const hasAddressContent = (address) => {
+  if (!address) return false;
+  if (typeof address === "string") return address.trim().length > 0;
+  return [
+    address?.streetAddress,
+    address?.apartment_suite,
+    address?.city,
+    address?.state,
+    address?.country,
+    address?.zipCode,
+  ].some((part) => part && String(part).trim());
+};
+
+const formatAddress = (address) => {
+  if (!address) return "—";
+  if (typeof address === "string") return address.trim() || "—";
+  const parts = [
+    address?.streetAddress,
+    address?.apartment_suite,
+    address?.city,
+    address?.state,
+    address?.country,
+    address?.zipCode,
+  ].filter((part) => part && String(part).trim());
+  return parts.length ? parts.join(", ") : "—";
+};
+
+const formatStatus = (value) => {
+  if (value === null || value === undefined || value === "") return "PENDING";
+  return String(value).replace(/[_-]/g, " ").trim().toUpperCase();
+};
+
+const getStatusBadgeClass = (value) => {
+  const status = formatStatus(value);
+  if (status.includes("DELIVER")) {
+    return "bg-green-100 text-green-700";
+  }
+  if (status.includes("PENDING") || status.includes("WAITING")) {
+    return "bg-yellow-100 text-yellow-700";
+  }
+  if (
+    status.includes("SHIP") ||
+    status.includes("OUT FOR DELIVERY") ||
+    status.includes("IN TRANSIT")
+  ) {
+    return "bg-blue-100 text-blue-700";
+  }
+  if (status.includes("CANCEL") || status.includes("FAIL") || status.includes("REJECT")) {
+    return "bg-red-100 text-red-700";
+  }
+  return "bg-gray-100 text-gray-700";
+};
+
+const getImageUrl = (value) => {
+  if (!value) return null;
+  if (typeof value === "string") return value;
+  return value?.url || value?.[0]?.url || null;
+};
+
+const InfoRow = ({ label, value }) => (
+  <div className="space-y-1">
+    <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+      {label}
+    </p>
+    <p className="text-sm text-gray-800 break-words">{value || "—"}</p>
+  </div>
+);
+
+const StatusBadge = ({ value }) => (
+  <span
+    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${getStatusBadgeClass(value)}`}
+  >
+    {formatStatus(value)}
+  </span>
+);
+
+const ImagePreview = ({ src, alt, emptyText }) => {
+  const [open, setOpen] = useState(false);
+
+  if (!src) {
+    return (
+      <div className="flex h-24 w-24 items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white text-center text-[10px] leading-tight text-gray-400 px-1">
+        {emptyText}
+      </div>
+    );
+  }
 
   return (
     <>
-      <div className="flex items-center justify-center  ">
-        {loader&&<span className="loader !left-[40%]"></span>}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-block cursor-pointer"
+        title="Click to view image"
+      >
+        <img
+          src={src}
+          alt={alt}
+          className="h-24 w-24 rounded-lg border border-gray-200 object-cover bg-white hover:opacity-90 transition-opacity"
+        />
+      </button>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          onClick={() => setOpen(false)}
+        >
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="absolute right-4 top-4 rounded-full bg-white px-3 py-1 text-sm font-medium text-gray-800 hover:bg-gray-100"
+          >
+            Close
+          </button>
+          <img
+            src={src}
+            alt={alt}
+            onClick={(e) => e.stopPropagation()}
+            className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-lg"
+          />
+        </div>
+      )}
+    </>
+  );
+};
+
+export default function DetailOrder() {
+  const { setLoader, loader } = useContext(AuthContext);
+  const [order, setOrder] = useState(null);
+  const params = useParams("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getOrder = async () => {
+      try {
+        setLoader(true);
+        const response = await axiosInterceptor.get("/admin/orders", {
+          params: { page: 1 },
+        });
+        const found = (response?.data?.data || []).find(
+          (item) => item._id == params.id
+        );
+        setOrder(found || null);
+      } catch (error) {
+        console.error("Error fetching order:", error);
+      } finally {
+        setLoader(false);
+      }
+    };
+
+    getOrder();
+  }, [params.id]);
+
+  const buyer = order?.placerDetails;
+  const buyerAddress =
+    order?.deliveryAddress ||
+    buyer?.deliveryAddresses?.[0] ||
+    buyer?.address;
+
+  const sellers =
+    order?.sellersProducts?.map((sp) => {
+      const products =
+        sp?.fulfillmentMethods?.flatMap((fm) => fm?.products || []) || [];
+      const nestedSeller = products
+        .map((p) => p?.product?.seller)
+        .find(Boolean);
+      const productPickupAddress = products
+        .map((p) => p?.product?.pickupAddress)
+        .find((addr) => hasAddressContent(addr));
+
+      const sellerAddress = hasAddressContent(nestedSeller?.pickupAddress)
+        ? nestedSeller.pickupAddress
+        : hasAddressContent(productPickupAddress)
+          ? productPickupAddress
+          : hasAddressContent(nestedSeller?.address)
+            ? nestedSeller.address
+            : nestedSeller?.deliveryAddresses?.[0];
+
+      return {
+        id: sp?.seller?.id || nestedSeller?._id,
+        name: sp?.seller?.name || nestedSeller?.name,
+        email: nestedSeller?.email?.value,
+        address: sellerAddress,
+      };
+    }) || [];
+
+  const uniqueSellers = sellers.filter(
+    (seller, index, arr) =>
+      seller?.id && arr.findIndex((s) => s.id === seller.id) === index
+  );
+
+  const deliveryStatus =
+    order?.status ?? order?.shipment?.status ?? order?.delivery?.status;
+  const escrowStatus = order?.escrowStatus ?? order?.escrow?.status;
+
+  const trackingNumber =
+    order?.shipment?.trackingId ||
+    order?.shipment?.trackingNumber ||
+    order?.shipment?.tracking ||
+    order?.trackingNumber;
+
+  const shippingPicture = getImageUrl(
+    order?.shipment?.shippingProof ||
+      order?.shipment?.shippingPicture ||
+      order?.shipment?.image ||
+      order?.shippingPicture
+  );
+
+  const proofOfDelivery = getImageUrl(
+    order?.delivery?.deliveryProof ||
+      order?.delivery?.proofOfDelivery ||
+      order?.delivery?.image ||
+      order?.proofOfDelivery
+  );
+
+  if (loader) {
+    return (
+      <div className="flex items-center justify-center py-40">
+        <span className="loader"></span>
+      </div>
+    );
+  }
+
+  if (!order) {
+    return (
+      <div className="px-4 py-10 md:px-6">
+        <button
+          onClick={() => navigate("/order")}
+          className="mb-4 inline-flex items-center gap-2 text-sm text-[#0098EA]"
+        >
+          <GoArrowLeft size={18} /> Back to Orders
+        </button>
+        <p className="text-gray-500">Order not found</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="py-4 px-4 md:px-6 2xl:px-4 2xl:container 2xl:mx-auto space-y-6">
+      <div className="flex flex-col gap-3">
+        <button
+          onClick={() => navigate("/order")}
+          className="inline-flex w-fit items-center gap-2 text-sm text-[#0098EA] hover:opacity-80"
+        >
+          <GoArrowLeft size={18} /> Back to Orders
+        </button>
+        <div>
+          <h1 className="text-3xl font-semibold text-gray-800">Order Detail</h1>
+          <p className="mt-1 text-sm text-gray-500">Order ID: {order?._id}</p>
+        </div>
       </div>
 
-      <div className="py-4 px-4 md:px-6 2xl:px-4 2xl:container 2xl:mx-auto">
-        <div className="flex justify-start item-start space-y-2 flex-col">
-          <h1 className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9 text-gray-800">
-            Order Detail
-          </h1>
-        </div>
+      <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 md:p-6">
+        <h2 className="mb-4 text-lg font-semibold text-gray-800">Products</h2>
+        <div className="space-y-4">
+          {order?.sellersProducts?.map((sellerProduct) =>
+            sellerProduct?.fulfillmentMethods?.map((method) =>
+              method?.products?.length > 0
+                ? method.products.map((item, i) => {
+                    const displayImage =
+                      item?.product?.images?.find((img) => img?.displayImage)
+                        ?.url || item?.product?.images?.[0]?.url;
 
-        <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
-          <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
-            <div className="flex flex-col justify-start items-start bg-gray-50 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
-              <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">
-                Customer’s Cart
-              </p>
-
-              {OrderDetail[0]?.sellersProducts?.map((sellerProduct) => {
-                return sellerProduct?.fulfillmentMethods?.map((method) => {
-                  return (
-                    method?.products.length > 0 &&
-                    method?.products.map((item,i) => (
-                      <div key={i} className="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
-                        <div className="pb-4 md:pb-8 w-full md:w-40">
-                          <img
-                            className="w-full hidden !h-[120px] md:block"
-                            src={
-                              item?.product?.images[0]?.url
-                                ? item?.product?.images[0]?.url
-                                : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                            }
-                            alt="product Img"
-                          />
-                          <img
-                            className="w-full !h-[120px] md:hidden"
-                            src={
-                              item?.product?.images[0]?.url
-                                ? item?.product?.images[0]?.url
-                                : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                            }
-                            alt="product Img"
-                          />
+                    return (
+                      <div
+                        key={`${item?._id || i}`}
+                        className="flex flex-col gap-4 border-b border-gray-200 pb-4 last:border-b-0 md:flex-row md:items-center"
+                      >
+                        <img
+                          src={
+                            displayImage ||
+                            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                          }
+                          alt={item?.product?.name || "product"}
+                          className="h-24 w-24 rounded-lg object-cover"
+                        />
+                        <div className="flex-1 space-y-1">
+                          <p
+                            onClick={() => {
+                              navigate(`/productDetail/${item?.product?._id}`, {
+                                state: { data: item?.product },
+                              });
+                            }}
+                            className="cursor-pointer text-base font-semibold text-gray-800 hover:text-[#0098EA]"
+                          >
+                            {item?.product?.name}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {item?.product?.category} /{" "}
+                            {item?.product?.subCategory}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            Fulfillment:{" "}
+                            {method.method === "selfPickup"
+                              ? "Self Pickup"
+                              : "Delivery"}
+                          </p>
                         </div>
-                        <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full pb-8 space-y-4 md:space-y-0">
-                          <div className="w-full flex flex-col justify-start items-start space-y-8">
-                            <h3
-                              onClick={() => {
-                                navigate(
-                                  `/productDetail/${item?.product?._id}`,
-                                  {
-                                    state: { data: item?.product },
-                                  }
-                                );
-                              }}
-                              className="text-xl cursor-pointer xl:text-2xl font-semibold leading-6 text-gray-800"
-                            >
-                              {item?.product?.name}
-                            </h3>
-                            <div className="flex justify-start items-start flex-col space-y-2">
-                              <p className="text-sm leading-none text-gray-800">
-                                <span className="dark:text-gray-400 text-gray-500">
-                                  Category:{" "}
-                                </span>{" "}
-                                {item?.product?.category}
-                              </p>
-                              <p className="text-sm leading-none text-gray-800">
-                                <span className="dark:text-gray-400 text-gray-500">
-                                  Sub Category:{" "}
-                                </span>{" "}
-                                {item?.product?.subCategory}
-                              </p>
-                              <p className="text-sm leading-none text-gray-800">
-                                <span className="dark:text-gray-400 text-gray-500">
-                                  Status:{" "}
-                                </span>{" "}
-                                {method.method === "selfPickup"
-                                  ? "Self Pickup"
-                                  : "Delivery"}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex justify-between space-x-8 items-start w-full">
-                            <p className="text-base xl:text-lg leading-6">
-                              ${item?.product?.price}
-                            </p>
-                            <p className="text-base xl:text-lg leading-6 text-gray-800">
-                              QTY/{item?.product?.quantity}
-                            </p>
-                            <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
-                              ${item?.product?.price * item?.product?.quantity}
-                            </p>
-                          </div>
+                        <div className="text-sm text-gray-700 md:text-right">
+                          <p>Qty: {item?.quantity || 1}</p>
+                          <p className="font-semibold">
+                            ${item?.product?.price}
+                          </p>
                         </div>
                       </div>
-                    ))
-                  );
-                });
-              })}
-            </div>
-          </div>
-          <div className="bg-gray-50 w-full xl:w-96 flex justify-between items-center md:items-start px-4 py-6 md:p-6 xl:p-8 flex-col">
-            <h3 className="text-xl font-semibold leading-5 text-gray-800">
-              Customer
-            </h3>
-            <div className="flex flex-col md:flex-row xl:flex-col justify-start items-stretch h-full w-full md:space-x-6 lg:space-x-8 xl:space-x-0">
-              <div className="flex flex-col justify-start items-start flex-shrink-0">
-                <div className="flex justify-center w-full md:justify-start items-center space-x-4 py-8 border-b border-gray-200">
-                  <img
-                    src="https://i.ibb.co/5TSg7f6/Rectangle-18.png"
-                    alt="avatar"
-                  />
-                  <div className="flex justify-start items-start flex-col space-y-2">
-                    <p
-                      onClick={() => {
-                        navigate(`/user/${OrderDetail[0]?.placerDetails._id}`, {
-                          state: { data: OrderDetail[0]?.placerDetails },
-                        });
-                      }}
-                      className=" cursor-pointer text-base font-semibold leading-4 text-left text-gray-800"
-                    >
-                      {OrderDetail[0]?.placerDetails?.name}
-                    </p>
-                    <p className="text-sm dark:text-gray-300 leading-5 text-gray-600">
-                      +{OrderDetail[0]?.placerDetails?.phoneNumber.code}
-                      {OrderDetail[0]?.placerDetails?.phoneNumber.value}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex justify-center text-gray-800 md:justify-start items-center space-x-4 py-4 border-b border-gray-200 w-full">
-                  <img
-                    className="w-[20px]"
-                    src="https://tuk-cdn.s3.amazonaws.com/can-uploader/order-summary-3-svg1.svg"
-                    alt="email"
-                  />
-                 
-                  <p className="cursor-pointer text-sm leading-5 ">
-                    {OrderDetail[0]?.placerDetails?.email.value}
-                  </p>
-                </div>
-              </div>
-              <div className="flex justify-between xl:h-full items-stretch w-full flex-col mt-6 md:mt-0">
-                <div className="flex justify-center md:justify-start xl:flex-col flex-col md:space-x-6 lg:space-x-8 xl:space-x-0 space-y-4 xl:space-y-12 md:space-y-0 md:flex-row items-center md:items-start">
-                  <div className="flex justify-center md:justify-start items-center md:items-start flex-col space-y-4 xl:mt-8">
-                    <p className="text-base font-semibold leading-4 text-center md:text-left text-gray-800">
-                      Delivery Address
-                    </p>
-                    <p className="w-48 lg:w-full dark:text-gray-300 xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">
-                      {formattedAddress}
-                    </p>
-                  </div>
-                  {/* <div className="flex justify-center md:justify-start items-center md:items-start flex-col space-y-4">
-                  <p className="text-base font-semibold leading-4 text-center md:text-left text-gray-800">
-                    Billing Address
-                  </p>
-                  <p className="w-48 lg:w-full dark:text-gray-300 xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">
-                    180 North King Street, Northhampton MA 1060
-                  </p>
-                </div> */}
-                </div>
-              </div>
-            </div>
-          </div>
+                    );
+                  })
+                : null
+            )
+          )}
+        </div>
+        <div className="mt-4 flex justify-end border-t border-gray-200 pt-4">
+          <p className="text-base font-semibold text-gray-800">
+            Total: ${order?.total}
+          </p>
         </div>
       </div>
-    </>
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 md:p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-gray-800">Buyer</h2>
+          <InfoRow label="Name" value={buyer?.name} />
+          <InfoRow label="Email" value={buyer?.email?.value} />
+          <InfoRow label="Address" value={formatAddress(buyerAddress)} />
+        </div>
+
+        <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 md:p-6 space-y-5">
+          <h2 className="text-lg font-semibold text-gray-800">Seller</h2>
+          {uniqueSellers.length > 0 ? (
+            uniqueSellers.map((seller) => (
+              <div
+                key={seller.id}
+                className="space-y-4 border-b border-gray-200 pb-4 last:border-b-0 last:pb-0"
+              >
+                <InfoRow label="Name" value={seller.name} />
+                <InfoRow label="Email" value={seller.email} />
+                <InfoRow
+                  label="Address"
+                  value={formatAddress(seller.address)}
+                />
+              </div>
+            ))
+          ) : (
+            <p className="text-sm text-gray-500">No seller details found</p>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 md:p-6 space-y-3">
+          <h2 className="text-lg font-semibold text-gray-800">Status</h2>
+          <StatusBadge value={deliveryStatus} />
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 md:p-6 space-y-3">
+          <h2 className="text-lg font-semibold text-gray-800">Escrow Status</h2>
+          <StatusBadge value={escrowStatus} />
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 md:p-6 space-y-4">
+        <h2 className="text-lg font-semibold text-gray-800">
+          Tracking / Shipping
+        </h2>
+        <InfoRow label="Tracking Number" value={trackingNumber || "—"} />
+        <div className="space-y-2">
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+            Shipping Picture
+          </p>
+          <ImagePreview
+            src={shippingPicture}
+            alt="Shipping"
+            emptyText="No shipping picture available"
+          />
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 md:p-6 space-y-4">
+        <h2 className="text-lg font-semibold text-gray-800">
+          Proof of Delivery
+        </h2>
+        <ImagePreview
+          src={proofOfDelivery}
+          alt="Proof of delivery"
+          emptyText="No proof of delivery available"
+        />
+      </div>
+    </div>
   );
 }
