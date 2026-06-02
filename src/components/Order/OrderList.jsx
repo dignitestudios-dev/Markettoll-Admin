@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import OrderListItem from "./OrderListItem";
 import { AuthContext } from "../../context/AuthContext";
 import BASE_URL from "../../constants/BaseUrl";
+import axiosInterceptor from "../../axiosInterceptor";
 
 const OrderList = ({ filterData, setOrderCount }) => {
   const { isUserData, setLoader, loader } = useContext(AuthContext);
@@ -10,28 +11,31 @@ const OrderList = ({ filterData, setOrderCount }) => {
   const [dataToDisplay, setDataToDisplay] = useState([]);
   const TOTAL_VALUES_PER_PAGE = 10;
   useEffect(() => {
-    setLoader(true);
-    const token = isUserData?.token;
-    fetch(`${BASE_URL}/admin/orders?name=${filterData || ""}&page=1`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res.data, "orderss");
-        setDataToDisplay(res.data);
-        setOrderCount(res?.ordersCount);
-        SetOrder(res.data);
+    const getOrders = async () => {
+      try {
+        setLoader(true);
+
+        const response = await axiosInterceptor.get("/admin/orders", {
+          params: {
+            name: filterData || "",
+            page: 1,
+          },
+        });
+
+        console.log(response?.data?.data, "orderss");
+
+        SetOrder(response?.data?.data || []);
+        setDataToDisplay(response?.data?.data || []);
+        setOrderCount(response?.data?.ordersCount || 0);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
         setLoader(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-        setLoader(false);
-      });
-  }, [isUserData, filterData]);
+      }
+    };
+
+    getOrders();
+  }, [filterData]);
   const goOnPrevPage = () => {
     if (currentPageNumber === 1) return;
     setCurrentPageNumber((prev) => prev - 1);
@@ -110,9 +114,8 @@ const OrderList = ({ filterData, setOrderCount }) => {
       </div>
       <div className="flex justify-end gap-3 w-full">
         <button
-          className={`${
-            currentPageNumber === 1 ? " bg-[#9fdeff]" : " bg-[#0098EA]"
-          } px-2 rounded-md w-[80px] text-white py-2 `}
+          className={`${currentPageNumber === 1 ? " bg-[#9fdeff]" : " bg-[#0098EA]"
+            } px-2 rounded-md w-[80px] text-white py-2 `}
           onClick={goOnPrevPage}
         >
           Prev

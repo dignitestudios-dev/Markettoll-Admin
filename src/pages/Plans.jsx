@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import BASE_URL from "../constants/BaseUrl";
 import { AuthContext } from "../context/AuthContext";
+import axiosInterceptor from "../axiosInterceptor";
 
 const plansData = [
   {
@@ -66,44 +67,37 @@ const Plans = () => {
   const [loading, setLoading] = useState(true);
   const [plansStats, setPlansStats] = useState(plansData);
 
-  const fetchSubscriptionsStats = () => {
-    setLoading(true);
-    const token = isUserData?.token;
+  const fetchSubscriptionsStats = async () => {
+    try {
+      setLoading(true);
 
-    fetch(`${BASE_URL}/admin/subscription-plan-counts`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("plans: ", res.plans);
+      const response = await axiosInterceptor.get(
+        "/admin/subscription-plan-counts"
+      );
 
-        // merge API stats with static plan definitions
-        const merged = plansData.map((plan) => {
-          const stats = res.plans[plan.name] || {};
-          return {
-            ...plan,
-            ...stats, // thisMonthRevenue, totalRevenue, totalUsers, etc.
-          };
-        });
+      console.log("plans: ", response?.data?.plans);
 
-        setPlansStats(merged);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-        setLoading(false);
+      const merged = plansData.map((plan) => {
+        const stats = response?.data?.plans?.[plan.name] || {};
+        return {
+          ...plan,
+          ...stats,
+        };
       });
+
+      setPlansStats(merged);
+    } catch (error) {
+      console.error("Error fetching plans:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchSubscriptionsStats();
-  }, [isUserData]);
+  }, []);
 
-  console.log("plansStats: ", plansStats);
+
 
   return (
     <div>
@@ -130,9 +124,8 @@ const Plans = () => {
                   </span>
                 </h2>
                 <p
-                  className={`${
-                    !item?.price && "mt-4"
-                  } text-base text-body-color pb-8 mb-8 border-b border-[#F2F2F2]`}
+                  className={`${!item?.price && "mt-4"
+                    } text-base text-body-color pb-8 mb-8 border-b border-[#F2F2F2]`}
                 >
                   <ul className="ps-5 space-y-2">
                     {item.features.map((feat, index) => (
