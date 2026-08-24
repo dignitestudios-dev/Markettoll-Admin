@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { HiOutlineLogout } from "react-icons/hi";
 import { LuLayoutDashboard, LuUser } from "react-icons/lu";
@@ -13,17 +13,50 @@ import cookie from "js-cookie";
 import { BiMessageRounded } from "react-icons/bi";
 import LogOutModal from "../LogOut/LogOutModal";
 import { AuthContext } from "../../context/AuthContext";
+
+const getActiveLinkFromPath = (pathname) => {
+  const path = pathname.toLowerCase();
+  if (path === "/" || path === "") return "Dashboard";
+  if (path.startsWith("/users") || path.startsWith("/user/")) return "Users";
+  if (path.startsWith("/inactive")) return "InActive";
+  if (path.startsWith("/products") || path.startsWith("/productdetail"))
+    return "Products";
+  if (path.startsWith("/order")) return "Order";
+  if (
+    path.startsWith("/category") ||
+    path.startsWith("/createcategory") ||
+    path.startsWith("/editcategory") ||
+    path.startsWith("/subcategory") ||
+    path.startsWith("/subcreatecategory") ||
+    path.startsWith("/subeditcategory")
+  )
+    return "Category";
+  if (path.startsWith("/affiliate") || path.startsWith("/pending-request") || path.startsWith("/achiever"))
+    return "Affiliate";
+  if (path.startsWith("/deleted")) return "Deleted";
+  if (path.startsWith("/customer")) return "Customer";
+  if (path.startsWith("/chat")) return "Chat";
+  if (path.startsWith("/revenue")) return "revenue";
+  if (path.startsWith("/notifications")) return "Notifications";
+  if (path.startsWith("/reports")) return "Settings";
+  return "";
+};
+
 const Sidebar = () => {
   const navigate = useNavigate();
-  const [activeLink, setActiveLink] = useState("Products");
+  const { pathname } = useLocation();
+  const activeLink = useMemo(() => getActiveLinkFromPath(pathname), [pathname]);
   const { setShowModal } = useContext(AuthContext);
 
-  const navigateToLink = (link, name) => {
+  const navigateToLink = (link) => {
     navigate(link);
-    setActiveLink(name);
   };
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(
+    () =>
+      pathname.toLowerCase().startsWith("/customer") ||
+      pathname.toLowerCase().startsWith("/chat")
+  );
 
   return (
     <div className="w-full py-6 px-2  lg:px-10 flex overflow-y-auto description-scroll flex-col items-center gap-y-6">
@@ -165,40 +198,37 @@ const Sidebar = () => {
     <span>Customer</span>
   </button>
 
-  {/* Dropdown */}
-  {isDropdownOpen && (
-    <ul className="mt-1 ml-4 space-y-1">
-      {/* Email Support */}
-      <li>
-        <button
-          onClick={() => navigateToLink("/customer", "Customer")}
-          className={`text-sm flex items-center gap-3 font-medium w-full py-2.5 px-4 rounded-lg transition-all duration-300 ${
-            activeLink === "Customer" || activeLink === "customer"
-              ? "bg-[#0098EA] text-white"
-              : "text-gray-700 hover:bg-[#E8F6FD] hover:text-[#0098EA]"
-          }`}
-        >
-          <span>Email Support</span>
-        </button>
-      </li>
-
-      {/* Order Queries */}
-      <li>
-        <button
-          onClick={() => navigateToLink("/chat", "Chat")}
-          className={`text-sm flex items-center gap-3 font-medium w-full py-2.5 px-4 rounded-lg transition-all duration-300 ${
-            activeLink === "Chat"
-              ? "bg-[#0098EA] text-white"
-              : "text-gray-700 hover:bg-[#E8F6FD] hover:text-[#0098EA]"
-          }`}
-        >
-          <BiMessageRounded className="text-lg shrink-0" />
-          <span>Order Queries</span>
-        </button>
-      </li>
-    </ul>
-  )}
-</li>
+          {/* Dropdown Menu for Customer */}
+          {isDropdownOpen && (
+            <ul className="ml-6 mt-2 bg-white border rounded-lg">
+              <li className="w-full">
+                <button
+                  onClick={() => navigateToLink("/customer")}
+                  className={`text-sm flex items-center  gap-3 font-medium w-full py-3 px-6 rounded-lg ${
+                    activeLink === "Customer"
+                      ? "bg-[#0098EA] text-white"
+                      : "bg-transparent text-black  hover:bg-[#0098EA] hover:text-white transition-all duration-300"
+                  }`}
+                >
+                  Email Support
+                </button>
+              </li>
+              <li className="w-full">
+                <button
+                  onClick={() => navigateToLink("/chat", "Chat")}
+                  className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
+                    activeLink === "Chat"
+                      ? "bg-[#0098EA] text-white"
+                      : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
+                  }`}
+                >
+                  <BiMessageRounded className="text-lg" />
+                  Live Chat
+                </button>
+              </li>
+            </ul>
+          )}
+        </li>
 
         {/* <li className="w-full ">
           <button

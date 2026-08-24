@@ -68,25 +68,31 @@ const OrderList = ({ filterData, setOrderCount }) => {
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2  py-3 text-sm font-semibold"
               >
-                Buyer Email
-              </th>
-              <th
-                scope="col"
-                className="px-6 lg:px-4 xl:px-2  py-3 text-xm font-semibold"
-              >
-                Delivery Address{" "}
-              </th>
-              <th
-                scope="col"
-                className="px-6 lg:px-4 text-nowrap xl:px-2  py-3 text-sm font-semibold"
-              >
-                Total Price
+                Seller Name
               </th>
               <th
                 scope="col"
                 className="px-6 lg:px-4 xl:px-2  py-3 text-sm font-semibold"
               >
-                Created At
+                Product Purchased
+              </th>
+              <th
+                scope="col"
+                className="px-6 lg:px-4 text-nowrap xl:px-2  py-3 text-sm font-semibold"
+              >
+                Delivery Status
+              </th>
+              <th
+                scope="col"
+                className="px-6 lg:px-4 xl:px-2  py-3 text-sm font-semibold"
+              >
+                Escrow Status
+              </th>
+              <th
+                scope="col"
+                className="px-6 lg:px-4 xl:px-2 rounded-e-lg py-3 text-sm font-semibold"
+              >
+                Action
               </th>
             </tr>
           </thead>
