@@ -7,7 +7,8 @@ import PendingRequest from "../pages/Affiliate/PendingRequest";
 import Category from "../pages/Category/Category";
 import CreateCategory from "../pages/Category/CreateCategory";
 import EditCategory from "../pages/Category/EditCategory";
-import Chat from "../pages/Chat";
+// import Chat from "../pages/Chat";
+import ChatV2Page from "../pages/ChatV2";
 import Customer from "../pages/CustomerSupport";
 import Dashboard from "../pages/Dashboard";
 import DeletedAccounts from "../pages/DeletedAccounts";
@@ -115,7 +116,8 @@ export const AppRoutes = [
   {
     Title: "chat",
     url: "/chat",
-    page: <Layout pages={<Chat />} />,
+    // page: <Layout pages={<Chat />} />,
+    page: <Layout pages={<ChatV2Page />} />,
     isPrivate: true,
   },
   {
