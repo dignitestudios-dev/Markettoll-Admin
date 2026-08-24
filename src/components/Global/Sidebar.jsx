@@ -198,37 +198,40 @@ const Sidebar = () => {
     <span>Customer</span>
   </button>
 
-          {/* Dropdown Menu for Customer */}
-          {isDropdownOpen && (
-            <ul className="ml-6 mt-2 bg-white border rounded-lg">
-              <li className="w-full">
-                <button
-                  onClick={() => navigateToLink("/customer")}
-                  className={`text-sm flex items-center  gap-3 font-medium w-full py-3 px-6 rounded-lg ${
-                    activeLink === "Customer"
-                      ? "bg-[#0098EA] text-white"
-                      : "bg-transparent text-black  hover:bg-[#0098EA] hover:text-white transition-all duration-300"
-                  }`}
-                >
-                  Email Support
-                </button>
-              </li>
-              <li className="w-full">
-                <button
-                  onClick={() => navigateToLink("/chat", "Chat")}
-                  className={`text-sm flex items-center gap-3 font-medium w-full py-3 px-6 rounded-lg ${
-                    activeLink === "Chat"
-                      ? "bg-[#0098EA] text-white"
-                      : "bg-transparent text-black hover:bg-[#0098EA] hover:text-white transition-all duration-300"
-                  }`}
-                >
-                  <BiMessageRounded className="text-lg" />
-                  Live Chat
-                </button>
-              </li>
-            </ul>
-          )}
-        </li>
+  {/* Dropdown */}
+  {isDropdownOpen && (
+    <ul className="mt-1 ml-4 space-y-1">
+      {/* Email Support */}
+      <li>
+        <button
+          onClick={() => navigateToLink("/customer", "Customer")}
+          className={`text-sm flex items-center gap-3 font-medium w-full py-2.5 px-4 rounded-lg transition-all duration-300 ${
+            activeLink === "Customer" || activeLink === "customer"
+              ? "bg-[#0098EA] text-white"
+              : "text-gray-700 hover:bg-[#E8F6FD] hover:text-[#0098EA]"
+          }`}
+        >
+          <span>Email Support</span>
+        </button>
+      </li>
+
+      {/* Order Queries */}
+      <li>
+        <button
+          onClick={() => navigateToLink("/chat", "Chat")}
+          className={`text-sm flex items-center gap-3 font-medium w-full py-2.5 px-4 rounded-lg transition-all duration-300 ${
+            activeLink === "Chat"
+              ? "bg-[#0098EA] text-white"
+              : "text-gray-700 hover:bg-[#E8F6FD] hover:text-[#0098EA]"
+          }`}
+        >
+          <BiMessageRounded className="text-lg shrink-0" />
+          <span>Order Queries</span>
+        </button>
+      </li>
+    </ul>
+  )}
+</li>
 
         {/* <li className="w-full ">
           <button
