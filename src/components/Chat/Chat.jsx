@@ -56,11 +56,11 @@ function ChatUIComponent() {
       "messages"
     );
     const messagesQuery = query(messagesRef);
-    const unsubscribe = onSnapshot(messagesQuery,(querySnapshot) => {
-        const messagesList = querySnapshot.docs.map((doc) => doc.data());
-        console.log(messagesList, "messageList");
-        setMessages(messagesList);
-      },
+    const unsubscribe = onSnapshot(messagesQuery, (querySnapshot) => {
+      const messagesList = querySnapshot.docs.map((doc) => doc.data());
+      console.log(messagesList, "messageList");
+      setMessages(messagesList);
+    },
       (error) => {
         console.error("Error fetching messages: ", error);
       }
@@ -191,18 +191,16 @@ function ChatUIComponent() {
                 .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
                 .map((item) => (
                   <div
-                    className={`w-full px-2 flex flex-col ${
-                      item.senderId == isUserData?._id
+                    className={`w-full px-2 flex flex-col ${item.senderId == isUserData?._id
                         ? "items-end"
                         : "items-start"
-                    }`}
+                      }`}
                   >
                     <div
-                      className={`w-[80%] lg:w-[307px] ${
-                        item.senderId == isUserData?._id
+                      className={`w-[80%] lg:w-[307px] ${item.senderId == isUserData?._id
                           ? " bg-[#0098EA] text-white"
                           : "bg-[#F7F7F7] text-[#000000]"
-                      } p-3 rounded-xl text-wrap break-words text-xs lg:text-sm`}
+                        } p-3 rounded-xl text-wrap break-words text-xs lg:text-sm`}
                     >
                       {item.text}
                     </div>
