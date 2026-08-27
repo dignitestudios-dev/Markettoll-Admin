@@ -19,10 +19,11 @@ function ChatUIComponent() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [chatId, setChatId] = useState("");
+  const chat_id = chatId?.chatId;
+  console.log(chatId, "chat_id")
 
   const handleMessage = async () => {
     if (message.trim() === "") return;
-    const chat_id = chatId?.chatId;
     const messageData = {
       senderId: isUserData?._id,
       text: message,
