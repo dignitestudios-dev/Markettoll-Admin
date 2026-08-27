@@ -13,17 +13,56 @@ import {
 import { AuthContext } from "../../context/AuthContext";
 import { IoSend } from "react-icons/io5";
 
+// Generate a consistent background color from name string
+const getAvatarColor = (name = "") => {
+  const colors = [
+    "#0098EA", "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4",
+    "#FFEAA7", "#DDA0DD", "#98D8C8", "#F7DC6F", "#BB8FCE",
+  ];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+};
+
+const Avatar = ({ name, image, size = "w-12 h-12" }) => {
+  const [imgError, setImgError] = useState(false);
+  const hasImage = image && typeof image === "string" && image.trim() !== "" && image !== "/chat-img.png" && !image.includes("photo-1633332755192-727a05c4013d");
+  const initial = (name || "U").charAt(0).toUpperCase();
+  const bgColor = getAvatarColor(name);
+
+  if (hasImage && !imgError) {
+    return (
+      <img
+        src={image}
+        alt={name || "Avatar"}
+        className={`${size} rounded-full object-cover border border-gray-100 shrink-0`}
+        onError={() => setImgError(true)}
+      />
+    );
+  }
+
+  return (
+    <div
+      className={`${size} rounded-full flex items-center justify-center border border-gray-100 text-white font-bold text-base shrink-0 select-none`}
+      style={{ backgroundColor: bgColor }}
+    >
+      {initial}
+    </div>
+  );
+};
+
 function ChatUIComponent() {
   const { isUserData } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [chatId, setChatId] = useState("");
-  const chat_id = chatId?.chatId;
-  console.log(chatId, "chat_id")
 
   const handleMessage = async () => {
     if (message.trim() === "") return;
+    const chat_id = chatId?.chatId;
     const messageData = {
       senderId: isUserData?._id,
       text: message,
@@ -35,13 +74,14 @@ function ChatUIComponent() {
       await addDoc(messagesRef, messageData);
       await setDoc(doc(db, "userChats", chatId?.id), {
         user: {
-          name: chatId?.user?.name,
-          pic: chatId?.user?.pic,
+          name: chatId?.user?.name || chatId?.user_name || "User",
+          pic: chatId?.user?.pic || chatId?.user?.profileImage || chatId?.user?.image || "",
+          ...(chatId?.user || {}),
         },
         chatId: chat_id,
         lastMessage: message,
         timestamp: new Date().toISOString(),
-      });
+      }, { merge: true });
       setMessage("");
       fetchMessages();
     } catch (error) {
@@ -119,9 +159,10 @@ function ChatUIComponent() {
       setUsers(originalUserList);
     } else {
       console.log(originalUserList, "userListt");
-      const dataFilter = originalUserList.filter((item) =>
-        item.user.name.toLowerCase().includes(filterValue.toLowerCase())
-      );
+      const dataFilter = originalUserList.filter((item) => {
+        const userName = item?.user?.name || item?.user_name || item?.name || "";
+        return userName.toLowerCase().includes(filterValue.toLowerCase());
+      });
       console.log(dataFilter, filterValue, originalUserList, "filteration");
       setUsers(dataFilter);
     }
@@ -145,30 +186,47 @@ function ChatUIComponent() {
         {/* user list */}
         {users
           .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-          ?.map((item) => (
-            <div
-              onClick={() => {
-                setChatId(item);
-              }}
-              className="flex gap-2 cursor-pointer flex-row py-4 px-2 justify-center items-center border"
-            >
-              <div className="">
-                <img
-                  src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODB8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww"
-                  className="object-cover h-12 w-12 rounded-full"
-                  alt=""
-                />
-              </div>
-              <div className="w-full">
-                <div className="text-[13px]  font-semibold">
-                  {item?.user?.name}
+          ?.map((item) => {
+            const userName = item?.user?.name || item?.user_name || item?.name || "User";
+            const userImg =
+              item?.user?.pic ||
+              item?.user?.profileImage ||
+              item?.user?.image ||
+              item?.user?.photoURL ||
+              item?.profileImage ||
+              item?.image ||
+              item?.pic ||
+              "";
+            const isSelected = (chatId?.id || chatId?._id) === (item?.id || item?._id);
+
+            return (
+              <div
+                key={item?.id || item?._id || Math.random()}
+                onClick={() => {
+                  setChatId(item);
+                }}
+                className={`flex gap-3 cursor-pointer flex-row py-4 px-3 justify-center items-center border-b transition-colors ${
+                  isSelected ? "bg-blue-50" : "hover:bg-gray-50"
+                }`}
+              >
+                <div className="shrink-0">
+                  <Avatar
+                    name={userName}
+                    image={userImg}
+                    size="w-12 h-12"
+                  />
                 </div>
-                <span className="text-gray-500 text-[12px] font-[400]">
-                  {item?.lastMessage}
-                </span>
+                <div className="w-full min-w-0">
+                  <div className="text-[13px] font-semibold truncate">
+                    {userName}
+                  </div>
+                  <span className="text-gray-500 text-[12px] font-[400] truncate block">
+                    {item?.lastMessage}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         {/* end user list */}
       </div>
 
@@ -176,13 +234,24 @@ function ChatUIComponent() {
         {chatId ? (
           <>
             <header className="flex justify-between items-center p-4 bg-gray-100 border-b border-gray-200">
-              <div className="flex items-center">
-                <img
-                  src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODB8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww"
-                  alt="Avatar"
-                  className="w-10 object-cover rounded-full"
+              <div className="flex items-center gap-3">
+                <Avatar
+                  name={chatId?.user?.name || chatId?.user_name || chatId?.name || "User"}
+                  image={
+                    chatId?.user?.pic ||
+                    chatId?.user?.profileImage ||
+                    chatId?.user?.image ||
+                    chatId?.user?.photoURL ||
+                    chatId?.profileImage ||
+                    chatId?.image ||
+                    chatId?.pic ||
+                    ""
+                  }
+                  size="w-10 h-10"
                 />
-                <span className="ml-2 font-semibold">{chatId?.user?.name}</span>
+                <span className="font-semibold text-gray-800">
+                  {chatId?.user?.name || chatId?.user_name || chatId?.name || "User"}
+                </span>
               </div>
             </header>
 
@@ -190,23 +259,24 @@ function ChatUIComponent() {
             <div className="flex-1 overflow-y-auto p-4 space-y-4 description-scroll max-h-[450px]">
               {messages
                 .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
-                .map((item) => (
+                .map((item, index) => (
                   <div
+                    key={item?.id || index}
                     className={`w-full px-2 flex flex-col ${item.senderId == isUserData?._id
-                        ? "items-end"
-                        : "items-start"
+                      ? "items-end"
+                      : "items-start"
                       }`}
                   >
                     <div
                       className={`w-[80%] lg:w-[307px] ${item.senderId == isUserData?._id
-                          ? " bg-[#0098EA] text-white"
-                          : "bg-[#F7F7F7] text-[#000000]"
+                        ? " bg-[#0098EA] text-white"
+                        : "bg-[#F7F7F7] text-[#000000]"
                         } p-3 rounded-xl text-wrap break-words text-xs lg:text-sm`}
                     >
                       {item.text}
                     </div>
                     <span className="text-[10px] text-[#5c5c5c]">
-                      {new Date(item?.timestamp).toLocaleTimeString({
+                      {new Date(item?.timestamp).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
